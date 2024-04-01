@@ -1,23 +1,32 @@
 const UsersModel = require('../models/usersModel')
 
 class UsersController {
-	async checkUser(req, res) {
+	async getUsers(req, res) {
 		try {
-			const { email } = req.body
-			const existingUser = await UsersModel.findOne({ email })
-
-			if (existingUser) {
-				res.status(200).json({ message: 'User exists' })
-			} else {
-				res.status(404).json({ message: 'User not found' })
-			}
+			const result = await UsersModel.find({})
+			res.status(200).json({ users: result })
 		} catch (error) {
-			console.error('Error while checking user existence:', error)
-			res.status(500).json({ message: 'Internal server error' })
+			res.status(400).json({ message: 'Произошла ошибка при получении' })
 		}
 	}
 
-	async addUser(req, res) {
+	// async checkUser(req, res) {
+	// 	try {
+	// 		const { email } = req.body
+	// 		const existingUser = await UsersModel.findOne({ email })
+
+	// 		if (existingUser) {
+	// 			res.status(200).json({ message: 'User exists' })
+	// 		} else {
+	// 			res.status(404).json({ message: 'User not found' })
+	// 		}
+	// 	} catch (error) {
+	// 		console.error('Error while checking user existence:', error)
+	// 		res.status(500).json({ message: 'Internal server error' })
+	// 	}
+	// }
+
+	async regUser(req, res) {
 		try {
 			const UserModel = new UsersModel({
 				username: req.body.username,
