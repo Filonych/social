@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getPosts } from '../../redux/slices/postsSlice'
+import { Container } from '../../components/ui/Container'
+import { Post } from '../../components/ui/Post'
+import { PostsWrap } from '../../components/ui/Post/components/PostsWrap'
 
 export const MainPage = () => {
 	const { list, loading } = useSelector(state => state.posts.posts)
@@ -12,16 +15,17 @@ export const MainPage = () => {
 	}, [])
 
 	return (
-		<div>
+		<Container>
 			{loading && <>...Loading</>}
-			{list &&
-				list.map(post => (
-					<div key={post._id}>
-						<div>{post.title}</div>
-						<div>{post.body}</div>
-						<div>{post.author}</div>
-					</div>
-				))}
-		</div>
+			<PostsWrap>
+				{list &&
+					list.map(post => (
+						<Post key={post._id} author={post.author} date={post.date} title={post.title} body={post.body} link={`/posts/${post._id}`}>
+							<div>{post.title}</div>
+							<div>{post.body}</div>
+						</Post>
+					))}
+			</PostsWrap>
+		</Container>
 	)
 }

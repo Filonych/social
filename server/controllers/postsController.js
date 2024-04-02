@@ -1,47 +1,62 @@
-const PostsModel = require("../models/postsModel");
+const PostsModel = require('../models/postsModel')
 
 class PostsController {
-  async getPosts(req, res) {
-    try {
+	async getPosts(req, res) {
+		try {
 			const result = await PostsModel.find({})
 			res.status(200).json({ posts: result })
 		} catch (error) {
 			res.status(400).json({ message: 'Произошла ошибка при получении' })
 		}
-  }
+	}
 
-  // async addPost(req, res) {
-  //   try {
-  //     const PostModel = new PostsModel({
-  //       title: req.body.title,
-  //       body: req.body.body,
-  //       id: req.body.id,
-  //     });
+	async getPostById(req, res) {
+		try {
+			const updatedPost = await PostsModel.findOne({ _id: req.params.id })
 
-  //     await PostModel.save();
-  //     res.status(200).json({ message: "Элемент успешно добавлен" });
-  //   } catch (e) {
-  //     res.status(400).json({ message: "Произошла ошибка при добавлении" });
-  //   }
-  // }
+			if (!updatedPost) {
+				return res.status(404).json({ message: 'Пост не найден' })
+			}
 
-  // async deletePost(req, res) {
-  //   try {
-  //     const { deletedCount } = await PostsModel.deleteOne({
-  //       id: req.body.id,
-  //     });
+			res.status(200).json({ post: updatedPost })
+		} catch (e) {
+			console.error(e)
+			res.status(500).json({ message: 'Произошла ошибка при получении поста' })
+		}
+	}
 
-  //     if (deletedCount === 0) {
-  //       res.status(400).json({
-  //         message: "Удаление не произошло, пожалуйста, проверьте заголовок",
-  //       });
-  //       return;
-  //     }
-  //     res.status(200).json({ message: "Элемент успешно удален" });
-  //   } catch (e) {
-  //     res.status(400).json({ message: "Произошла ошибка при удалении" });
-  //   }
-  // } 
+	// async addPost(req, res) {
+	//   try {
+	//     const PostModel = new PostsModel({
+	//       title: req.body.title,
+	//       body: req.body.body,
+	//       id: req.body.id,
+	//     });
+
+	//     await PostModel.save();
+	//     res.status(200).json({ message: "Элемент успешно добавлен" });
+	//   } catch (e) {
+	//     res.status(400).json({ message: "Произошла ошибка при добавлении" });
+	//   }
+	// }
+
+	// async deletePost(req, res) {
+	//   try {
+	//     const { deletedCount } = await PostsModel.deleteOne({
+	//       id: req.body.id,
+	//     });
+
+	//     if (deletedCount === 0) {
+	//       res.status(400).json({
+	//         message: "Удаление не произошло, пожалуйста, проверьте заголовок",
+	//       });
+	//       return;
+	//     }
+	//     res.status(200).json({ message: "Элемент успешно удален" });
+	//   } catch (e) {
+	//     res.status(400).json({ message: "Произошла ошибка при удалении" });
+	//   }
+	// }
 }
 
-module.exports = new PostsController();
+module.exports = new PostsController()

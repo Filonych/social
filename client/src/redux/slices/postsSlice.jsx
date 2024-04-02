@@ -15,12 +15,12 @@ export const getPosts = createAsyncThunk(
 //   }
 // );
 
-// export const getPostById = createAsyncThunk(
-//   "posts/fetchbyId",
-//   async (postId) => {
-//     return await postsAPI.fetchbyId(postId);
-//   }
-// );
+export const getPostById = createAsyncThunk(
+  "posts/fetchbyId",
+  async (id) => {
+    return await postsAPI.fetchbyId(id);
+  }
+);
 
 // export const addPost = createAsyncThunk(
 //   "posts/fetchNewPost",
@@ -46,6 +46,10 @@ export const getPosts = createAsyncThunk(
 const initialState = {
   posts: {
     list: null,
+    loading: false,
+  },
+  postForView: {
+    post: null,
     loading: false,
   },
 };
@@ -87,18 +91,18 @@ export const postsSlice = createSlice({
       //     loading: false,
       //   };
       // })
-      // .addCase(getPostById.pending, (state) => {
-      //   state.postForView = {
-      //     post: null,
-      //     loading: true,
-      //   };
-      // })
-      // .addCase(getPostById.fulfilled, (state, action) => {
-      //   state.postForView = {
-      //     post: action.payload.post,
-      //     loading: false,
-      //   };
-      // });
+      .addCase(getPostById.pending, (state) => {
+        state.postForView = {
+          post: null,
+          loading: true,
+        };
+      })
+      .addCase(getPostById.fulfilled, (state, action) => {
+        state.postForView = {
+          post: action.payload.post,
+          loading: false,
+        };
+      });
   },
 });
 

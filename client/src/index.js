@@ -9,6 +9,10 @@ import './index.css'
 import { AuthPage } from './pages/auth'
 import { RegistrationPage } from './pages/registration'
 import reportWebVitals from './reportWebVitals'
+import { FriendsPage } from './pages/friends'
+import { PostsPage } from './pages/posts'
+import { UserPage } from './pages/user'
+import { DetailPostPage } from './pages/posts/detail'
 
 const router = createBrowserRouter([
 	{
@@ -26,6 +30,22 @@ const router = createBrowserRouter([
 			{
 				path: 'registration',
 				element: <RegistrationPage />,
+			},
+			{
+				path: 'friends',
+				element: <FriendsPage />,
+			},
+			{
+				path: 'posts',
+				element: <PostsPage />,
+			},
+			{
+        path: "posts/:id",
+        element: <DetailPostPage />,
+      },
+			{
+				path: 'user',
+				element: <UserPage />,
 			},
 		],
 	},
