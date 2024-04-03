@@ -21,7 +21,7 @@ export const Root = () => {
 				<SC.MenuLinks>
 					<SC.MenuItem to={'/user'}>kate27</SC.MenuItem>
 					<SC.MenuItem to={'/friends'}>Friends</SC.MenuItem>
-					<SC.MenuItem to={'/posts'}>Posts</SC.MenuItem>
+					<SC.MenuItem to={'/add'}>Add Post</SC.MenuItem>
 					<SC.MenuItem to={'/auth'}>
 						<Button className='white'>Login</Button>
 					</SC.MenuItem>

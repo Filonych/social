@@ -13,6 +13,7 @@ import { FriendsPage } from './pages/friends'
 import { PostsPage } from './pages/posts'
 import { UserPage } from './pages/user'
 import { DetailPostPage } from './pages/posts/detail'
+import { AddPostPage } from './pages/posts/add/index copy'
 
 const router = createBrowserRouter([
 	{
@@ -36,13 +37,13 @@ const router = createBrowserRouter([
 				element: <FriendsPage />,
 			},
 			{
-				path: 'posts',
-				element: <PostsPage />,
+				path: 'add',
+				element: <AddPostPage />,
 			},
 			{
-        path: "posts/:id",
-        element: <DetailPostPage />,
-      },
+				path: 'posts/:id',
+				element: <DetailPostPage />,
+			},
 			{
 				path: 'user',
 				element: <UserPage />,

@@ -22,4 +22,8 @@ export const Button = styled.button`
 		opacity: 0.5;
 		cursor: default;
 	}
+
+	&:active {  box-shadow: none;
+  transform: translateY(2px);
+	}
 `
