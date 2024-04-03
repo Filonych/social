@@ -8,6 +8,13 @@ export const regNewUser = createAsyncThunk(
 	}
 )
 
+export const login = createAsyncThunk(
+	'users/fetchLogin',
+	async ({ email, password }) => {
+		return await usersAPI.fetchLogin(email, password)
+	}
+)
+
 const initialState = {
 	user: null,
 }
@@ -15,31 +22,19 @@ const initialState = {
 export const authSlice = createSlice({
 	name: 'user',
 	initialState,
-	reducers: {
-		login: (state, action) => {
-			state.user = action.payload
-		},
-		logout: state => {
-			state.user = null
-		},
-	},
-  // extraReducers: (builder) => {
-  //   builder
+  extraReducers: (builder) => {
+    builder
   //     .addCase(getPosts.pending, (state) => {
   //       state.posts = {
   //         list: null,
   //         loading: true,
   //       };
   //     })
-  //     .addCase(getPosts.fulfilled, (state, action) => {
-  //       state.posts = {
-  //         list: action.payload.posts,
-  //         loading: false,
-  //       };
-  //       state.totalCount = action.payload.totalCount;
-  //     })}
+      .addCase(login.fulfilled, (state, action) => {
+        state.user = action.payload.user
+      })}
 })
 
-export const { login, logout } = authSlice.actions
+
 
 export default authSlice.reducer

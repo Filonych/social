@@ -41,6 +41,21 @@ class UsersController {
 		}
 	}
 
+	async loginUser(req, res) {
+		try {
+			const user = await UsersModel.findOne({ email: req.body.email, password: req.body.password })
+
+			if (!user) {
+				return res.status(404).json({ message: 'Пользователь не найден' })
+			}
+
+			res.status(200).json({ user })
+		} catch (e) {
+			console.error(e)
+			res.status(500).json({ message: 'Произошла ошибка при получении пользователя' })
+		}
+	}
+
 	//   async deletePost(req, res) {
 	//     try {
 	//       const { deletedCount } = await PostsModel.deleteOne({
