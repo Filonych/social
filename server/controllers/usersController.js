@@ -43,7 +43,10 @@ class UsersController {
 
 	async loginUser(req, res) {
 		try {
-			const user = await UsersModel.findOne({ email: req.body.email, password: req.body.password })
+			const user = await UsersModel.findOne({
+				email: req.body.email,
+				password: req.body.password,
+			})
 
 			if (!user) {
 				return res.status(404).json({ message: 'Пользователь не найден' })
@@ -52,7 +55,9 @@ class UsersController {
 			res.status(200).json({ user })
 		} catch (e) {
 			console.error(e)
-			res.status(500).json({ message: 'Произошла ошибка при получении пользователя' })
+			res
+				.status(500)
+				.json({ message: 'Произошла ошибка при получении пользователя' })
 		}
 	}
 
@@ -74,25 +79,49 @@ class UsersController {
 	//     }
 	//   }
 
-	//   async editPost(req, res) {
-	//     try {
-	//       const updatedPost = await PostsModel.findOneAndUpdate(
-	//         { id: req.body.id },
-	//         { title: req.body.title, body: req.body.body },
-	//         { new: true }
-	//       );
+	async addFriend(req, res) {
+		try {
+			const user = await UsersModel.findOne({
+				username: req.body.username,
+			})
 
-	//       if (!updatedPost) {
-	//         return res
-	//           .status(400)
-	//           .json({ message: "Произошла ошибка при редактировании" });
-	//       }
+			if (!user) {
+				return res
+					.status(400)
+					.json({ message: 'Произошла ошибка при добавлении в друзья' })
+			}
 
-	//       res.status(200).json({ message: "Элемент успешно отредактирован" });
-	//     } catch (e) {
-	//       res.status(400).json({ message: "Произошла ошибка при редактировании" });
-	//     }
-	//   }
+			user.friends.push(req.body.friend)
+
+			await user.save()
+
+			res.status(200).json({ user })
+		} catch (e) {
+			res
+				.status(400)
+				.json({ message: 'Произошла ошибка при добавлении в друзья' })
+		}
+	}
+
+
+	async removeFriend (req, res) {
+		try {
+			const user = await UsersModel.findOne({username: req.body.username});
+	
+			if (!user) {
+				return res.status(404).json({ message: 'Пользователь не найден' });
+			}
+	
+			
+			user.friends = user.friends.filter(friend => friend !== req.body.friend);
+			await user.save();
+	
+			res.status(200).json({ user });
+		} catch (error) {
+			console.error(error);
+			res.status(500).json({ message: 'Произошла ошибка при удалении друга' });
+		}
+	};
 
 	//   async getPostById(req, res) {
 	//     try {

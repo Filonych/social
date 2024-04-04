@@ -4,11 +4,13 @@ import { useParams } from 'react-router-dom'
 import { Button } from '../../../components/ui/Button'
 import { Container } from '../../../components/ui/Container'
 import { DetailedPost } from '../../../components/ui/DetailedPost'
+import { DetailedPostWrap } from '../../../components/ui/DetailedPostWrap'
+import { Link } from '../../../components/ui/Link'
+import { PostDetails } from '../../../components/ui/Post/components/PostDetails'
+import { Typo } from '../../../components/ui/Typo'
 import { getPostById } from '../../../redux/slices/postsSlice'
 import { CommentForm } from '../components/CommentForm'
-import { DetailedPostWrap } from '../../../components/ui/DetailedPostWrap'
 import * as SC from './styles'
-import { Typo } from '../../../components/ui/Typo'
 
 export const DetailPostPage = () => {
 	const { id } = useParams()
@@ -29,6 +31,7 @@ export const DetailPostPage = () => {
 						date={post.date}
 						title={post.title}
 						body={post.body}
+						authorLink={`/users/${post.author}`}
 					></DetailedPost>
 				)}
 				<SC.ButtonsWrap>
@@ -40,17 +43,21 @@ export const DetailPostPage = () => {
 
 			{showForm && <CommentForm />}
 			{post?.comments && <Typo>Comments</Typo>}
-
-			<div>
+			<SC.CommentsWrap>
 				{post?.comments &&
 					post.comments.map(comment => (
-						<div key={comment.author}>
-							<div>{comment.body}</div>
-							<div>{comment.author}</div>
-							<div>{comment.date}</div>
-						</div>
+						<SC.CommentWrap key={comment.author}>
+							<SC.PostDetailsWrap>
+								<PostDetails>
+									<Link to={`/users/${comment.author}`}>{comment.author}</Link>
+								</PostDetails>
+								<PostDetails>{comment.date}</PostDetails>
+							</SC.PostDetailsWrap>
+
+							<SC.CommentText>{comment.body}</SC.CommentText>
+						</SC.CommentWrap>
 					))}
-			</div>
+			</SC.CommentsWrap>
 		</Container>
 	)
 }

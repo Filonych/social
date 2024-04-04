@@ -19,7 +19,11 @@ export const Root = () => {
 					<img src='img/rocket.svg' />
 				</NavLink>
 				<SC.MenuLinks>
-					<SC.MenuItem to={'/user'}>kate27</SC.MenuItem>
+					{user && (
+						<SC.MenuItem to={`/users/${user.username}`}>
+							{user.username}
+						</SC.MenuItem>
+					)}
 					<SC.MenuItem to={'/friends'}>Friends</SC.MenuItem>
 					<SC.MenuItem to={'/add'}>Add Post</SC.MenuItem>
 					<SC.MenuItem to={'/auth'}>
@@ -28,7 +32,9 @@ export const Root = () => {
 					<SC.MenuItem to={'/registration'}>
 						<Button>Create account</Button>
 					</SC.MenuItem>
-					<SC.MenuItem><Button className='white'>Logout</Button></SC.MenuItem>
+					<SC.MenuItem>
+						<Button className='white'>Logout</Button>
+					</SC.MenuItem>
 				</SC.MenuLinks>
 			</SC.Menu>
 

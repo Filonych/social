@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-export const DetailsItem = styled.div`
+export const PostDetails = styled.div`
 	display: flex;
 	align-items: center;
 

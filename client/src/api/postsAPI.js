@@ -24,6 +24,22 @@ export const postsAPI = {
 	//   }
 	// },
 
+	fetchByAuthor(author) {
+	  try {	    
+	    return fetch('http://localhost:3005/api/posts/byAuthor', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ author })
+    })
+	      .then((response) => response.json())
+	      .then((posts) => posts);
+	  } catch (ex) {
+	    console.log(ex);
+	  }
+	},
+
 	fetchbyId(id) {
 	  try {
 	    if (!id) {

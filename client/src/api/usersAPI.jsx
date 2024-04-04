@@ -32,5 +32,37 @@ export const usersAPI = {
 	    console.log(ex);
 	  }
 	},
+
+	fetchAddFriend(username, friend) {
+	  try {	    
+	    return fetch('http://localhost:3005/api/users/addFriend', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ username, friend })
+    })
+		.then((response) => response.json())
+	      .then((user) => user);
+	  } catch (ex) {
+	    console.log(ex);
+	  }
+	},
+
+	fetchRemoveFriend(username, friend) {
+	  try {	    
+	    return fetch('http://localhost:3005/api/users/removeFriend', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ username, friend })
+    })
+		.then((response) => response.json())
+	      .then((user) => user);
+	  } catch (ex) {
+	    console.log(ex);
+	  }
+	},
 	
 }

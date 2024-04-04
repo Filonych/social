@@ -8,4 +8,5 @@ export const DetailedPostWrap = styled.div`
 	flex-direction: column;
 	margin: 0 auto;
 	background: #fdf3ea;
+	border-radius: 10px;
 `

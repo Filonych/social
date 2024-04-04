@@ -8,6 +8,20 @@ export const regNewUser = createAsyncThunk(
 	}
 )
 
+export const addFriend = createAsyncThunk(
+	'users/fetchAddFriend',
+	async ({ username, author }) => {
+		return await usersAPI.fetchAddFriend(username, author)
+	}
+)
+
+export const RemoveFriend = createAsyncThunk(
+	'users/fetchRemoveFriend',
+	async ({ username, author }) => {
+		return await usersAPI.fetchRemoveFriend(username, author)
+	}
+)
+
 export const login = createAsyncThunk(
 	'users/fetchLogin',
 	async ({ email, password }) => {
@@ -22,19 +36,24 @@ const initialState = {
 export const authSlice = createSlice({
 	name: 'user',
 	initialState,
-  extraReducers: (builder) => {
-    builder
-  //     .addCase(getPosts.pending, (state) => {
-  //       state.posts = {
-  //         list: null,
-  //         loading: true,
-  //       };
-  //     })
-      .addCase(login.fulfilled, (state, action) => {
-        state.user = action.payload.user
-      })}
+	extraReducers: builder => {
+		builder
+			//     .addCase(getPosts.pending, (state) => {
+			//       state.posts = {
+			//         list: null,
+			//         loading: true,
+			//       };
+			//     })
+			.addCase(login.fulfilled, (state, action) => {
+				return { ...state, user: action.payload.user }
+			})
+			.addCase(addFriend.fulfilled, (state, action) => {
+				return { ...state, user: action.payload.user }
+			})
+			.addCase(RemoveFriend.fulfilled, (state, action) => {
+				return { ...state, user: action.payload.user }
+			})
+	},
 })
-
-
 
 export default authSlice.reducer

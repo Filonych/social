@@ -3,10 +3,10 @@ import * as SC from './styles'
 import { Link } from '../Link'
 import { PostDetails } from '../Post/components/PostDetails'
 
-export const DetailedPost = ({ author, date, title, body }) => (
+export const DetailedPost = ({ author, date, title, body, authorLink }) => (
 	<SC.DetailedPost>
 		<SC.Details>
-			<PostDetails>{author}</PostDetails>
+			<PostDetails><Link to={authorLink}>{author}</Link></PostDetails>
 			<PostDetails>{date}</PostDetails>
 			<PostDetails>5 likes</PostDetails>
 			<PostDetails>3 comments</PostDetails>

@@ -22,6 +22,13 @@ export const getPostById = createAsyncThunk(
   }
 );
 
+export const getPostsByAuthor = createAsyncThunk(
+  "posts/fetchByAuthor",
+  async (author) => {
+    return await postsAPI.fetchByAuthor(author);
+  }
+);
+
 // export const addPost = createAsyncThunk(
 //   "posts/fetchNewPost",
 //   async ({ title, body, id }) => {
@@ -52,6 +59,10 @@ const initialState = {
     post: null,
     loading: false,
   },
+  postsByAuthor: {
+    list: null,
+    loading: false,
+  },
 };
 
 export const postsSlice = createSlice({
@@ -75,6 +86,19 @@ export const postsSlice = createSlice({
       })
       .addCase(getPosts.fulfilled, (state, action) => {
         state.posts = {
+          list: action.payload.posts,
+          loading: false,
+        };
+      })
+
+      .addCase(getPostsByAuthor.pending, (state) => {
+        state.postsByAuthor = {
+          list: null,
+          loading: true,
+        };
+      })
+      .addCase(getPostsByAuthor.fulfilled, (state, action) => {
+        state.postsByAuthor = {
           list: action.payload.posts,
           loading: false,
         };

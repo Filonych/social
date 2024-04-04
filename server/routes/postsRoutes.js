@@ -5,6 +5,7 @@ const postsRoutes = new Router()
 
 postsRoutes.get('/list', postsController.getPosts)
 postsRoutes.get('/list/:id', postsController.getPostById)
+postsRoutes.post('/byAuthor', postsController.getPostsByAuthor)
 // postsRoutes.post("/add", postsController.addPost);
 // postsRoutes.delete("/delete", postsController.deletePost);
 

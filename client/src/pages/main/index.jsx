@@ -227,7 +227,8 @@ export const MainPage = () => {
 							date={post.date}
 							title={post.title}
 							body={post.body}
-							link={`/posts/${post._id}`}
+							postLink={`/posts/${post._id}`}
+							authorLink={`/users/${post.author}`}
 						>
 							<div>{post.title}</div>
 							<div>{post.body}</div>

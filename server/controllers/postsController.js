@@ -25,6 +25,18 @@ class PostsController {
 		}
 	}
 
+	
+
+	async getPostsByAuthor(req, res) {
+		try {
+			const result = await PostsModel.find({author: req.body.author})
+
+			res.status(200).json({ posts: result })
+		} catch (error) {
+			res.status(400).json({ message: 'Произошла ошибка при получении' })
+		}
+	}
+
 	// async addPost(req, res) {
 	//   try {
 	//     const PostModel = new PostsModel({
