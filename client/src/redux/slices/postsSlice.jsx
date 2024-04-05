@@ -29,26 +29,26 @@ export const getPostsByAuthor = createAsyncThunk(
   }
 );
 
-// export const addPost = createAsyncThunk(
-//   "posts/fetchNewPost",
-//   async ({ title, body, id }) => {
-//     return await postsAPI.fetchNewPost(title, body, id);
-//   }
-// );
+export const addPost = createAsyncThunk(
+  "posts/fetchNewPost",
+  async ({ title, body, date, author, isPrivate }) => {
+    return await postsAPI.fetchNewPost(title, body, date, author, isPrivate);
+  }
+);
 
-// export const deletePost = createAsyncThunk(
-//   "posts/fetchDeletePost",
-//   async ({ id }) => {
-//     return await postsAPI.fetchDeletePost(id);
-//   }
-// );
+export const deletePost = createAsyncThunk(
+  "posts/fetchDeletePost",
+  async ({ id }) => {    
+    return await postsAPI.fetchDeletePost(id);
+  }
+);
 
-// export const editPost = createAsyncThunk(
-//   "posts/fetchEditPost",
-//   async ({ title, body, id }) => {
-//     return await postsAPI.fetchEditPost(title, body, id);
-//   }
-// );
+export const addComment = createAsyncThunk(
+  "posts/fetchAddComment",
+  async ({ body, id, date, author }) => {
+    return await postsAPI.fetchAddComment(body, id, date, author);
+  }
+);
 
 const initialState = {
   posts: {
@@ -126,7 +126,20 @@ export const postsSlice = createSlice({
           post: action.payload.post,
           loading: false,
         };
-      });
+      })
+
+      // .addCase(addComment.pending, (state) => {
+      //   state.postForView = {
+      //     post: null,
+      //     loading: true,
+      //   };
+      // })
+      // .addCase(addComment.fulfilled, (state, action) => {
+      //   state.postForView = {
+      //     post: action.payload.post,
+      //     loading: false,
+      //   };
+      // });
   },
 });
 

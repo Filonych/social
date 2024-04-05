@@ -107,6 +107,7 @@ class UsersController {
 	async removeFriend (req, res) {
 		try {
 			const user = await UsersModel.findOne({username: req.body.username});
+			
 	
 			if (!user) {
 				return res.status(404).json({ message: 'Пользователь не найден' });
@@ -115,6 +116,7 @@ class UsersController {
 			
 			user.friends = user.friends.filter(friend => friend !== req.body.friend);
 			await user.save();
+			
 	
 			res.status(200).json({ user });
 		} catch (error) {

@@ -25,87 +25,92 @@ export const postsAPI = {
 	// },
 
 	fetchByAuthor(author) {
-	  try {	    
-	    return fetch('http://localhost:3005/api/posts/byAuthor', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ author })
-    })
-	      .then((response) => response.json())
-	      .then((posts) => posts);
-	  } catch (ex) {
-	    console.log(ex);
-	  }
+		try {
+			return fetch('http://localhost:3005/api/posts/byAuthor', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ author }),
+			})
+				.then(response => response.json())
+				.then(posts => posts)
+		} catch (ex) {
+			console.log(ex)
+		}
 	},
 
 	fetchbyId(id) {
-	  try {
-	    if (!id) {
-	      throw new Error("ID is broken");
-	    }
-	    return fetch(`http://localhost:3005/api/posts/list/${id}`)
-	      .then((response) => response.json())
-	      .then((post) => post);
-	  } catch (ex) {
-	    console.log(ex);
-	  }
+		try {
+			if (!id) {
+				throw new Error('ID is broken')
+			}
+			return fetch(`http://localhost:3005/api/posts/list/${id}`)
+				.then(response => response.json())
+				.then(post => post)
+		} catch (ex) {
+			console.log(ex)
+		}
 	},
 
-	// fetchNewPost(title, body, id) {
-	//   try {
-	//     fetch("http://localhost:3003/api/posts/add", {
-	//       method: "POST",
-	//       body: JSON.stringify({
-	//         title,
-	//         body,
-	//         id,
-	//       }),
-	//       headers: {
-	//         "Content-type": "application/json; charset=UTF-8",
-	//       },
-	//     });
-	//   } catch (ex) {
-	//     console.log(ex);
-	//   }
-	// },
+	fetchNewPost(title, body, date, author, isPrivate) {
+		try {
+			fetch('http://localhost:3005/api/posts/add', {
+				method: 'POST',
+				body: JSON.stringify({
+					title,
+					body,
+					date,
+					author,
+					isPrivate,
+				}),
+				headers: {
+					'Content-type': 'application/json; charset=UTF-8',
+				},
+			})
+		} catch (ex) {
+			console.log(ex)
+		}
+	},
 
-	// fetchDeletePost(id) {
-	//   try {
-	//     if (!id) {
-	//       throw new Error("ID is broken");
-	//     }
-	//     fetch(`http://localhost:3003/api/posts/delete`, {
-	//       method: "DELETE",
-	//       headers: {
-	//         Accept: "application/json",
-	//         "Content-Type": "application/json",
-	//       },
-	//       body: JSON.stringify({
-	//         id,
-	//       }),
-	//     });
-	//   } catch (ex) {
-	//     console.log(ex);
-	//   }
-	// },
+	fetchDeletePost(id) {
+		try {
+			if (!id) {
+				throw new Error('ID is broken')
+			}
+			fetch(`http://localhost:3005/api/posts/delete`, {
+				method: 'DELETE',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					id,
+				}),
+			})
+		} catch (ex) {
+			console.log(ex)
+		}
+	},
 
-	// fetchEditPost(title, body, id) {
-	//   try {
-	//     fetch("http://localhost:3003/api/posts/edit", {
-	//       method: "PUT",
-	//       body: JSON.stringify({
-	//         title,
-	//         body,
-	//         id,
-	//       }),
-	//       headers: {
-	//         "Content-type": "application/json; charset=UTF-8",
-	//       },
-	//     });
-	//   } catch (ex) {
-	//     console.log(ex);
-	//   }
-	// },
+	fetchAddComment(body, id, date, author) {
+		try {
+			fetch('http://localhost:3005/api/posts/comment', {
+				method: 'POST',
+				body: JSON.stringify({
+					body,
+					id,
+					date,
+					author,
+				}),
+				headers: {
+					'Content-type': 'application/json; charset=UTF-8',
+				},
+			})
+				.then(response => response.json())
+				.then(post => post)
+		} catch (ex) {
+			console.log(ex)
+		}
+	},
 }

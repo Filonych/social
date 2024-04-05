@@ -13,7 +13,7 @@ import { FriendsPage } from './pages/friends'
 import { PostsPage } from './pages/posts'
 import { UserPage } from './pages/user'
 import { DetailPostPage } from './pages/posts/detail'
-import { AddPostPage } from './pages/posts/add/index copy'
+import { AddPostPage } from './pages/posts/add/index'
 
 const router = createBrowserRouter([
 	{
