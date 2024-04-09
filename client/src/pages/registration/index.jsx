@@ -5,6 +5,8 @@ import { Field } from '../../components/ui/Field'
 import { Form } from '../../components/ui/Form'
 import { Input } from '../../components/ui/Input'
 import { regNewUser } from '../../redux/slices/usersSlice'
+import { Container } from '../../components/ui/Container'
+import { MainTitle } from '../../components/ui/MainTitle'
 
 const DEFAULT_VALUES = { username: '', email: '', password: '' }
 
@@ -21,7 +23,9 @@ export const RegistrationPage = () => {
     setFormValues({ ...formValues, [name]: value });
   };
 
-	return (
+	return (<Container>
+		
+		<MainTitle first='Create' second='account' />
 		<Form onSubmit={onSubmit}>
 			<Field>
 				<Input
@@ -50,7 +54,9 @@ export const RegistrationPage = () => {
 					onChange={e => onChange(e.target.name, e.target.value)}
 				/>
 			</Field>
-			<Button type='submit'>Создать профиль</Button>
+			<Button type='submit'>Create account</Button>
 		</Form>
+	</Container>
+		
 	)
 }

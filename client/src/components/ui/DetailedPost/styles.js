@@ -16,6 +16,7 @@ export const Title = styled.h2`
 export const Body = styled.h2`
 	font-weight: 500;
 	font-size: 16px;
+	text-align: left;
 	line-height: 187%;
 	color: #58595d;
 	overflow: hidden;

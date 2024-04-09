@@ -1,8 +1,11 @@
 const PostsModel = require('../models/postsModel')
+const UsersModel = require('../models/usersModel')
 
 class PostsController {
 	async getPosts(req, res) {
 		try {
+			const { user } = req.query
+			if (!user)
 			const result = await PostsModel.find({})
 			res.status(200).json({ posts: result })
 		} catch (error) {
@@ -76,17 +79,17 @@ class PostsController {
 			const updatedPost = await PostsModel.findOneAndUpdate(
 				{ _id: req.body.id },
 				{
-						$push: {
-								comments: {
-										body: req.body.body,
-										author: req.body.author,
-										authorId: req.body.authorId,
-										date: req.body.date,
-								},
+					$push: {
+						comments: {
+							body: req.body.body,
+							author: req.body.author,
+							authorId: req.body.authorId,
+							date: req.body.date,
 						},
+					},
 				},
 				{ new: true }
-		);
+			)
 
 			if (!updatedPost) {
 				return res
@@ -97,6 +100,29 @@ class PostsController {
 			res.status(200).json({ post: updatedPost })
 		} catch (e) {
 			res.status(400).json({ message: 'Произошла ошибка при редактировании' })
+		}
+	}
+
+	async likePost(req, res) {
+		try {
+			const post = await PostsModel.findOne({ _id: req.body.id })
+
+			if (!post) {
+				return res.status(400).json({ message: 'Произошла ошибка' })
+			}
+
+			if (post.likes.includes(req.body.user)) {
+				const index = post.likes.indexOf(req.body.user)
+				post.likes.splice(index, 1)
+			} else {
+				post.likes.push(req.body.user)
+			}
+
+			await post.save()
+
+			res.status(200).json({ post: post })
+		} catch (e) {
+			res.status(400).json({ message: 'Произошла ошибка' })
 		}
 	}
 }

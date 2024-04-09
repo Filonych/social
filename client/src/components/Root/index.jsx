@@ -2,12 +2,13 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { NavLink, Outlet } from 'react-router-dom'
 import { Button } from '../ui/Button'
+import { Container } from '../ui/Container'
 import * as SC from './styles'
 
 export const Root = () => {
 	const { user } = useSelector(state => state.user)
 	return (
-		<>
+		<Container>
 			{/* <NavLink to={'/'}>Главная </NavLink>
 			{user && <NavLink>Мой профиль</NavLink>}
 			{user && <NavLink>Посты</NavLink>}
@@ -39,6 +40,6 @@ export const Root = () => {
 			</SC.Menu>
 
 			<Outlet />
-		</>
+		</Container>
 	)
 }

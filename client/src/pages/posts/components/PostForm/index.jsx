@@ -4,8 +4,8 @@ import { Container } from '../../../../components/ui/Container'
 import { Field } from '../../../../components/ui/Field'
 import { Form } from '../../../../components/ui/Form'
 import { Input } from '../../../../components/ui/Input'
-import { Typo } from '../../../../components/ui/Typo'
 import * as SC from './styles'
+import { MainTitle } from '../../../../components/ui/MainTitle'
 
 const DEFAULT_VALUES = {
 	title: '',
@@ -13,7 +13,7 @@ const DEFAULT_VALUES = {
   isPrivate: false,
 }
 
-export const PostForm = ({ title, onSubmitForm, button }) => {
+export const PostForm = ({ first, second, onSubmitForm, button }) => {
 	const [formValues, setFormValues] = useState(DEFAULT_VALUES)
 	const disabled = !formValues.title || !formValues.body
 
@@ -29,7 +29,7 @@ export const PostForm = ({ title, onSubmitForm, button }) => {
 
 	return (
 		<Container>
-			<Typo>{title}</Typo>
+			<MainTitle first={first} second={second} />
 			<Form onSubmit={onSubmit}>
 				<Field>
 					<Input

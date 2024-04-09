@@ -4,6 +4,7 @@ import { Container } from '../../components/ui/Container'
 import { Typo } from '../../components/ui/Typo'
 import { Post } from '../../components/ui/Post'
 import { Button } from '../../components/ui/Button'
+import { MainTitle } from '../../components/ui/MainTitle'
 import { PostsWrap } from '../../components/ui/Post/components/PostsWrap'
 import * as SC from './styles'
 import { useParams } from 'react-router-dom'
@@ -39,7 +40,7 @@ export const UserPage = () => {
 	return (
 		<Container>
 			<SC.Avatar />
-			{author && <div>{author}</div>}
+			{author && <SC.User>{author}</SC.User>}
 			{user && !isAuthUser && !isAddedToFriends && (
 				<Button onClick={onAddFriend} className='white'>
 					Add Friend

@@ -44,6 +44,7 @@ export const Title = styled.h2`
 `
 
 export const Body = styled.h2`
+text-align: left;
 	font-weight: 500;
 	font-size: 16px;
 	line-height: 187%;
@@ -51,7 +52,7 @@ export const Body = styled.h2`
 	overflow: hidden;
 	text-overflow: ellipsis;
 	display: -webkit-box;
-	-webkit-line-clamp: 6;
+	-webkit-line-clamp: 5;
 	-webkit-box-orient: vertical;
 `
 

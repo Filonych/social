@@ -3,8 +3,8 @@ import { postsAPI } from "../../api/postsAPI";
 
 export const getPosts = createAsyncThunk(
   "posts/fetchPosts",
-  async () => {
-    return await postsAPI.fetchPosts();
+  async (user) => {
+    return await postsAPI.fetchPosts(user);
   }
 );
 
@@ -47,6 +47,13 @@ export const addComment = createAsyncThunk(
   "posts/fetchAddComment",
   async ({ body, id, date, author }) => {
     return await postsAPI.fetchAddComment(body, id, date, author);
+  }
+);
+
+export const likePost = createAsyncThunk(
+  "posts/fetchLikePost",
+  async ({ id, user }) => {
+    return await postsAPI.fetchLikePost(id, user);
   }
 );
 
@@ -128,21 +135,31 @@ export const postsSlice = createSlice({
         };
       })
 
-      // .addCase(addComment.pending, (state) => {
-      //   state.postForView = {
-      //     post: null,
-      //     loading: true,
-      //   };
-      // })
-      // .addCase(addComment.fulfilled, (state, action) => {
-      //   state.postForView = {
-      //     post: action.payload.post,
-      //     loading: false,
-      //   };
-      // });
+      .addCase(addComment.pending, (state) => {
+        state.postForView = {
+          post: null,
+          loading: true,
+        };
+      })
+      .addCase(addComment.fulfilled, (state, action) => {
+        state.postForView = {
+          post: action.payload.post,
+          loading: false,
+        };
+        console.log('postForView', state.postForView)
+      })
+      .addCase(likePost.fulfilled, (state, action) => {
+        state.postForView = {
+          post: action.payload.post,
+          loading: false,
+        };
+        console.log('postForView', state.postForView)
+      })
   },
 });
 
 export const { showPost } = postsSlice.actions;
 
 export default postsSlice.reducer;
+
+

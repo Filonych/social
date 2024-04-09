@@ -1,6 +1,8 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Container } from '../../components/ui/Container'
+import { Link } from '../../components/ui/Link'
+import { MainTitle } from '../../components/ui/MainTitle'
 import * as SC from './styles'
 
 export const FriendsPage = () => {
@@ -10,13 +12,14 @@ export const FriendsPage = () => {
 
 	return (
 		<Container>
+			<MainTitle first='My' second='friends' />
 			<SC.Wrap>
 				{isUser &&
 					user.friends.map(friend => (
-						<div key={friend}>
+						<SC.Friend key={friend}>
 							<SC.Image></SC.Image>
-							<div>{friend}</div>
-						</div>
+							<Link to={`/users/${friend}`}>{friend}</Link>
+						</SC.Friend>
 					))}
 			</SC.Wrap>
 		</Container>

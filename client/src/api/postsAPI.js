@@ -95,13 +95,32 @@ export const postsAPI = {
 
 	fetchAddComment(body, id, date, author) {
 		try {
-			fetch('http://localhost:3005/api/posts/comment', {
+			return fetch('http://localhost:3005/api/posts/comment', {
 				method: 'POST',
 				body: JSON.stringify({
 					body,
 					id,
 					date,
 					author,
+				}),
+				headers: {
+					'Content-type': 'application/json; charset=UTF-8',
+				},
+			})
+				.then(response => response.json())
+				.then(post => post)
+		} catch (ex) {
+			console.log(ex)
+		}
+	},
+
+	fetchLikePost(id, user) {
+		try {
+			console.log('id',id)
+			return fetch('http://localhost:3005/api/posts/likePost', {
+				method: 'POST',
+				body: JSON.stringify({
+					id, user
 				}),
 				headers: {
 					'Content-type': 'application/json; charset=UTF-8',

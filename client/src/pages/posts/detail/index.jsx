@@ -6,31 +6,45 @@ import { Container } from '../../../components/ui/Container'
 import { DetailedPost } from '../../../components/ui/DetailedPost'
 import { DetailedPostWrap } from '../../../components/ui/DetailedPostWrap'
 import { Link } from '../../../components/ui/Link'
+import { Loader } from '../../../components/ui/Loader'
 import { PostDetails } from '../../../components/ui/Post/components/PostDetails'
 import { Typo } from '../../../components/ui/Typo'
-import { addComment, deletePost, getPostById } from '../../../redux/slices/postsSlice'
+import { formatDate } from '../../../helpers/formatDate'
+import {
+	addComment,
+	deletePost,
+	getPostById,
+	likePost,
+} from '../../../redux/slices/postsSlice'
 import { CommentForm } from '../components/CommentForm'
 import * as SC from './styles'
 
 export const DetailPostPage = () => {
 	const { user } = useSelector(state => state.user)
 
-
 	const { id } = useParams()
 	const { post, loading } = useSelector(state => state.posts.postForView)
 	const [showForm, setShowForm] = useState(false)
 	const dispatch = useDispatch()
 
-	console.log('post',post)
+	const likes = post?.likes?.length || 0
+	const commentsCount = post?.comments?.length || 0
+	const isLiked = post?.likes.includes(user._id)
+
+	console.log('isLiked',isLiked)
 
 	const onDeletePost = () => {
-    dispatch(deletePost({ id }));
-  };
+		dispatch(deletePost({ id }))
+	}
 
 	const onSubmitForm = formValues => {
-		const date = new Date().toISOString()
+		const date = formatDate()
 		formValues = { ...formValues, id, date, author: user.username }
-		dispatch(addComment(formValues))
+		dispatch(addComment(formValues)).then(() => dispatch(getPostById(id)))
+	}
+
+	const onLikePost = () => {
+		dispatch(likePost({ id, user: user._id }))
 	}
 
 	useEffect(() => {
@@ -39,26 +53,30 @@ export const DetailPostPage = () => {
 
 	return (
 		<Container>
-			<DetailedPostWrap>
-				{post && (
+			{loading && <Loader />}
+			{post && (
+				<DetailedPostWrap>
 					<DetailedPost
 						author={post.author}
 						date={post.date}
 						title={post.title}
 						body={post.body}
 						authorLink={`/users/${post.author}`}
+						likes={likes}
+						commentsCount={commentsCount}
+						onLikePost={onLikePost}
 					></DetailedPost>
-				)}
-				<SC.ButtonsWrap>
-					<Button className='white'>Like</Button>
-					<Button onClick={() => setShowForm(true)}>Comment</Button>
-					<button onClick={onDeletePost}>Удалить</button>
-				</SC.ButtonsWrap>
-			</DetailedPostWrap>
+					<SC.ButtonsWrap>
+						<Button className={isLiked ? undefined :'white'} onClick={onLikePost}>{isLiked ? 'Liked' : 'Like'}
+						</Button>
+						<Button onClick={() => setShowForm(true)}>Comment</Button>
+						<button onClick={onDeletePost}>Удалить</button>
+					</SC.ButtonsWrap>
+				</DetailedPostWrap>
+			)}
 
-			{showForm && <CommentForm 		onSubmitForm={onSubmitForm}
-				button='Comment'/>}
-			{post?.comments && <Typo>Comments</Typo>}
+			{showForm && <CommentForm onSubmitForm={onSubmitForm} button='Comment' />}
+			{!!commentsCount && <Typo>Comments</Typo>}
 			<SC.CommentsWrap>
 				{post?.comments &&
 					post.comments.map(comment => (
