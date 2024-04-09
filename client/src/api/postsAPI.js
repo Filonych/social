@@ -1,7 +1,9 @@
 export const postsAPI = {
-	async fetchPosts() {
+	async fetchPosts(userId) {
 		try {
-			const response = await fetch(`http://localhost:3005/api/posts/list/`)
+			const response = await fetch(
+				`http://localhost:3005/api/posts/list/?_userId=${userId}`
+			)
 			if (!response.ok) {
 				throw new Error('Ошибка при получении данных')
 			}
@@ -24,9 +26,9 @@ export const postsAPI = {
 	//   }
 	// },
 
-	fetchByAuthor(author) {
+	fetchByAuthor(author, privatePosts) {
 		try {
-			return fetch('http://localhost:3005/api/posts/byAuthor', {
+			return fetch(`http://localhost:3005/api/posts/byAuthor/?_privatePosts=${privatePosts}`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -53,7 +55,7 @@ export const postsAPI = {
 		}
 	},
 
-	fetchNewPost(title, body, date, author, isPrivate) {
+	fetchNewPost(title, body, date, author, authorId, isPrivate) {
 		try {
 			fetch('http://localhost:3005/api/posts/add', {
 				method: 'POST',
@@ -62,6 +64,7 @@ export const postsAPI = {
 					body,
 					date,
 					author,
+					authorId,
 					isPrivate,
 				}),
 				headers: {
@@ -116,11 +119,12 @@ export const postsAPI = {
 
 	fetchLikePost(id, user) {
 		try {
-			console.log('id',id)
+			console.log('id', id)
 			return fetch('http://localhost:3005/api/posts/likePost', {
 				method: 'POST',
 				body: JSON.stringify({
-					id, user
+					id,
+					user,
 				}),
 				headers: {
 					'Content-type': 'application/json; charset=UTF-8',

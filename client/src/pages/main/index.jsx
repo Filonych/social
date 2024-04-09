@@ -39,6 +39,7 @@ export const MainPage = () => {
 							body={post.body}
 							postLink={`/posts/${post._id}`}
 							authorLink={`/users/${post.author}`}
+							isPrivate={post.isPrivate}
 						></Post>
 					))}
 			</PostsWrap>

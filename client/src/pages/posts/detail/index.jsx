@@ -31,14 +31,14 @@ export const DetailPostPage = () => {
 	const commentsCount = post?.comments?.length || 0
 	const isLiked = post?.likes.includes(user._id)
 
-	console.log('isLiked',isLiked)
+	console.log('post',post )
 
 	const onDeletePost = () => {
 		dispatch(deletePost({ id }))
 	}
 
 	const onSubmitForm = formValues => {
-		const date = formatDate()
+		const date = Date.now()
 		formValues = { ...formValues, id, date, author: user.username }
 		dispatch(addComment(formValues)).then(() => dispatch(getPostById(id)))
 	}
@@ -65,6 +65,7 @@ export const DetailPostPage = () => {
 						likes={likes}
 						commentsCount={commentsCount}
 						onLikePost={onLikePost}
+						isPrivate={post.isPrivate}
 					></DetailedPost>
 					<SC.ButtonsWrap>
 						<Button className={isLiked ? undefined :'white'} onClick={onLikePost}>{isLiked ? 'Liked' : 'Like'}

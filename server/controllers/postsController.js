@@ -4,9 +4,34 @@ const UsersModel = require('../models/usersModel')
 class PostsController {
 	async getPosts(req, res) {
 		try {
-			const { user } = req.query
-			if (!user)
-			const result = await PostsModel.find({})
+			const { _userId } = req.query
+
+			let result = []
+
+			if (_userId === '660ffb90bf8311e942dff41c') {
+				result = await PostsModel.find()
+			}
+
+			if (_userId === 'undefined') {
+				result = await PostsModel.find({ isPrivate: false })
+			}
+
+			if (_userId !== 'undefined' && _userId !== '660ffb90bf8311e942dff41c') {
+				const user = await UsersModel.findOne({ _id: _userId })
+				const friends = user.friends
+				result = await PostsModel.find({
+					$or: [
+						{ authorId: _userId },
+						{ author: { $in: friends } },
+						{ isPrivate: false },
+					],
+				})
+
+				result = await PostsModel.find({
+					$or: [{ author: { $in: friends } }, { isPrivate: false }],
+				})
+			}
+
 			res.status(200).json({ posts: result })
 		} catch (error) {
 			res.status(400).json({ message: 'Произошла ошибка при получении' })
@@ -30,7 +55,16 @@ class PostsController {
 
 	async getPostsByAuthor(req, res) {
 		try {
-			const result = await PostsModel.find({ author: req.body.author })
+			let result = []
+			if (req.params._privatePosts === false) {
+				result = await PostsModel.find({
+					author: req.body.author,
+					isPrivate: false,
+				})
+			} else {
+				result = await PostsModel.find({ author: req.body.author })
+				console.log('result',result)
+			}
 
 			res.status(200).json({ posts: result })
 		} catch (error) {
@@ -44,6 +78,7 @@ class PostsController {
 				title: req.body.title,
 				body: req.body.body,
 				author: req.body.author,
+				authorId: req.body.authorId,
 				date: req.body.date,
 				isPrivate: req.body.isPrivate,
 			})

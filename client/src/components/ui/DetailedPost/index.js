@@ -11,6 +11,7 @@ export const DetailedPost = ({
 	authorLink,
 	likes,
 	commentsCount,
+	isPrivate
 }) => (
 	<SC.DetailedPost>
 		<SC.Details>
@@ -24,6 +25,7 @@ export const DetailedPost = ({
 			<PostDetails>{`${commentsCount} ${
 				commentsCount === 0 || commentsCount > 1 ? 'comments' : 'comment'
 			}`}</PostDetails>
+			<PostDetails>{`${isPrivate ? 'Private' : 'Public'}`}</PostDetails>
 		</SC.Details>{' '}
 		<SC.Title>{title}</SC.Title>
 		<SC.Body>{body}</SC.Body>

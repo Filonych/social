@@ -1,15 +1,14 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Container } from '../../components/ui/Container'
-import { Typo } from '../../components/ui/Typo'
-import { Post } from '../../components/ui/Post'
-import { Button } from '../../components/ui/Button'
-import { MainTitle } from '../../components/ui/MainTitle'
-import { PostsWrap } from '../../components/ui/Post/components/PostsWrap'
-import * as SC from './styles'
 import { useParams } from 'react-router-dom'
+import { Button } from '../../components/ui/Button'
+import { Container } from '../../components/ui/Container'
+import { Post } from '../../components/ui/Post'
+import { PostsWrap } from '../../components/ui/Post/components/PostsWrap'
+import { Typo } from '../../components/ui/Typo'
 import { getPostsByAuthor } from '../../redux/slices/postsSlice'
 import { RemoveFriend, addFriend } from '../../redux/slices/usersSlice'
+import * as SC from './styles'
 
 export const UserPage = () => {
 	const { user } = useSelector(state => state.user)
@@ -22,8 +21,6 @@ export const UserPage = () => {
 
 	const username = user?.username
 
-	console.log('user', user)
-
 	const onAddFriend = () => {
 		dispatch(addFriend({ username, author }))
 	}
@@ -31,10 +28,15 @@ export const UserPage = () => {
 	const onRemoveFriend = () => {
 		dispatch(RemoveFriend({ username, author }))
 	}
-	
 
 	useEffect(() => {
-		dispatch(getPostsByAuthor(author))
+		if (isAddedToFriends) {
+			dispatch(getPostsByAuthor({author}))
+		}
+		if (!isAddedToFriends) {
+			dispatch(getPostsByAuthor({author, privatePosts: false}))
+		}
+
 	}, [])
 
 	return (
@@ -46,7 +48,9 @@ export const UserPage = () => {
 					Add Friend
 				</Button>
 			)}
-			{user && !isAuthUser && isAddedToFriends && <Button onClick={onRemoveFriend}>Remove Friend</Button>}
+			{user && !isAuthUser && isAddedToFriends && (
+				<Button onClick={onRemoveFriend}>Remove Friend</Button>
+			)}
 			<Typo>Posts</Typo>
 			{loading && <>...Loading</>}
 			<PostsWrap>
@@ -60,9 +64,8 @@ export const UserPage = () => {
 							body={post.body}
 							postLink={`/posts/${post._id}`}
 							authorLink={`/users/${post.author}`}
+							isPrivate={post.isPrivate}
 						>
-							<div>{post.title}</div>
-							<div>{post.body}</div>
 						</Post>
 					))}
 			</PostsWrap>

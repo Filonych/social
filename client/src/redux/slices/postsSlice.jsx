@@ -24,15 +24,15 @@ export const getPostById = createAsyncThunk(
 
 export const getPostsByAuthor = createAsyncThunk(
   "posts/fetchByAuthor",
-  async (author) => {
-    return await postsAPI.fetchByAuthor(author);
+  async ({author, privatePosts}) => {
+    return await postsAPI.fetchByAuthor(author, privatePosts);
   }
 );
 
 export const addPost = createAsyncThunk(
   "posts/fetchNewPost",
-  async ({ title, body, date, author, isPrivate }) => {
-    return await postsAPI.fetchNewPost(title, body, date, author, isPrivate);
+  async ({ title, body, date, author, authorId, isPrivate }) => {
+    return await postsAPI.fetchNewPost(title, body, date, author, authorId, isPrivate);
   }
 );
 
