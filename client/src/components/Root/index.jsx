@@ -1,12 +1,20 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
-import { NavLink, Outlet } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { logout } from '../../redux/slices/usersSlice'
 import { Button } from '../ui/Button'
 import { Container } from '../ui/Container'
 import * as SC from './styles'
 
 export const Root = () => {
 	const { user } = useSelector(state => state.user)
+	const dispatch = useDispatch()
+	const navigate = useNavigate()
+
+	const onClickExitBtn = () => {
+		dispatch(logout())
+		navigate('/auth')
+	}
 	return (
 		<Container>
 			{/* <NavLink to={'/'}>Главная </NavLink>
@@ -33,9 +41,13 @@ export const Root = () => {
 					<SC.MenuItem to={'/registration'}>
 						<Button>Create account</Button>
 					</SC.MenuItem>
-					<SC.MenuItem>
-						<Button className='white'>Logout</Button>
-					</SC.MenuItem>
+					{user && (
+						<SC.MenuItem>
+							<Button className='white' onClick={onClickExitBtn}>
+								Logout
+							</Button>
+						</SC.MenuItem>
+					)}
 				</SC.MenuLinks>
 			</SC.Menu>
 

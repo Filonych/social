@@ -22,7 +22,7 @@ export const MainPage = () => {
 		if (user) {
 			dispatch(getPosts(user._id))
 		}
-	}, [])
+	}, [user])
 
 	return (
 		<Container>

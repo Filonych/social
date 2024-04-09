@@ -26,10 +26,6 @@ class PostsController {
 						{ isPrivate: false },
 					],
 				})
-
-				result = await PostsModel.find({
-					$or: [{ author: { $in: friends } }, { isPrivate: false }],
-				})
 			}
 
 			res.status(200).json({ posts: result })
@@ -56,14 +52,16 @@ class PostsController {
 	async getPostsByAuthor(req, res) {
 		try {
 			let result = []
-			if (req.params._privatePosts === false) {
+			const { _privatePosts } = req.query
+			if (_privatePosts === 'false') {
 				result = await PostsModel.find({
 					author: req.body.author,
 					isPrivate: false,
 				})
+				
+				
 			} else {
 				result = await PostsModel.find({ author: req.body.author })
-				console.log('result',result)
 			}
 
 			res.status(200).json({ posts: result })

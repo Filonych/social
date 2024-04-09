@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { Button } from '../../components/ui/Button'
 import { Container } from '../../components/ui/Container'
 import { Field } from '../../components/ui/Field'
@@ -11,13 +12,13 @@ import { login } from '../../redux/slices/usersSlice'
 export const AuthPage = () => {
 	const [formValues, setFormValues] = useState({ email: '', password: '' })
 	const { user } = useSelector(state => state.user)
-
-	console.log(user)
-
+	const navigate = useNavigate()
 	const dispatch = useDispatch()
+
 	const onSubmit = e => {
 		e.preventDefault()
 		dispatch(login(formValues))
+		navigate('/')
 	}
 
 	const onChange = (name, value) => {

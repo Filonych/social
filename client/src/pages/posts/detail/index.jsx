@@ -22,6 +22,8 @@ import * as SC from './styles'
 export const DetailPostPage = () => {
 	const { user } = useSelector(state => state.user)
 
+	console.log('user',user)
+
 	const { id } = useParams()
 	const { post, loading } = useSelector(state => state.posts.postForView)
 	const [showForm, setShowForm] = useState(false)
@@ -29,7 +31,7 @@ export const DetailPostPage = () => {
 
 	const likes = post?.likes?.length || 0
 	const commentsCount = post?.comments?.length || 0
-	const isLiked = post?.likes.includes(user._id)
+	const isLiked = post?.likes.includes(user?._id)
 
 	console.log('post',post )
 
@@ -38,7 +40,7 @@ export const DetailPostPage = () => {
 	}
 
 	const onSubmitForm = formValues => {
-		const date = Date.now()
+		const date = formatDate()
 		formValues = { ...formValues, id, date, author: user.username }
 		dispatch(addComment(formValues)).then(() => dispatch(getPostById(id)))
 	}
@@ -67,12 +69,13 @@ export const DetailPostPage = () => {
 						onLikePost={onLikePost}
 						isPrivate={post.isPrivate}
 					></DetailedPost>
-					<SC.ButtonsWrap>
+					{user && <SC.ButtonsWrap>
 						<Button className={isLiked ? undefined :'white'} onClick={onLikePost}>{isLiked ? 'Liked' : 'Like'}
 						</Button>
 						<Button onClick={() => setShowForm(true)}>Comment</Button>
 						<button onClick={onDeletePost}>Удалить</button>
-					</SC.ButtonsWrap>
+					</SC.ButtonsWrap>}
+					
 				</DetailedPostWrap>
 			)}
 
