@@ -17,12 +17,6 @@ export const Root = () => {
 	}
 	return (
 		<Container>
-			{/* <NavLink to={'/'}>Главная </NavLink>
-			{user && <NavLink>Мой профиль</NavLink>}
-			{user && <NavLink>Посты</NavLink>}
-			{!user && <NavLink to={'/auth'}>Войти</NavLink>}
-			{!user && <NavLink to={'/registration'}>Создать профиль</NavLink>}
-			{user && <NavLink>Выйти</NavLink>} */}
 			<SC.Menu>
 				<NavLink to={'/'}>
 					<img src='img/rocket.svg' />

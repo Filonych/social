@@ -3,17 +3,16 @@ import ReactDOM from 'react-dom/client'
 import { Provider } from 'react-redux'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { App } from './App'
-import { store } from './redux/store'
 import { Root } from './components/Root'
 import './index.css'
 import { AuthPage } from './pages/auth'
-import { RegistrationPage } from './pages/registration'
-import reportWebVitals from './reportWebVitals'
 import { FriendsPage } from './pages/friends'
-import { PostsPage } from './pages/posts'
-import { UserPage } from './pages/user'
-import { DetailPostPage } from './pages/posts/detail'
 import { AddPostPage } from './pages/posts/add/index'
+import { DetailPostPage } from './pages/posts/detail'
+import { RegistrationPage } from './pages/registration'
+import { UserPage } from './pages/user'
+import { store } from './redux/store'
+import reportWebVitals from './reportWebVitals'
 
 const router = createBrowserRouter([
 	{
@@ -44,10 +43,6 @@ const router = createBrowserRouter([
 				path: 'posts/:id',
 				element: <DetailPostPage />,
 			},
-			// {
-			// 	path: 'user',
-			// 	element: <UserPage />,
-			// },
 			{
 				path: 'users/:author',
 				element: <UserPage />,
