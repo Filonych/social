@@ -28,6 +28,18 @@ class UsersController {
 
 	async regUser(req, res) {
 		try {
+			const existingUser = await UsersModel.findOne({
+				$or: [{ username: req.body.username }, { email: req.body.email }],
+			})
+			
+			if (existingUser) {
+				return res
+					.status(400)
+					.json({
+						message:
+							'Пользователь с таким именем пользователя или адресом электронной почты уже существует',
+					})
+			}
 			const UserModel = new UsersModel({
 				username: req.body.username,
 				email: req.body.email,
@@ -103,27 +115,23 @@ class UsersController {
 		}
 	}
 
-
-	async removeFriend (req, res) {
+	async removeFriend(req, res) {
 		try {
-			const user = await UsersModel.findOne({username: req.body.username});
-			
-	
+			const user = await UsersModel.findOne({ username: req.body.username })
+
 			if (!user) {
-				return res.status(404).json({ message: 'Пользователь не найден' });
+				return res.status(404).json({ message: 'Пользователь не найден' })
 			}
-	
-			
-			user.friends = user.friends.filter(friend => friend !== req.body.friend);
-			await user.save();
-			
-	
-			res.status(200).json({ user });
+
+			user.friends = user.friends.filter(friend => friend !== req.body.friend)
+			await user.save()
+
+			res.status(200).json({ user })
 		} catch (error) {
-			console.error(error);
-			res.status(500).json({ message: 'Произошла ошибка при удалении друга' });
+			console.error(error)
+			res.status(500).json({ message: 'Произошла ошибка при удалении друга' })
 		}
-	};
+	}
 
 	//   async getPostById(req, res) {
 	//     try {

@@ -2,11 +2,10 @@ import styled from 'styled-components'
 
 export const Post = styled.div`
 	border-radius: 13px;
-	max-width: 250px;
 	height: 400px;
 	background: #fdf3ea;
-	padding: 51px;
-	width: 21%;
+	padding: 35px;
+	width: 25%;
 	display: flex;
 	justify-content: space-between;
 	flex-direction: column;
@@ -35,15 +34,21 @@ export const Post = styled.div`
 		background: #f1f1f1;
 	}
 `
+export const DetailsWrap = styled.div`
+	display: flex;
+	flex-direction: column;
+`
+
 export const Details = styled.div`
 	display: flex;
 `
 export const Title = styled.h2`
 	font-weight: 700;
 	font-size: 26px;
+	margin: 0;
 `
 
-export const Body = styled.h2`
+export const Body = styled.p`
 text-align: left;
 	font-weight: 500;
 	font-size: 16px;

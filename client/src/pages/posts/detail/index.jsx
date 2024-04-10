@@ -22,8 +22,6 @@ import * as SC from './styles'
 export const DetailPostPage = () => {
 	const { user } = useSelector(state => state.user)
 
-	console.log('user',user)
-
 	const { id } = useParams()
 	const { post, loading } = useSelector(state => state.posts.postForView)
 	const [showForm, setShowForm] = useState(false)
@@ -32,8 +30,6 @@ export const DetailPostPage = () => {
 	const likes = post?.likes?.length || 0
 	const commentsCount = post?.comments?.length || 0
 	const isLiked = post?.likes.includes(user?._id)
-
-	console.log('post',post )
 
 	const onDeletePost = () => {
 		dispatch(deletePost({ id }))

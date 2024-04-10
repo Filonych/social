@@ -9,6 +9,7 @@ import { Typo } from '../../components/ui/Typo'
 import { getPostsByAuthor } from '../../redux/slices/postsSlice'
 import { RemoveFriend, addFriend } from '../../redux/slices/usersSlice'
 import * as SC from './styles'
+import { Loader } from '../../components/ui/Loader'
 
 export const UserPage = () => {
 	const { user } = useSelector(state => state.user)
@@ -19,6 +20,7 @@ export const UserPage = () => {
 
 	const isAuthUser = user?.username === author
 	const isAddedToFriends = user?.friends.includes(author)
+	const noPosts = !!list?.length
 
 	const username = user?.username
 
@@ -52,8 +54,8 @@ export const UserPage = () => {
 			{user && !isAuthUser && isAddedToFriends && (
 				<Button onClick={onRemoveFriend}>Remove Friend</Button>
 			)}
-			<Typo>Posts</Typo>
-			{loading && <>...Loading</>}
+			{noPosts && <Typo>Posts</Typo>}
+			{loading && <Loader/>}
 			<PostsWrap>
 				{list &&
 					list.map(post => (

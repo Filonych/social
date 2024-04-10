@@ -1,62 +1,84 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { Button } from '../../components/ui/Button'
+import { Container } from '../../components/ui/Container'
 import { Field } from '../../components/ui/Field'
 import { Form } from '../../components/ui/Form'
 import { Input } from '../../components/ui/Input'
-import { regNewUser } from '../../redux/slices/usersSlice'
-import { Container } from '../../components/ui/Container'
+import { Modal } from '../../components/ui/Modal'
 import { MainTitle } from '../../components/ui/MainTitle'
+import { regNewUser } from '../../redux/slices/usersSlice'
 
 const DEFAULT_VALUES = { username: '', email: '', password: '' }
+const SUCCESSED_TEXT = "Вы успешно зарегистрировались";
+const FAILED_TEXT = "Пользователь с таким email уже существует";
 
 export const RegistrationPage = () => {
 	const [formValues, setFormValues] = useState(DEFAULT_VALUES)
+
+	const [showModal, setShowModal] = useState(false)
+	const [modalText, setModalText] = useState('')
+
 	const dispatch = useDispatch()
-	const onSubmit = e => {
+  const navigate = useNavigate();
+
+	const onSubmit = async e => {
 		e.preventDefault()
-		console.log(formValues)
-		dispatch(regNewUser(formValues))
+		const response = await dispatch(regNewUser(formValues))
+		
 	}
 
 	const onChange = (name, value) => {
-    setFormValues({ ...formValues, [name]: value });
+		setFormValues({ ...formValues, [name]: value })
+	}
+
+	const onHandleClose = () => {
+    if (modalText === SUCCESSED_TEXT) {
+      navigate("/auth");
+    }
+    setShowModal(false);
   };
 
-	return (<Container>
-		
-		<MainTitle first='Create' second='account' />
-		<Form onSubmit={onSubmit}>
-			<Field>
-				<Input
-					type='text'
-					name='username'
-					value={formValues.username}
-					placeholder='Username'
-					onChange={e => onChange(e.target.name, e.target.value)}
+	return (
+		<Container>
+			{showModal && (
+				<Modal
+					text={modalText}
+					buttons={<Button onClick={() => onHandleClose()}>ОК</Button>}
 				/>
-			</Field>
-			<Field>
-				<Input
-					type='email'
-					name='email'
-					value={formValues.email}
-					placeholder='E-mail'
-					onChange={e => onChange(e.target.name, e.target.value)}
-				/>
-			</Field>
-			<Field>
-				<Input
-					type='password'
-					name='password'
-					value={formValues.password}
-					placeholder='Password'
-					onChange={e => onChange(e.target.name, e.target.value)}
-				/>
-			</Field>
-			<Button type='submit'>Create account</Button>
-		</Form>
-	</Container>
-		
+			)}
+			<MainTitle first='Create' second='account' />
+			<Form onSubmit={onSubmit}>
+				<Field>
+					<Input
+						type='text'
+						name='username'
+						value={formValues.username}
+						placeholder='Username'
+						onChange={e => onChange(e.target.name, e.target.value)}
+					/>
+				</Field>
+				<Field>
+					<Input
+						type='email'
+						name='email'
+						value={formValues.email}
+						placeholder='E-mail'
+						onChange={e => onChange(e.target.name, e.target.value)}
+					/>
+				</Field>
+				<Field>
+					<Input
+						type='password'
+						name='password'
+						value={formValues.password}
+						placeholder='Password'
+						onChange={e => onChange(e.target.name, e.target.value)}
+					/>
+				</Field>
+				<Button type='submit'>Create account</Button>
+			</Form>
+		</Container>
 	)
 }

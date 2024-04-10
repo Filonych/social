@@ -4,16 +4,27 @@ const UsersModel = require('../models/usersModel')
 class PostsController {
 	async getPosts(req, res) {
 		try {
-			const { _userId } = req.query
+			const { _userId, _page } = req.query
 
 			let result = []
+			let totalCount = 0
+
+			const page = parseInt(_page) || 1
 
 			if (_userId === '660ffb90bf8311e942dff41c') {
 				result = await PostsModel.find()
+					.sort({ date: -1 })
+					.skip((page - 1) * 6)
+					.limit(6)
+				totalCount = await PostsModel.countDocuments({})
 			}
 
 			if (_userId === 'undefined') {
 				result = await PostsModel.find({ isPrivate: false })
+					.sort({ date: -1 })
+					.skip((page - 1) * 6)
+					.limit(6)
+				totalCount = await PostsModel.countDocuments({ isPrivate: false })
 			}
 
 			if (_userId !== 'undefined' && _userId !== '660ffb90bf8311e942dff41c') {
@@ -26,9 +37,26 @@ class PostsController {
 						{ isPrivate: false },
 					],
 				})
+					.sort({ date: -1 })
+					.skip((page - 1) * 6)
+					.limit(6)
+				totalCount = await PostsModel.countDocuments({
+					$or: [
+						{ authorId: _userId },
+						{ author: { $in: friends } },
+						{ isPrivate: false },
+					],
+				})
 			}
 
-			res.status(200).json({ posts: result })
+			res.status(200).json({
+				posts: {
+					metadata: {
+						totalCount,
+					},
+					result,
+				},
+			})
 		} catch (error) {
 			res.status(400).json({ message: 'Произошла ошибка при получении' })
 		}
@@ -58,8 +86,6 @@ class PostsController {
 					author: req.body.author,
 					isPrivate: false,
 				})
-				
-				
 			} else {
 				result = await PostsModel.find({ author: req.body.author })
 			}

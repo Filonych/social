@@ -1,14 +1,17 @@
 export const postsAPI = {
-	async fetchPosts(userId) {
+	async fetchPosts(userId, currentPage) {
 		try {
 			const response = await fetch(
-				`http://localhost:3005/api/posts/list/?_userId=${userId}`
+				`http://localhost:3005/api/posts/list/?_userId=${userId}&_page=${currentPage}`
 			)
 			if (!response.ok) {
 				throw new Error('Ошибка при получении данных')
 			}
-			const posts = await response.json()
-			return posts
+			const responseData = await response.json();
+      const posts = responseData.posts.result;
+      const totalCount = responseData.posts.metadata.totalCount;
+			console.log('posts',posts)
+      return { posts, totalCount };
 		} catch (ex) {
 			console.log(ex)
 		}

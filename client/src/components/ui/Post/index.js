@@ -13,13 +13,16 @@ export const Post = ({
 	isPrivate,
 }) => (
 	<SC.Post>
-		<SC.Details>
-			<PostDetails>
-				<Link to={authorLink}>{author}</Link>
-			</PostDetails>
-			<PostDetails>{date}</PostDetails>
-			<PostDetails>{`${isPrivate ? 'Private' : 'Public'}`}</PostDetails>
-		</SC.Details>{' '}
+		<SC.DetailsWrap>
+			<SC.Details>{`${isPrivate ? 'Private' : 'Public'}`}</SC.Details>
+			<SC.Details>
+				<PostDetails>
+					<Link to={authorLink}>{author}</Link>
+				</PostDetails>
+				<PostDetails>{date}</PostDetails>
+			</SC.Details>
+		</SC.DetailsWrap>
+
 		<SC.Title>{title}</SC.Title>
 		<SC.Body>{body}</SC.Body>
 		<Link to={postLink}>View post...</Link>

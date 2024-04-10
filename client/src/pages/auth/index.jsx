@@ -7,17 +7,26 @@ import { Field } from '../../components/ui/Field'
 import { Form } from '../../components/ui/Form'
 import { Input } from '../../components/ui/Input'
 import { MainTitle } from '../../components/ui/MainTitle'
+import { Modal } from '../../components/ui/Modal'
 import { login } from '../../redux/slices/usersSlice'
 
 export const AuthPage = () => {
 	const [formValues, setFormValues] = useState({ email: '', password: '' })
+	const [showModal, setShowModal] = useState(null)
 	const { user } = useSelector(state => state.user)
 	const navigate = useNavigate()
 	const dispatch = useDispatch()
 
-	const onSubmit = e => {
+	const onSubmit = async e => {
 		e.preventDefault()
-		dispatch(login(formValues))
+
+		const response = await dispatch(login(formValues))
+
+		if (response.payload.message === 'Пользователь не найден') {
+			setShowModal(true)
+			return
+		}
+
 		navigate('/')
 	}
 
@@ -26,6 +35,12 @@ export const AuthPage = () => {
 	}
 	return (
 		<Container>
+			{showModal && (
+				<Modal
+					text='Данный пользователь не найден'
+					buttons={<Button onClick={() => setShowModal(false)}>ОК</Button>}
+				/>
+			)}
 			<MainTitle first='Login' />
 			<Form onSubmit={onSubmit}>
 				<Field>

@@ -3,8 +3,8 @@ import { postsAPI } from "../../api/postsAPI";
 
 export const getPosts = createAsyncThunk(
   "posts/fetchPosts",
-  async (user) => {
-    return await postsAPI.fetchPosts(user);
+  async ({ user, currentPage }) => {
+    return await postsAPI.fetchPosts(user, currentPage);
   }
 );
 
@@ -70,6 +70,7 @@ const initialState = {
     list: null,
     loading: false,
   },
+  totalCount: 0
 };
 
 export const postsSlice = createSlice({
@@ -96,6 +97,7 @@ export const postsSlice = createSlice({
           list: action.payload.posts,
           loading: false,
         };
+        state.totalCount = action.payload.totalCount;
       })
 
       .addCase(getPostsByAuthor.pending, (state) => {
