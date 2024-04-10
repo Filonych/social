@@ -19,11 +19,6 @@ export const Body = styled.h2`
 	text-align: left;
 	line-height: 187%;
 	color: #58595d;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	display: -webkit-box;
-	-webkit-line-clamp: 6;
-	-webkit-box-orient: vertical;
 `
 
 export const Link = styled.div`

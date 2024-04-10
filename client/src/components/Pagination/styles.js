@@ -4,6 +4,7 @@ export const Wrap = styled.div`
   display: flex;
   justify-content: center;
   gap: 25px;
+  margin-top: 30px;
 `;
 
 export const Page = styled.div`
@@ -14,6 +15,7 @@ export const Page = styled.div`
   }
 
   &.active {
-    color: #00bcd4;
+    color: #009387;
+    font-weight: bold;
   }
 `;

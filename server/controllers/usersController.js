@@ -31,14 +31,12 @@ class UsersController {
 			const existingUser = await UsersModel.findOne({
 				$or: [{ username: req.body.username }, { email: req.body.email }],
 			})
-			
+
 			if (existingUser) {
-				return res
-					.status(400)
-					.json({
-						message:
-							'Пользователь с таким именем пользователя или адресом электронной почты уже существует',
-					})
+				return res.status(400).json({
+					message:
+						'Пользователь с таким именем пользователя или адресом электронной почты уже существует',
+				})
 			}
 			const UserModel = new UsersModel({
 				username: req.body.username,

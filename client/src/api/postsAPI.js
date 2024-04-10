@@ -7,11 +7,11 @@ export const postsAPI = {
 			if (!response.ok) {
 				throw new Error('Ошибка при получении данных')
 			}
-			const responseData = await response.json();
-      const posts = responseData.posts.result;
-      const totalCount = responseData.posts.metadata.totalCount;
-			console.log('posts',posts)
-      return { posts, totalCount };
+			const responseData = await response.json()
+			const posts = responseData.posts.result
+			const totalCount = responseData.posts.metadata.totalCount
+			console.log('posts', posts)
+			return { posts, totalCount }
 		} catch (ex) {
 			console.log(ex)
 		}
@@ -31,13 +31,16 @@ export const postsAPI = {
 
 	fetchByAuthor(author, privatePosts) {
 		try {
-			return fetch(`http://localhost:3005/api/posts/byAuthor/?_privatePosts=${privatePosts}`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({ author }),
-			})
+			return fetch(
+				`http://localhost:3005/api/posts/byAuthor/?_privatePosts=${privatePosts}`,
+				{
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({ author }),
+				}
+			)
 				.then(response => response.json())
 				.then(posts => posts)
 		} catch (ex) {
@@ -99,7 +102,7 @@ export const postsAPI = {
 		}
 	},
 
-	fetchAddComment(body, id, date, author) {
+	fetchAddComment(body, id, date, author, commentId) {
 		try {
 			return fetch('http://localhost:3005/api/posts/comment', {
 				method: 'POST',
@@ -108,6 +111,7 @@ export const postsAPI = {
 					id,
 					date,
 					author,
+					commentId,
 				}),
 				headers: {
 					'Content-type': 'application/json; charset=UTF-8',

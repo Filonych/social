@@ -33,14 +33,18 @@ export const Root = () => {
 							{user.username}
 						</SC.MenuItem>
 					)}
-					<SC.MenuItem to={'/friends'}>Friends</SC.MenuItem>
-					<SC.MenuItem to={'/add'}>Add Post</SC.MenuItem>
-					<SC.MenuItem to={'/auth'}>
-						<Button className='white'>Login</Button>
-					</SC.MenuItem>
-					<SC.MenuItem to={'/registration'}>
-						<Button>Create account</Button>
-					</SC.MenuItem>
+					{user && <SC.MenuItem to={'/friends'}>Friends</SC.MenuItem>}
+					{user && <SC.MenuItem to={'/add'}>Add Post</SC.MenuItem>}
+					{!user && (
+						<SC.MenuItem to={'/auth'}>
+							<Button className='white'>Login</Button>
+						</SC.MenuItem>
+					)}
+					{!user && (
+						<SC.MenuItem to={'/registration'}>
+							<Button>Create account</Button>
+						</SC.MenuItem>
+					)}
 					{user && (
 						<SC.MenuItem>
 							<Button className='white' onClick={onClickExitBtn}>

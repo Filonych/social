@@ -40,7 +40,7 @@ export const UserPage = () => {
 			dispatch(getPostsByAuthor({author, privatePosts: false}))
 		}
 
-	}, [author])
+	}, [author, user])
 
 	return (
 		<Container>

@@ -11,9 +11,9 @@ class PostsController {
 
 			const page = parseInt(_page) || 1
 
-			if (_userId === '660ffb90bf8311e942dff41c') {
+			if (_userId === '6616aae42dae08b279a06b43') {
 				result = await PostsModel.find()
-					.sort({ date: -1 })
+					.sort({ _id: -1 })
 					.skip((page - 1) * 6)
 					.limit(6)
 				totalCount = await PostsModel.countDocuments({})
@@ -21,13 +21,13 @@ class PostsController {
 
 			if (_userId === 'undefined') {
 				result = await PostsModel.find({ isPrivate: false })
-					.sort({ date: -1 })
+					.sort({ _id: -1 })
 					.skip((page - 1) * 6)
 					.limit(6)
 				totalCount = await PostsModel.countDocuments({ isPrivate: false })
 			}
 
-			if (_userId !== 'undefined' && _userId !== '660ffb90bf8311e942dff41c') {
+			if (_userId !== 'undefined' && _userId !== '6616aae42dae08b279a06b43') {
 				const user = await UsersModel.findOne({ _id: _userId })
 				const friends = user.friends
 				result = await PostsModel.find({
@@ -37,7 +37,7 @@ class PostsController {
 						{ isPrivate: false },
 					],
 				})
-					.sort({ date: -1 })
+					.sort({ _id: -1 })
 					.skip((page - 1) * 6)
 					.limit(6)
 				totalCount = await PostsModel.countDocuments({
@@ -142,8 +142,8 @@ class PostsController {
 						comments: {
 							body: req.body.body,
 							author: req.body.author,
-							authorId: req.body.authorId,
 							date: req.body.date,
+							id: req.body.commentId
 						},
 					},
 				},

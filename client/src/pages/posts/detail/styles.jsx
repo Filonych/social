@@ -53,6 +53,7 @@ export const PostDetailsWrap = styled.div`
 export const CommentText = styled.div`
 	border-left: 5px solid #fff;
 	padding-left: 15px;
+	text-align: left;
 
 	/* &:before {
 		content: '';

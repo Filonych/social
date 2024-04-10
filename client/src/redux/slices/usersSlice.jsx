@@ -52,6 +52,9 @@ export const usersSlice = createSlice({
 			.addCase(login.fulfilled, (state, action) => {
 				return { ...state, user: action.payload.user }
 			})
+			// .addCase(regNewUser.fulfilled, (state, action) => {
+			// 	return { ...state, user: action.payload.user }
+			// })
 			.addCase(addFriend.fulfilled, (state, action) => {
 				return { ...state, user: action.payload.user }
 			})

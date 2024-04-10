@@ -21,6 +21,7 @@ export const AuthPage = () => {
 		e.preventDefault()
 
 		const response = await dispatch(login(formValues))
+		console.log(response)
 
 		if (response.payload.message === 'Пользователь не найден') {
 			setShowModal(true)

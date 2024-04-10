@@ -45,8 +45,8 @@ export const deletePost = createAsyncThunk(
 
 export const addComment = createAsyncThunk(
   "posts/fetchAddComment",
-  async ({ body, id, date, author }) => {
-    return await postsAPI.fetchAddComment(body, id, date, author);
+  async ({ body, id, date, author, commentId }) => {
+    return await postsAPI.fetchAddComment(body, id, date, author, commentId);
   }
 );
 

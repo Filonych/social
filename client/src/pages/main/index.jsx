@@ -46,7 +46,7 @@ export const MainPage = () => {
 						></Post>
 					))}
 			</PostsWrap>
-			<Pagination currentPage={currentPage} setCurrentPage={setCurrentPage}/>
+			{list && <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage}/>}
 		</Container>
 	)
 }

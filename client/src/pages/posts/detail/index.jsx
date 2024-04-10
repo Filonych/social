@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { Button } from '../../../components/ui/Button'
 import { Container } from '../../../components/ui/Container'
 import { DetailedPost } from '../../../components/ui/DetailedPost'
@@ -9,6 +9,7 @@ import { Link } from '../../../components/ui/Link'
 import { Loader } from '../../../components/ui/Loader'
 import { PostDetails } from '../../../components/ui/Post/components/PostDetails'
 import { Typo } from '../../../components/ui/Typo'
+import { Modal } from '../../../components/ui/Modal'
 import { formatDate } from '../../../helpers/formatDate'
 import {
 	addComment,
@@ -25,7 +26,9 @@ export const DetailPostPage = () => {
 	const { id } = useParams()
 	const { post, loading } = useSelector(state => state.posts.postForView)
 	const [showForm, setShowForm] = useState(false)
+  const [showModal, setShowModal] = useState(false);
 	const dispatch = useDispatch()
+	const navigate = useNavigate()
 
 	const likes = post?.likes?.length || 0
 	const commentsCount = post?.comments?.length || 0
@@ -33,17 +36,27 @@ export const DetailPostPage = () => {
 
 	const onDeletePost = () => {
 		dispatch(deletePost({ id }))
+		setShowModal(true)
 	}
 
 	const onSubmitForm = formValues => {
 		const date = formatDate()
-		formValues = { ...formValues, id, date, author: user.username }
+		const commentId = new Date().getTime()
+		formValues = { ...formValues, id, date, author: user.username, commentId }
 		dispatch(addComment(formValues)).then(() => dispatch(getPostById(id)))
+		setShowForm(false)
 	}
 
 	const onLikePost = () => {
 		dispatch(likePost({ id, user: user._id }))
 	}
+
+	const onCloseModal = () => {
+    
+      navigate("/");
+			setShowModal(false);
+    
+  };
 
 	useEffect(() => {
 		dispatch(getPostById(id))
@@ -51,6 +64,12 @@ export const DetailPostPage = () => {
 
 	return (
 		<Container>
+			{showModal && (
+        <Modal
+          text="Пост успешно удалён"
+          buttons={<Button onClick={() => onCloseModal()}>ОК</Button>}
+        />
+      )}
 			{loading && <Loader />}
 			{post && (
 				<DetailedPostWrap>
@@ -69,8 +88,8 @@ export const DetailPostPage = () => {
 						<Button className={isLiked ? undefined :'white'} onClick={onLikePost}>{isLiked ? 'Liked' : 'Like'}
 						</Button>
 						<Button onClick={() => setShowForm(true)}>Comment</Button>
-						<button onClick={onDeletePost}>Удалить</button>
-					</SC.ButtonsWrap>}
+						{user._isAdmin && <button onClick={onDeletePost}>Удалить</button>}
+					</SC.ButtonsWrap> }
 					
 				</DetailedPostWrap>
 			)}
@@ -80,7 +99,7 @@ export const DetailPostPage = () => {
 			<SC.CommentsWrap>
 				{post?.comments &&
 					post.comments.map(comment => (
-						<SC.CommentWrap key={`${comment.author}_${comment.date}`}>
+						<SC.CommentWrap key={comment.id}>
 							<SC.PostDetailsWrap>
 								<PostDetails>
 									<Link to={`/users/${comment.author}`}>{comment.author}</Link>
