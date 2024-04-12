@@ -12,18 +12,19 @@ export const Button = styled.button`
 	color: ${({ className }) => (className === 'white' ? 'black' : 'white')};
 	cursor: pointer;
 
-	&:hover {
+	&:not(:disabled):hover {
 		background: ${({ className }) =>
 			className === 'white' ? '#ff6d2c' : '#009387'};
 		color: white;
 	}
 
+	&:not(:disabled):active {
+		box-shadow: none;
+		transform: translateY(2px);
+	}
+
 	&:disabled {
 		opacity: 0.5;
 		cursor: default;
-	}
-
-	&:active {  box-shadow: none;
-  transform: translateY(2px);
 	}
 `

@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
-export const PostsWrap = styled.div`
+export const Posts = styled.div`
 	display: flex;
 	flex-wrap: wrap;
-  gap: 30px;
+	gap: 30px;
 `

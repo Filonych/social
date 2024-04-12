@@ -1,19 +1,19 @@
 import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
 import { Button } from '../../../../components/ui/Button'
 import { Container } from '../../../../components/ui/Container'
 import { Field } from '../../../../components/ui/Field'
 import { Form } from '../../../../components/ui/Form'
 import { Typo } from '../../../../components/ui/Typo'
 import * as SC from './styles'
-import { useSelector } from 'react-redux'
 
 // TODO: поправить тут весь код, он полностью скопирован
 
 const DEFAULT_VALUES = { body: '' }
 
 export const CommentForm = ({ title, onSubmitForm, defaultValues }) => {
-	const { user } = useSelector((state) => state.user)
 	const [formValues, setFormValues] = useState(defaultValues || DEFAULT_VALUES)
+	
 	const disabled = !formValues.body
 
 	const onSubmit = e => {

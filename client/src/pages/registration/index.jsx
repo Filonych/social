@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '../../components/ui/Button'
 import { Container } from '../../components/ui/Container'
@@ -8,36 +8,24 @@ import { Form } from '../../components/ui/Form'
 import { Input } from '../../components/ui/Input'
 import { MainTitle } from '../../components/ui/MainTitle'
 import { Modal } from '../../components/ui/Modal'
-import { regNewUser } from '../../redux/slices/usersSlice'
+import { clearMessage, regNewUser } from '../../redux/slices/usersSlice'
 
 const DEFAULT_VALUES = { username: '', email: '', password: '' }
-const SUCCESSED_TEXT = 'Вы успешно зарегистрировались'
-const FAILED_TEXT = 'Пользователь с таким email уже существует'
 
 export const RegistrationPage = () => {
+	const dispatch = useDispatch()
+	const navigate = useNavigate()
+
+	const { message } = useSelector(state => state.user)
+
 	const [formValues, setFormValues] = useState(DEFAULT_VALUES)
 
 	const disabled =
 		!formValues.username || !formValues.email || !formValues.password
 
-	const [showModal, setShowModal] = useState(false)
-	const [modalText, setModalText] = useState('')
-
-	const dispatch = useDispatch()
-	const navigate = useNavigate()
-
-	const onSubmit = async e => {
+	const onSubmit = e => {
 		e.preventDefault()
-		const response = await dispatch(regNewUser(formValues))
-		console.log(response)
-
-		if (
-			response?.payload?.message ===
-			'Пользователь с таким именем пользователя или адресом электронной почты уже существует'
-		) {
-			setShowModal(true)
-			return
-		}
+		dispatch(regNewUser(formValues))
 	}
 
 	const onChange = (name, value) => {
@@ -45,17 +33,17 @@ export const RegistrationPage = () => {
 	}
 
 	const onHandleClose = () => {
-		if (modalText === SUCCESSED_TEXT) {
+		if (message === 'User successfully added') {
 			navigate('/auth')
 		}
-		setShowModal(false)
+		dispatch(clearMessage())
 	}
 
 	return (
 		<Container>
-			{showModal && (
+			{message && (
 				<Modal
-					text={modalText}
+					text={message}
 					buttons={<Button onClick={() => onHandleClose()}>ОК</Button>}
 				/>
 			)}

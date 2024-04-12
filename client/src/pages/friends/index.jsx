@@ -8,19 +8,16 @@ import * as SC from './styles'
 export const FriendsPage = () => {
 	const { user } = useSelector(state => state.user)
 
-	const isUser = user?.friends
-
 	return (
 		<Container>
 			<MainTitle first='My' second='friends' />
 			<SC.Wrap>
-				{isUser &&
-					user.friends.map(friend => (
-						<SC.Friend key={friend}>
-							<SC.Image></SC.Image>
-							<Link to={`/users/${friend}`}>{friend}</Link>
-						</SC.Friend>
-					))}
+				{user.friends.map(friend => (
+					<SC.Friend key={friend}>
+						<SC.Image></SC.Image>
+						<Link to={`/users/${friend}`}>{friend}</Link>
+					</SC.Friend>
+				))}
 			</SC.Wrap>
 		</Container>
 	)

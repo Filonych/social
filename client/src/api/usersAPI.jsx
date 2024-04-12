@@ -1,7 +1,7 @@
 export const usersAPI = {
-	fetchNewUser(username, email, password) {
+	async fetchNewUser(username, email, password) {
 		try {
-			fetch('http://localhost:3005/api/users/add', {
+			const response = await fetch('http://localhost:3005/api/users/add', {
 				method: 'POST',
 				body: JSON.stringify({
 					username,
@@ -12,54 +12,62 @@ export const usersAPI = {
 					'Content-type': 'application/json; charset=UTF-8',
 				},
 			})
+			const message = await response.json()
+			return message
 		} catch (ex) {
 			console.log(ex)
 		}
 	},
 
-	fetchLogin(email, password) {
+	async fetchLogin(email, password) {
 		try {
-			return fetch('http://localhost:3005/api/users/login', {
+			const response = await fetch('http://localhost:3005/api/users/login', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
 				},
 				body: JSON.stringify({ email, password }),
 			})
-				.then(response => response.json())
-				.then(user => user)
+			const user = await response.json()
+			return user
 		} catch (ex) {
 			console.log(ex)
 		}
 	},
 
-	fetchAddFriend(username, friend) {
+	async fetchAddFriend(username, friend) {
 		try {
-			return fetch('http://localhost:3005/api/users/addFriend', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({ username, friend }),
-			})
-				.then(response => response.json())
-				.then(user => user)
+			const response = await fetch(
+				'http://localhost:3005/api/users/addFriend',
+				{
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({ username, friend }),
+				}
+			)
+			const user = await response.json()
+			return user
 		} catch (ex) {
 			console.log(ex)
 		}
 	},
 
-	fetchRemoveFriend(username, friend) {
+	async fetchRemoveFriend(username, friend) {
 		try {
-			return fetch('http://localhost:3005/api/users/removeFriend', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({ username, friend }),
-			})
-				.then(response => response.json())
-				.then(user => user)
+			const response = await fetch(
+				'http://localhost:3005/api/users/removeFriend',
+				{
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({ username, friend }),
+				}
+			)
+			const user = await response.json()
+			return user
 		} catch (ex) {
 			console.log(ex)
 		}

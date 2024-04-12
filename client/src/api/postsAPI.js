@@ -10,28 +10,15 @@ export const postsAPI = {
 			const responseData = await response.json()
 			const posts = responseData.posts.result
 			const totalCount = responseData.posts.metadata.totalCount
-			console.log('posts', posts)
 			return { posts, totalCount }
 		} catch (ex) {
 			console.log(ex)
 		}
 	},
 
-	// fetchFreshPosts(limit = 3) {
-	//   try {
-	//     return fetch(
-	//       `http://localhost:3003/api/posts/list/?_perPage=${limit}&_sort=id&_order=desc`
-	//     )
-	//       .then((response) => response.json())
-	//       .then((posts) => posts.posts.data);
-	//   } catch (ex) {
-	//     console.log(ex);
-	//   }
-	// },
-
-	fetchByAuthor(author, privatePosts) {
+	async fetchByAuthor(author, privatePosts) {
 		try {
-			return fetch(
+			const response = await fetch(
 				`http://localhost:3005/api/posts/byAuthor/?_privatePosts=${privatePosts}`,
 				{
 					method: 'POST',
@@ -41,29 +28,29 @@ export const postsAPI = {
 					body: JSON.stringify({ author }),
 				}
 			)
-				.then(response => response.json())
-				.then(posts => posts)
+			const posts = await response.json()
+			return posts
 		} catch (ex) {
 			console.log(ex)
 		}
 	},
 
-	fetchbyId(id) {
+	async fetchbyId(id) {
 		try {
 			if (!id) {
 				throw new Error('ID is broken')
 			}
-			return fetch(`http://localhost:3005/api/posts/list/${id}`)
-				.then(response => response.json())
-				.then(post => post)
+			const response = await fetch(`http://localhost:3005/api/posts/list/${id}`)
+			const post = await response.json()
+			return post
 		} catch (ex) {
 			console.log(ex)
 		}
 	},
 
-	fetchNewPost(title, body, date, author, authorId, isPrivate) {
+	async fetchNewPost(title, body, date, author, authorId, isPrivate) {
 		try {
-			fetch('http://localhost:3005/api/posts/add', {
+			const response = await fetch('http://localhost:3005/api/posts/add', {
 				method: 'POST',
 				body: JSON.stringify({
 					title,
@@ -77,17 +64,19 @@ export const postsAPI = {
 					'Content-type': 'application/json; charset=UTF-8',
 				},
 			})
+			const message = await response.json()
+			return message
 		} catch (ex) {
 			console.log(ex)
 		}
 	},
 
-	fetchDeletePost(id) {
+	async fetchDeletePost(id) {
 		try {
 			if (!id) {
 				throw new Error('ID is broken')
 			}
-			fetch(`http://localhost:3005/api/posts/delete`, {
+			const response = await fetch(`http://localhost:3005/api/posts/delete`, {
 				method: 'DELETE',
 				headers: {
 					Accept: 'application/json',
@@ -97,14 +86,16 @@ export const postsAPI = {
 					id,
 				}),
 			})
+			const message = response.json()
+			return message
 		} catch (ex) {
 			console.log(ex)
 		}
 	},
 
-	fetchAddComment(body, id, date, author, commentId) {
+	async fetchAddComment(body, id, date, author, commentId) {
 		try {
-			return fetch('http://localhost:3005/api/posts/comment', {
+			const response = await fetch('http://localhost:3005/api/posts/comment', {
 				method: 'POST',
 				body: JSON.stringify({
 					body,
@@ -117,17 +108,16 @@ export const postsAPI = {
 					'Content-type': 'application/json; charset=UTF-8',
 				},
 			})
-				.then(response => response.json())
-				.then(post => post)
+			const post = response.json()
+			return post
 		} catch (ex) {
 			console.log(ex)
 		}
 	},
 
-	fetchLikePost(id, user) {
+	async fetchLikePost(id, user) {
 		try {
-			console.log('id', id)
-			return fetch('http://localhost:3005/api/posts/likePost', {
+			const response = await fetch('http://localhost:3005/api/posts/likePost', {
 				method: 'POST',
 				body: JSON.stringify({
 					id,
@@ -137,8 +127,8 @@ export const postsAPI = {
 					'Content-type': 'application/json; charset=UTF-8',
 				},
 			})
-				.then(response => response.json())
-				.then(post => post)
+			const post = response.json()
+			return post
 		} catch (ex) {
 			console.log(ex)
 		}

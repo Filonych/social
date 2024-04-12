@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '../../components/ui/Button'
 import { Container } from '../../components/ui/Container'
@@ -10,20 +10,23 @@ import { MainTitle } from '../../components/ui/MainTitle'
 import { Modal } from '../../components/ui/Modal'
 import { login } from '../../redux/slices/usersSlice'
 
+const DEFAULT_VALUES = { email: '', password: '' }
+
 export const AuthPage = () => {
-	const [formValues, setFormValues] = useState({ email: '', password: '' })
-	const [showModal, setShowModal] = useState(null)
-	const { user } = useSelector(state => state.user)
 	const navigate = useNavigate()
 	const dispatch = useDispatch()
+
+	const [formValues, setFormValues] = useState(DEFAULT_VALUES)
+	const [showModal, setShowModal] = useState(null)
+
+	const disabled = !formValues.email || !formValues.password
 
 	const onSubmit = async e => {
 		e.preventDefault()
 
 		const response = await dispatch(login(formValues))
-		console.log(response)
 
-		if (response.payload.message === 'Пользователь не найден') {
+		if (response.payload.message === 'User not found') {
 			setShowModal(true)
 			return
 		}
@@ -38,7 +41,7 @@ export const AuthPage = () => {
 		<Container>
 			{showModal && (
 				<Modal
-					text='Данный пользователь не найден'
+					text='User not found'
 					buttons={<Button onClick={() => setShowModal(false)}>ОК</Button>}
 				/>
 			)}
@@ -58,11 +61,11 @@ export const AuthPage = () => {
 						type='password'
 						name='password'
 						value={formValues.password}
-						placeholder='Пароль'
+						placeholder='Password'
 						onChange={e => onChange(e.target.name, e.target.value)}
 					/>
 				</Field>
-				<Button type='submit'>Войти</Button>
+				<Button type='submit' disabled={disabled}>Login</Button>
 			</Form>
 		</Container>
 	)

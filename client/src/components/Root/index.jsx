@@ -7,9 +7,10 @@ import { Container } from '../ui/Container'
 import * as SC from './styles'
 
 export const Root = () => {
-	const { user } = useSelector(state => state.user)
 	const dispatch = useDispatch()
 	const navigate = useNavigate()
+
+	const { user } = useSelector(state => state.user)
 
 	const onClickExitBtn = () => {
 		dispatch(logout())

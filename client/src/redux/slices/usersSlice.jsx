@@ -31,30 +31,32 @@ export const login = createAsyncThunk(
 
 const initialState = {
 	user: null,
+	message: null,
 }
 
 export const usersSlice = createSlice({
 	name: 'user',
 	initialState,
 	reducers: {
-    logout: (state) => {
-      state.user = null;
-    },
-  },
+		logout: state => {
+			state.user = null
+		},
+		clearMessage: state => {
+			state.message = null
+		},
+	},
 	extraReducers: builder => {
 		builder
-			//     .addCase(getPosts.pending, (state) => {
-			//       state.posts = {
-			//         list: null,
-			//         loading: true,
-			//       };
-			//     })
-			.addCase(login.fulfilled, (state, action) => {
-				return { ...state, user: action.payload.user }
+			.addCase(regNewUser.fulfilled, (state, action) => {
+				return { ...state, message: action.payload.message }
 			})
-			// .addCase(regNewUser.fulfilled, (state, action) => {
-			// 	return { ...state, user: action.payload.user }
-			// })
+			.addCase(login.fulfilled, (state, action) => {
+				return {
+					...state,
+					user: action.payload.user,
+					message: action.payload.message,
+				}
+			})
 			.addCase(addFriend.fulfilled, (state, action) => {
 				return { ...state, user: action.payload.user }
 			})
@@ -64,6 +66,6 @@ export const usersSlice = createSlice({
 	},
 })
 
-export const { logout } = usersSlice.actions;
+export const { logout, clearMessage } = usersSlice.actions
 
 export default usersSlice.reducer

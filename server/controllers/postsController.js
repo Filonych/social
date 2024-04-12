@@ -58,7 +58,7 @@ class PostsController {
 				},
 			})
 		} catch (error) {
-			res.status(400).json({ message: 'Произошла ошибка при получении' })
+			res.status(400).json({ message: 'An error occurred while getting the posts' })
 		}
 	}
 
@@ -67,13 +67,13 @@ class PostsController {
 			const updatedPost = await PostsModel.findOne({ _id: req.params.id })
 
 			if (!updatedPost) {
-				return res.status(404).json({ message: 'Пост не найден' })
+				return res.status(404).json({ message: 'The post was not found' })
 			}
 
 			res.status(200).json({ post: updatedPost })
 		} catch (e) {
 			console.error(e)
-			res.status(500).json({ message: 'Произошла ошибка при получении поста' })
+			res.status(500).json({ message: 'An error occurred while getting the post' })
 		}
 	}
 
@@ -92,7 +92,7 @@ class PostsController {
 
 			res.status(200).json({ posts: result })
 		} catch (error) {
-			res.status(400).json({ message: 'Произошла ошибка при получении' })
+			res.status(400).json({ message: 'An error occurred while getting the posts' })
 		}
 	}
 
@@ -108,9 +108,9 @@ class PostsController {
 			})
 
 			await PostModel.save()
-			res.status(200).json({ message: 'Элемент успешно добавлен' })
+			res.status(200).json({ message: 'The post successfully added' })
 		} catch (e) {
-			res.status(400).json({ message: 'Произошла ошибка при добавлении' })
+			res.status(400).json({ message: 'An error occurred while adding' })
 		}
 	}
 
@@ -123,13 +123,13 @@ class PostsController {
 
 			if (deletedCount === 0) {
 				res.status(400).json({
-					message: 'Удаление не произошло',
+					message: 'The post was not deleted',
 				})
 				return
 			}
-			res.status(200).json({ message: 'Элемент успешно удален' })
+			res.status(200).json({ message: 'Deleted successfully' })
 		} catch (e) {
-			res.status(400).json({ message: 'Произошла ошибка при удалении' })
+			res.status(400).json({ message: 'An error occurred while deleting the post' })
 		}
 	}
 
@@ -143,7 +143,7 @@ class PostsController {
 							body: req.body.body,
 							author: req.body.author,
 							date: req.body.date,
-							id: req.body.commentId
+							id: req.body.commentId,
 						},
 					},
 				},
@@ -153,12 +153,12 @@ class PostsController {
 			if (!updatedPost) {
 				return res
 					.status(400)
-					.json({ message: 'Произошла ошибка при редактировании' })
+					.json({ message: 'An error occurred while editing' })
 			}
 
 			res.status(200).json({ post: updatedPost })
 		} catch (e) {
-			res.status(400).json({ message: 'Произошла ошибка при редактировании' })
+			res.status(400).json({ message: 'An error occurred while editing' })
 		}
 	}
 
@@ -167,7 +167,7 @@ class PostsController {
 			const post = await PostsModel.findOne({ _id: req.body.id })
 
 			if (!post) {
-				return res.status(400).json({ message: 'Произошла ошибка' })
+				return res.status(400).json({ message: 'An error occurred' })
 			}
 
 			if (post.likes.includes(req.body.user)) {
@@ -181,7 +181,7 @@ class PostsController {
 
 			res.status(200).json({ post: post })
 		} catch (e) {
-			res.status(400).json({ message: 'Произошла ошибка' })
+			res.status(400).json({ message: 'An error occurred' })
 		}
 	}
 }

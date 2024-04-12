@@ -1,6 +1,6 @@
 import React from 'react'
-import { Link } from '../Link'
-import { PostDetails } from './components/PostDetails'
+import { Link } from '../../../ui/Link'
+import { PostDetails } from '../PostDetails'
 import * as SC from './styles'
 
 export const Post = ({ post }) => {

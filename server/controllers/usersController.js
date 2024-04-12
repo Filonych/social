@@ -6,25 +6,9 @@ class UsersController {
 			const result = await UsersModel.find({})
 			res.status(200).json({ users: result })
 		} catch (error) {
-			res.status(400).json({ message: 'Произошла ошибка при получении' })
+			res.status(400).json({ message: 'An error occurred while getting users' })
 		}
 	}
-
-	// async checkUser(req, res) {
-	// 	try {
-	// 		const { email } = req.body
-	// 		const existingUser = await UsersModel.findOne({ email })
-
-	// 		if (existingUser) {
-	// 			res.status(200).json({ message: 'User exists' })
-	// 		} else {
-	// 			res.status(404).json({ message: 'User not found' })
-	// 		}
-	// 	} catch (error) {
-	// 		console.error('Error while checking user existence:', error)
-	// 		res.status(500).json({ message: 'Internal server error' })
-	// 	}
-	// }
 
 	async regUser(req, res) {
 		try {
@@ -34,8 +18,7 @@ class UsersController {
 
 			if (existingUser) {
 				return res.status(400).json({
-					message:
-						'Пользователь с таким именем пользователя или адресом электронной почты уже существует',
+					message: 'Email address or username already exists',
 				})
 			}
 			const UserModel = new UsersModel({
@@ -45,9 +28,9 @@ class UsersController {
 			})
 
 			await UserModel.save()
-			res.status(200).json({ message: 'Пользователь успешно добавлен' })
+			res.status(200).json({ message: 'User successfully added' })
 		} catch (e) {
-			res.status(400).json({ message: 'Произошла ошибка при добавлении' })
+			res.status(400).json({ message: 'Error occurred while adding' })
 		}
 	}
 
@@ -59,35 +42,15 @@ class UsersController {
 			})
 
 			if (!user) {
-				return res.status(404).json({ message: 'Пользователь не найден' })
+				return res.status(404).json({ message: 'User not found' })
 			}
 
 			res.status(200).json({ user })
 		} catch (e) {
 			console.error(e)
-			res
-				.status(500)
-				.json({ message: 'Произошла ошибка при получении пользователя' })
+			res.status(500).json({ message: 'An error occurred while getting user' })
 		}
 	}
-
-	//   async deletePost(req, res) {
-	//     try {
-	//       const { deletedCount } = await PostsModel.deleteOne({
-	//         id: req.body.id,
-	//       });
-
-	//       if (deletedCount === 0) {
-	//         res.status(400).json({
-	//           message: "Удаление не произошло, пожалуйста, проверьте заголовок",
-	//         });
-	//         return;
-	//       }
-	//       res.status(200).json({ message: "Элемент успешно удален" });
-	//     } catch (e) {
-	//       res.status(400).json({ message: "Произошла ошибка при удалении" });
-	//     }
-	//   }
 
 	async addFriend(req, res) {
 		try {
@@ -98,7 +61,7 @@ class UsersController {
 			if (!user) {
 				return res
 					.status(400)
-					.json({ message: 'Произошла ошибка при добавлении в друзья' })
+					.json({ message: 'An error occurred while adding to friends' })
 			}
 
 			user.friends.push(req.body.friend)
@@ -109,7 +72,7 @@ class UsersController {
 		} catch (e) {
 			res
 				.status(400)
-				.json({ message: 'Произошла ошибка при добавлении в друзья' })
+				.json({ message: 'An error occurred while adding to friends' })
 		}
 	}
 
@@ -118,7 +81,7 @@ class UsersController {
 			const user = await UsersModel.findOne({ username: req.body.username })
 
 			if (!user) {
-				return res.status(404).json({ message: 'Пользователь не найден' })
+				return res.status(404).json({ message: 'User not found' })
 			}
 
 			user.friends = user.friends.filter(friend => friend !== req.body.friend)
@@ -127,24 +90,11 @@ class UsersController {
 			res.status(200).json({ user })
 		} catch (error) {
 			console.error(error)
-			res.status(500).json({ message: 'Произошла ошибка при удалении друга' })
+			res
+				.status(500)
+				.json({ message: 'An error occurred while deleting a friend' })
 		}
 	}
-
-	//   async getPostById(req, res) {
-	//     try {
-	//       const updatedPost = await PostsModel.findOne({ id: req.params.id });
-
-	//       if (!updatedPost) {
-	//         return res.status(404).json({ message: "Пост не найден" });
-	//       }
-
-	//       res.status(200).json({ post: updatedPost });
-	//     } catch (e) {
-	//       console.error(e);
-	//       res.status(500).json({ message: "Произошла ошибка при получении поста" });
-	//     }
-	//   }
 }
 
 module.exports = new UsersController()
