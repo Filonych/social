@@ -5,7 +5,7 @@ const UsersSchema = new Schema({
   email: { type: String, required: true },
   password: { type: String, required: true },
   friends: { type: Array, default: [] },
-  _isAdmin: { type: Boolean, default: false },
+  // _isAdmin: { type: Boolean, default: false },
 
 });
 

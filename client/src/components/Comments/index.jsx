@@ -1,5 +1,5 @@
 import React from 'react'
-import { Typo } from '../../../../components/ui/Typo'
+import { Typo } from '../ui/Typo'
 import { Comment } from './components/Comment'
 import * as SC from './styles'
 

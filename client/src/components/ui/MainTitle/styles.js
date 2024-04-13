@@ -5,7 +5,6 @@ export const FirstTitle = styled.h1`
 	font-size: 64px;
 	text-align: center;
 `
-
 export const SecondTitle = styled.span`
 	font-family: 'Covered By Your Grace';
 	font-size: 70px;

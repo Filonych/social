@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Comments } from '../../../components/Posts/components/Comments'
+import { Comments } from '../../../components/Comments'
 import { DetailedPost } from '../../../components/Posts/components/DetailedPost'
 import { DetailedPostWrap } from '../../../components/Posts/components/DetailedPostWrap'
 import { Button } from '../../../components/ui/Button'

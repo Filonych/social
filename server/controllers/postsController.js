@@ -10,8 +10,9 @@ class PostsController {
 			let totalCount = 0
 
 			const page = parseInt(_page) || 1
+			const adminId = '6616aae42dae08b279a06b43'
 
-			if (_userId === '6616aae42dae08b279a06b43') {
+			if (_userId === adminId) {
 				result = await PostsModel.find()
 					.sort({ _id: -1 })
 					.skip((page - 1) * 6)
@@ -27,9 +28,10 @@ class PostsController {
 				totalCount = await PostsModel.countDocuments({ isPrivate: false })
 			}
 
-			if (_userId !== 'undefined' && _userId !== '6616aae42dae08b279a06b43') {
+			if (_userId !== 'undefined' && _userId !== adminId) {
 				const user = await UsersModel.findOne({ _id: _userId })
 				const friends = user.friends
+
 				result = await PostsModel.find({
 					$or: [
 						{ authorId: _userId },
@@ -64,13 +66,13 @@ class PostsController {
 
 	async getPostById(req, res) {
 		try {
-			const updatedPost = await PostsModel.findOne({ _id: req.params.id })
+			const post = await PostsModel.findOne({ _id: req.params.id })
 
-			if (!updatedPost) {
+			if (!post) {
 				return res.status(404).json({ message: 'The post was not found' })
 			}
 
-			res.status(200).json({ post: updatedPost })
+			res.status(200).json({ post: post })
 		} catch (e) {
 			console.error(e)
 			res.status(500).json({ message: 'An error occurred while getting the post' })
@@ -119,7 +121,6 @@ class PostsController {
 			const { deletedCount } = await PostsModel.deleteOne({
 				_id: req.body.id,
 			})
-			console.log('req.body.id', req.body.id)
 
 			if (deletedCount === 0) {
 				res.status(400).json({
@@ -135,7 +136,7 @@ class PostsController {
 
 	async addComment(req, res) {
 		try {
-			const updatedPost = await PostsModel.findOneAndUpdate(
+			const post = await PostsModel.findOneAndUpdate(
 				{ _id: req.body.id },
 				{
 					$push: {
@@ -150,13 +151,13 @@ class PostsController {
 				{ new: true }
 			)
 
-			if (!updatedPost) {
+			if (!post) {
 				return res
 					.status(400)
 					.json({ message: 'An error occurred while editing' })
 			}
 
-			res.status(200).json({ post: updatedPost })
+			res.status(200).json({ post: post })
 		} catch (e) {
 			res.status(400).json({ message: 'An error occurred while editing' })
 		}

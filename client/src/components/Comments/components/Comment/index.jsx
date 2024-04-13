@@ -1,11 +1,11 @@
 import React from 'react'
-import { Link } from '../../../../../ui/Link'
-import { PostDetails } from '../../../PostDetails'
+import { PostDetails } from '../../../Posts/components/PostDetails'
+import { Link } from '../../../ui/Link'
 import * as SC from './styles'
 
 export const Comment = ({ comment }) => {
 	return (
-		<SC.CommentWrap key={comment.id}>
+		<SC.CommentWrap>
 			<SC.PostDetailsWrap>
 				<PostDetails>
 					<Link to={`/users/${comment.author}`}>{comment.author}</Link>

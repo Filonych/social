@@ -8,13 +8,6 @@ export const getPosts = createAsyncThunk(
 	}
 )
 
-// export const getFreshPosts = createAsyncThunk(
-//   "posts/fetchFreshPosts",
-//   async (limit) => {
-//     return await postsAPI.fetchFreshPosts(limit);
-//   }
-// );
-
 export const getPostById = createAsyncThunk('posts/fetchbyId', async id => {
 	return await postsAPI.fetchbyId(id)
 })
@@ -65,6 +58,7 @@ const initialState = {
 	posts: {
 		list: null,
 		loading: false,
+		totalCount: 0,
 	},
 	postForView: {
 		post: null,
@@ -74,7 +68,6 @@ const initialState = {
 		list: null,
 		loading: false,
 	},
-	totalCount: 0,
 	message: null,
 }
 
@@ -98,8 +91,8 @@ export const postsSlice = createSlice({
 				state.posts = {
 					list: action.payload.posts,
 					loading: false,
+					totalCount: action.payload.totalCount,
 				}
-				state.totalCount = action.payload.totalCount
 			})
 
 			.addCase(getPostsByAuthor.pending, state => {
@@ -138,20 +131,24 @@ export const postsSlice = createSlice({
 					post: action.payload.post,
 					loading: false,
 				}
-				console.log('postForView', state.postForView)
 			})
 			.addCase(likePost.fulfilled, (state, action) => {
 				state.postForView = {
 					post: action.payload.post,
 					loading: false,
 				}
-				console.log('postForView', state.postForView)
 			})
 			.addCase(addPost.fulfilled, (state, action) => {
-				state.message = action.payload.message
+				return {
+					...state,
+					message: action.payload.message,
+				}
 			})
 			.addCase(deletePost.fulfilled, (state, action) => {
-				state.message = action.payload.message
+				return {
+					...state,
+					message: action.payload.message,
+				}
 			})
 	},
 })

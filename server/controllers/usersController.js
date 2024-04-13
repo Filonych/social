@@ -1,22 +1,22 @@
 const UsersModel = require('../models/usersModel')
 
 class UsersController {
-	async getUsers(req, res) {
-		try {
-			const result = await UsersModel.find({})
-			res.status(200).json({ users: result })
-		} catch (error) {
-			res.status(400).json({ message: 'An error occurred while getting users' })
-		}
-	}
+	// async getUsers(req, res) {
+	// 	try {
+	// 		const result = await UsersModel.find({})
+	// 		res.status(200).json({ users: result })
+	// 	} catch (error) {
+	// 		res.status(400).json({ message: 'An error occurred while getting users' })
+	// 	}
+	// }
 
 	async regUser(req, res) {
 		try {
-			const existingUser = await UsersModel.findOne({
+			const userExists = await UsersModel.findOne({
 				$or: [{ username: req.body.username }, { email: req.body.email }],
 			})
 
-			if (existingUser) {
+			if (userExists) {
 				return res.status(400).json({
 					message: 'Email address or username already exists',
 				})

@@ -5,13 +5,11 @@ import * as SC from './styles'
 import { Link } from '../../../ui/Link'
 
 export const DetailedPost = () => {
-	const { user } = useSelector(state => state.user)
 	const { post } = useSelector(state => state.posts.postForView)
 	const { author, date, title, body, isPrivate } = post
 
 	const likes = post?.likes?.length || 0
 	const commentsCount = post?.comments?.length || 0
-	// const isLiked = post?.likes.includes(user?._id)
 
 	return (
 		<SC.DetailedPost>

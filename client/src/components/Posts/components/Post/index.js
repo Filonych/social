@@ -5,6 +5,7 @@ import * as SC from './styles'
 
 export const Post = ({ post }) => {
 	const { author, date, title, body, isPrivate } = post
+	
 	return (
 		<SC.Post>
 			<SC.DetailsWrap>
