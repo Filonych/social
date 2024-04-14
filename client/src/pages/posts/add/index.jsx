@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { Button } from '../../../components/ui/Button'
 import { Container } from '../../../components/ui/Container'
 import { Field } from '../../../components/ui/Field'
@@ -19,6 +20,7 @@ const DEFAULT_VALUES = {
 
 export const AddPostPage = () => {
 	const dispatch = useDispatch()
+	const navigate = useNavigate()
 
 	const [formValues, setFormValues] = useState(DEFAULT_VALUES)
 
@@ -45,6 +47,9 @@ export const AddPostPage = () => {
 
 	const onCloseModal = () => {
 		setFormValues(DEFAULT_VALUES)
+		if (message === 'The post successfully added') {
+			navigate('/')
+		}
 		dispatch(clearMessage())
 	}
 
