@@ -80,7 +80,7 @@ export const DetailPostPage = () => {
 								{isLiked ? 'Liked' : 'Like'}
 							</Button>
 							<Button onClick={() => setShowCommentForm(true)}>Comment</Button>
-							{user._isAdmin && <button onClick={onDeletePost}>Delete</button>}
+							{user._isAdmin && <Button onClick={onDeletePost}>Delete</Button>}
 						</SC.ButtonsWrap>
 					)}
 				</DetailedPostWrap>

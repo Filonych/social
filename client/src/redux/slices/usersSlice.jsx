@@ -39,7 +39,7 @@ export const usersSlice = createSlice({
 	initialState,
 	reducers: {
 		logout: state => {
-			state.user = null
+			return { ...state, user: null }
 		},
 		clearMessage: state => {
 			state.message = null

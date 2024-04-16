@@ -12,8 +12,8 @@ export const Root = () => {
 
 	const { user } = useSelector(state => state.user)
 
-	const onClickExitBtn = () => {
-		dispatch(logout())
+	const onClickExitBtn = async () => {
+		await dispatch(logout())
 		navigate('/auth')
 	}
 	return (

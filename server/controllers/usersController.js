@@ -1,14 +1,6 @@
 const UsersModel = require('../models/usersModel')
 
 class UsersController {
-	// async getUsers(req, res) {
-	// 	try {
-	// 		const result = await UsersModel.find({})
-	// 		res.status(200).json({ users: result })
-	// 	} catch (error) {
-	// 		res.status(400).json({ message: 'An error occurred while getting users' })
-	// 	}
-	// }
 
 	async regUser(req, res) {
 		try {
