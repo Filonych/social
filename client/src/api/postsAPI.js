@@ -5,7 +5,7 @@ export const postsAPI = {
 				`http://localhost:3005/api/posts/list/?_userId=${userId}&_page=${currentPage}`
 			)
 			if (!response.ok) {
-				throw new Error('Ошибка при получении данных')
+				throw new Error('Error fetching data')
 			}
 			const responseData = await response.json()
 			const posts = responseData.posts.result
