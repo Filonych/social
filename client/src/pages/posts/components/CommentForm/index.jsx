@@ -32,7 +32,7 @@ export const CommentForm = ({ title, onSubmitForm }) => {
 						type='text'
 						name='body'
 						value={formValues.body}
-						placeholder='Текст'
+						placeholder='Text'
 						rows={10}
 						cols={30}
 						onChange={e => onChange(e.target.name, e.target.value)}
