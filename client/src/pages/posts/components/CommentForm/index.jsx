@@ -3,15 +3,16 @@ import { Button } from '../../../../components/ui/Button'
 import { Container } from '../../../../components/ui/Container'
 import { Field } from '../../../../components/ui/Field'
 import { Form } from '../../../../components/ui/Form'
+import { Textarea } from '../../../../components/ui/Textarea'
 import { Typo } from '../../../../components/ui/Typo'
-import * as SC from './styles'
 
 const DEFAULT_VALUES = { body: '' }
 
 export const CommentForm = ({ title, onSubmitForm }) => {
 	const [formValues, setFormValues] = useState(DEFAULT_VALUES)
 
-	const disabled = !formValues.body
+	const disabled =
+		!formValues.body || (formValues.body && !formValues.body.trim())
 
 	const onSubmit = e => {
 		e.preventDefault()
@@ -28,7 +29,7 @@ export const CommentForm = ({ title, onSubmitForm }) => {
 			<Typo>{title}</Typo>
 			<Form onSubmit={onSubmit}>
 				<Field>
-					<SC.Textarea
+					<Textarea
 						type='text'
 						name='body'
 						value={formValues.body}

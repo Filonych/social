@@ -60,7 +60,9 @@ class PostsController {
 				},
 			})
 		} catch (error) {
-			res.status(400).json({ message: 'An error occurred while getting the posts' })
+			res
+				.status(400)
+				.json({ message: 'An error occurred while getting the posts' })
 		}
 	}
 
@@ -75,7 +77,9 @@ class PostsController {
 			res.status(200).json({ post: post })
 		} catch (e) {
 			console.error(e)
-			res.status(500).json({ message: 'An error occurred while getting the post' })
+			res
+				.status(500)
+				.json({ message: 'An error occurred while getting the post' })
 		}
 	}
 
@@ -94,7 +98,9 @@ class PostsController {
 
 			res.status(200).json({ posts: result })
 		} catch (error) {
-			res.status(400).json({ message: 'An error occurred while getting the posts' })
+			res
+				.status(400)
+				.json({ message: 'An error occurred while getting the posts' })
 		}
 	}
 
@@ -130,29 +136,35 @@ class PostsController {
 			}
 			res.status(200).json({ message: 'Deleted successfully' })
 		} catch (e) {
-			res.status(400).json({ message: 'An error occurred while deleting the post' })
+			res
+				.status(400)
+				.json({ message: 'An error occurred while deleting the post' })
 		}
 	}
 
 	async editPost(req, res) {
-    try {
-      const updatedPost = await PostsModel.findOneAndUpdate(
-        {_id: req.body._id },
-        { title: req.body.title, body: req.body.body },
-        { new: true }
-      );
+		try {
+			const updatedPost = await PostsModel.findOneAndUpdate(
+				{ _id: req.body._id },
+				{
+					title: req.body.title,
+					body: req.body.body,
+					isPrivate: req.body.isPrivate,
+				},
+				{ new: true }
+			)
 
-      if (!updatedPost) {
-        return res
-          .status(400)
-          .json({ message: 'The post was not edited' });
-      }
+			if (!updatedPost) {
+				return res.status(400).json({ message: 'The post was not edited' })
+			}
 
-      res.status(200).json({ message: "Edited successfully" });
-    } catch (e) {
-      res.status(400).json({ message: "An error occurred while editing the post" });
-    }
-  }
+			res.status(200).json({ message: 'Edited successfully' })
+		} catch (e) {
+			res
+				.status(400)
+				.json({ message: 'An error occurred while editing the post' })
+		}
+	}
 
 	async addComment(req, res) {
 		try {

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { PasswordVisibility } from '../../components/PasswordVisibility'
 import { Button } from '../../components/ui/Button'
 import { Container } from '../../components/ui/Container'
 import { Field } from '../../components/ui/Field'
@@ -18,6 +19,7 @@ export const AuthPage = () => {
 
 	const [formValues, setFormValues] = useState(DEFAULT_VALUES)
 	const [showModal, setShowModal] = useState(null)
+	const [showPassword, setShowPassword] = useState(false)
 
 	const disabled = !formValues.email || !formValues.password
 
@@ -58,14 +60,20 @@ export const AuthPage = () => {
 				</Field>
 				<Field>
 					<Input
-						type='password'
+						type={showPassword ? 'text' : 'password'}
 						name='password'
 						value={formValues.password}
 						placeholder='Password'
 						onChange={e => onChange(e.target.name, e.target.value)}
 					/>
+					<PasswordVisibility
+						showPassword={showPassword}
+						setShowPassword={setShowPassword}
+					/>
 				</Field>
-				<Button type='submit' disabled={disabled}>Login</Button>
+				<Button type='submit' disabled={disabled}>
+					Login
+				</Button>
 			</Form>
 		</Container>
 	)

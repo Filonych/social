@@ -89,7 +89,7 @@ export const postsAPI = {
 		}
 	},
 
-	async fetchEditPost(title, body, _id) {
+	async fetchEditPost(title, body, _id, isPrivate) {
 		try {
 			const response = await fetch('http://localhost:3005/api/posts/edit', {
 				method: 'PUT',
@@ -97,6 +97,7 @@ export const postsAPI = {
 					title,
 					body,
 					_id,
+					isPrivate,
 				}),
 				headers: {
 					'Content-type': 'application/json; charset=UTF-8',

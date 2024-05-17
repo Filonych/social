@@ -30,11 +30,9 @@ export const Root = () => {
 						</MenuItem>
 						<MenuItem link='/friends'>Friends</MenuItem>
 						<MenuItem link='/add'>Add Post</MenuItem>
-						<MenuItem>
-							<Button className='white' onClick={onClickExitBtn}>
-								Logout
-							</Button>
-						</MenuItem>
+						<Button className='white' onClick={onClickExitBtn}>
+							Logout
+						</Button>
 					</SC.MenuLinks>
 				)}
 				{!user && (

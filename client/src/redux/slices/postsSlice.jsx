@@ -41,10 +41,10 @@ export const deletePost = createAsyncThunk(
 )
 
 export const editPost = createAsyncThunk(
-  "posts/fetchEditPost",
-  async ({ title, body, _id }) => {
-    return await postsAPI.fetchEditPost(title, body, _id);
-  }
+	'posts/fetchEditPost',
+	async ({ title, body, _id, isPrivate }) => {
+		return await postsAPI.fetchEditPost(title, body, _id, isPrivate)
+	}
 )
 
 export const addComment = createAsyncThunk(

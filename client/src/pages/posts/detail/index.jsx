@@ -82,12 +82,12 @@ export const DetailPostPage = () => {
 							</Button>
 							<Button onClick={() => setShowCommentForm(true)}>Comment</Button>
 							{(user._isAdmin || post.author === user.username) && (
-								<MenuItem link={`/posts/${id}/edit`}>
-									<Button>Edit</Button>
-								</MenuItem>
-							)}
-							{(user._isAdmin || post.author === user.username) && (
-								<Button onClick={onDeletePost}>Delete</Button>
+								<SC.ButtonsWrap>
+									<MenuItem link={`/posts/${id}/edit`}>
+										<Button>Edit</Button>
+									</MenuItem>
+									<Button onClick={onDeletePost}>Delete</Button>
+								</SC.ButtonsWrap>
 							)}
 						</SC.ButtonsWrap>
 					)}
