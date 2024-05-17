@@ -28,8 +28,7 @@ export const postsAPI = {
 					body: JSON.stringify({ author }),
 				}
 			)
-			const posts = await response.json()
-			return posts
+			return await response.json()
 		} catch (ex) {
 			console.log(ex)
 		}
@@ -41,8 +40,7 @@ export const postsAPI = {
 				throw new Error('ID is broken')
 			}
 			const response = await fetch(`http://localhost:3005/api/posts/list/${id}`)
-			const post = await response.json()
-			return post
+			return await response.json()
 		} catch (ex) {
 			console.log(ex)
 		}
@@ -64,8 +62,7 @@ export const postsAPI = {
 					'Content-type': 'application/json; charset=UTF-8',
 				},
 			})
-			const message = await response.json()
-			return message
+			return await response.json()
 		} catch (ex) {
 			console.log(ex)
 		}
@@ -86,8 +83,26 @@ export const postsAPI = {
 					id,
 				}),
 			})
-			const message = response.json()
-			return message
+			return await response.json()
+		} catch (ex) {
+			console.log(ex)
+		}
+	},
+
+	async fetchEditPost(title, body, _id) {
+		try {
+			const response = await fetch('http://localhost:3005/api/posts/edit', {
+				method: 'PUT',
+				body: JSON.stringify({
+					title,
+					body,
+					_id,
+				}),
+				headers: {
+					'Content-type': 'application/json; charset=UTF-8',
+				},
+			})
+			return await response.json()
 		} catch (ex) {
 			console.log(ex)
 		}

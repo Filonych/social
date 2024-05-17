@@ -62,7 +62,7 @@ export const AddPostPage = () => {
 				/>
 			)}
 			<Container>
-				<MainTitle first={'Add'} second={'post'} />
+				<MainTitle first='Add' second='post' />
 				<Form onSubmit={onSubmitForm}>
 					<Field>
 						<Input

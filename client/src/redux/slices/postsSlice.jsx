@@ -40,6 +40,13 @@ export const deletePost = createAsyncThunk(
 	}
 )
 
+export const editPost = createAsyncThunk(
+  "posts/fetchEditPost",
+  async ({ title, body, _id }) => {
+    return await postsAPI.fetchEditPost(title, body, _id);
+  }
+)
+
 export const addComment = createAsyncThunk(
 	'posts/fetchAddComment',
 	async ({ body, id, date, author, commentId }) => {
@@ -145,6 +152,12 @@ export const postsSlice = createSlice({
 				}
 			})
 			.addCase(deletePost.fulfilled, (state, action) => {
+				return {
+					...state,
+					message: action.payload.message,
+				}
+			})
+			.addCase(editPost.fulfilled, (state, action) => {
 				return {
 					...state,
 					message: action.payload.message,

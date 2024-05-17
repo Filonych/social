@@ -134,6 +134,26 @@ class PostsController {
 		}
 	}
 
+	async editPost(req, res) {
+    try {
+      const updatedPost = await PostsModel.findOneAndUpdate(
+        {_id: req.body._id },
+        { title: req.body.title, body: req.body.body },
+        { new: true }
+      );
+
+      if (!updatedPost) {
+        return res
+          .status(400)
+          .json({ message: 'The post was not edited' });
+      }
+
+      res.status(200).json({ message: "Edited successfully" });
+    } catch (e) {
+      res.status(400).json({ message: "An error occurred while editing the post" });
+    }
+  }
+
 	async addComment(req, res) {
 		try {
 			const post = await PostsModel.findOneAndUpdate(

@@ -7,6 +7,7 @@ import { DetailedPostWrap } from '../../../components/Posts/components/DetailedP
 import { Button } from '../../../components/ui/Button'
 import { Container } from '../../../components/ui/Container'
 import { Loader } from '../../../components/ui/Loader'
+import { MenuItem } from '../../../components/ui/MenuItem'
 import { Modal } from '../../../components/ui/Modal'
 import { formatDate } from '../../../helpers/formatDate'
 import {
@@ -74,13 +75,20 @@ export const DetailPostPage = () => {
 					{user && (
 						<SC.ButtonsWrap>
 							<Button
-								className={isLiked ? undefined : 'white'}
+								className={isLiked ? 'white' : undefined}
 								onClick={onLikePost}
 							>
 								{isLiked ? 'Liked' : 'Like'}
 							</Button>
 							<Button onClick={() => setShowCommentForm(true)}>Comment</Button>
-							{user._isAdmin && <Button onClick={onDeletePost}>Delete</Button>}
+							{(user._isAdmin || post.author === user.username) && (
+								<MenuItem link={`/posts/${id}/edit`}>
+									<Button>Edit</Button>
+								</MenuItem>
+							)}
+							{(user._isAdmin || post.author === user.username) && (
+								<Button onClick={onDeletePost}>Delete</Button>
+							)}
 						</SC.ButtonsWrap>
 					)}
 				</DetailedPostWrap>

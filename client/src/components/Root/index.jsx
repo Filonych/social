@@ -4,6 +4,7 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { logout } from '../../redux/slices/usersSlice'
 import { Button } from '../ui/Button'
 import { Container } from '../ui/Container'
+import { MenuItem } from '../ui/MenuItem'
 import * as SC from './styles'
 
 export const Root = () => {
@@ -19,35 +20,33 @@ export const Root = () => {
 	return (
 		<Container>
 			<SC.Menu>
-				<NavLink to={'/'}>
+				<NavLink to='/'>
 					<img src='img/rocket.svg' />
 				</NavLink>
-				<SC.MenuLinks>
-					{user && (
-						<SC.MenuItem to={`/users/${user.username}`}>
+				{user && (
+					<SC.MenuLinks>
+						<MenuItem link={`/users/${user.username}`}>
 							{user.username}
-						</SC.MenuItem>
-					)}
-					{user && <SC.MenuItem to={'/friends'}>Friends</SC.MenuItem>}
-					{user && <SC.MenuItem to={'/add'}>Add Post</SC.MenuItem>}
-					{!user && (
-						<SC.MenuItem to={'/auth'}>
-							<Button className='white'>Login</Button>
-						</SC.MenuItem>
-					)}
-					{!user && (
-						<SC.MenuItem to={'/registration'}>
-							<Button>Create account</Button>
-						</SC.MenuItem>
-					)}
-					{user && (
-						<SC.MenuItem>
+						</MenuItem>
+						<MenuItem link='/friends'>Friends</MenuItem>
+						<MenuItem link='/add'>Add Post</MenuItem>
+						<MenuItem>
 							<Button className='white' onClick={onClickExitBtn}>
 								Logout
 							</Button>
-						</SC.MenuItem>
-					)}
-				</SC.MenuLinks>
+						</MenuItem>
+					</SC.MenuLinks>
+				)}
+				{!user && (
+					<SC.MenuLinks>
+						<MenuItem link='/auth'>
+							<Button className='white'>Login</Button>
+						</MenuItem>
+						<MenuItem link='/registration'>
+							<Button>Create account</Button>
+						</MenuItem>
+					</SC.MenuLinks>
+				)}
 			</SC.Menu>
 
 			<Outlet />

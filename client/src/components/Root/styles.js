@@ -14,18 +14,5 @@ export const MenuLinks = styled.div`
 	display: flex;
 	gap: 15px;
 	justify-content: space-between;
-`
-
-export const MenuItem = styled(NavLink)`
-	color: black;
-	text-decoration: none;
-
-	&:hover {
-		color: #ff6d2c;
-	}
-
-	&.active {
-		color: #ff6d2c;
-		font-weight: bold;
-	}
+	align-items: center;
 `
