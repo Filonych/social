@@ -93,7 +93,9 @@ class PostsController {
 					isPrivate: false,
 				})
 			} else {
-				result = await PostsModel.find({ author: req.body.author })
+				result = await PostsModel.find({ author: req.body.author }).sort({
+					_id: -1,
+				})
 			}
 
 			res.status(200).json({ posts: result })

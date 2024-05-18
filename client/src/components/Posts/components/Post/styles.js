@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 export const Post = styled.div`
 	border-radius: 13px;
-	height: 400px;
+	min-height: 400px;
 	background: #fdf3ea;
 	padding: 35px;
 	width: 25%;

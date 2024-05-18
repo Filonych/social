@@ -10,6 +10,7 @@ import { Input } from '../../components/ui/Input'
 import { MainTitle } from '../../components/ui/MainTitle'
 import { Modal } from '../../components/ui/Modal'
 import { Warning } from '../../components/ui/Warning'
+import { validateRegField } from '../../helpers/validateRegField'
 import { clearMessage, regNewUser } from '../../redux/slices/usersSlice'
 
 const DEFAULT_VALUES = { username: '', email: '', password: '' }
@@ -21,26 +22,20 @@ export const RegistrationPage = () => {
 	const { message } = useSelector(state => state.user)
 
 	const [formValues, setFormValues] = useState(DEFAULT_VALUES)
-	const [usernameError, setUsernameError] = useState(null)
-	const [passwordError, setPasswordError] = useState(null)
-	const [emailError, setEmailError] = useState(null)
 	const [showPassword, setShowPassword] = useState(false)
-
-	const isValidUsername = username => /^[a-zA-Z0-9_-]+$/.test(username)
-
-	const isValidEmail = email =>
-		/^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu.test(
-			email
-		)
-
-	const isValidPassword = password =>
-		/^[a-zA-Z0-9!@#$%^&*()_+{}\[\]:;<>,.?/~`]+$/.test(password)
+	const [validationErrors, setValidationErrors] = useState({
+		username: null,
+		email: null,
+		password: null,
+	})
 
 	const disabled =
-		!isValidUsername(formValues.username) ||
-		formValues.username.length > 20 ||
-		!isValidEmail(formValues.email) ||
-		!isValidPassword(formValues.password)
+		!formValues.username ||
+		!formValues.email ||
+		!formValues.password ||
+		validationErrors.username ||
+		validationErrors.email ||
+		validationErrors.password
 
 	const onSubmit = e => {
 		e.preventDefault()
@@ -48,28 +43,7 @@ export const RegistrationPage = () => {
 	}
 
 	const onChange = (name, value) => {
-		if (name === 'username') {
-			if (value.length > 20) {
-				setUsernameError('The username is too long.')
-			} else if (!isValidUsername(value)) {
-				setUsernameError('The username format is not valid')
-			} else {
-				setUsernameError(null)
-			}
-		} else if (name === 'email') {
-			if (!isValidEmail(value)) {
-				setEmailError('The email format is not valid.')
-			} else {
-				setEmailError(null)
-			}
-		} else if (name === 'password') {
-			if (!isValidPassword(value)) {
-				setPasswordError('The password format is not valid.')
-			} else {
-				setPasswordError(null)
-			}
-		}
-
+		validateRegField(name, value, validationErrors, setValidationErrors)
 		setFormValues({ ...formValues, [name]: value })
 	}
 
@@ -97,9 +71,11 @@ export const RegistrationPage = () => {
 						value={formValues.username}
 						placeholder='Username'
 						onChange={e => onChange(e.target.name, e.target.value)}
-						className={usernameError ? 'red' : undefined}
+						className={validationErrors.username ? 'red' : undefined}
 					/>
-					{usernameError && <Warning>{usernameError}</Warning>}
+					{validationErrors.username && (
+						<Warning>{validationErrors.username}</Warning>
+					)}
 				</Field>
 				<Field>
 					<Input
@@ -108,9 +84,11 @@ export const RegistrationPage = () => {
 						value={formValues.email}
 						placeholder='E-mail'
 						onChange={e => onChange(e.target.name, e.target.value)}
-						className={emailError ? 'red' : undefined}
+						className={validationErrors.email ? 'red' : undefined}
 					/>
-					{emailError && <Warning>{emailError}</Warning>}
+					{validationErrors.email && (
+						<Warning>{validationErrors.email}</Warning>
+					)}
 				</Field>
 				<Field>
 					<Input
@@ -119,13 +97,15 @@ export const RegistrationPage = () => {
 						value={formValues.password}
 						placeholder='Password'
 						onChange={e => onChange(e.target.name, e.target.value)}
-						className={passwordError ? 'red' : undefined}
+						className={validationErrors.password ? 'red' : undefined}
 					/>
 					<PasswordVisibility
 						showPassword={showPassword}
 						setShowPassword={setShowPassword}
 					/>
-					{passwordError && <Warning>{passwordError}</Warning>}
+					{validationErrors.password && (
+						<Warning>{validationErrors.password}</Warning>
+					)}
 				</Field>
 				<Button type='submit' disabled={disabled}>
 					Create account

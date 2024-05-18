@@ -7,6 +7,7 @@ import { Input } from '../../../../components/ui/Input'
 import { MainTitle } from '../../../../components/ui/MainTitle'
 import { Textarea } from '../../../../components/ui/Textarea'
 import { Warning } from '../../../../components/ui/Warning'
+import { validateTextField } from '../../../../helpers/validateTextField'
 
 const DEFAULT_VALUES = {
 	title: '',
@@ -15,8 +16,7 @@ const DEFAULT_VALUES = {
 }
 
 const MAX_TITLE_LENGTH = 100
-const MAX_BODY_LENGTH = 1000
-const MAX_WORD_LENGTH = 20
+const MAX_BODY_LENGTH = 2000
 
 export const PostForm = ({ first, second, onSubmitForm, defaultValues }) => {
 	const [formValues, setFormValues] = useState(defaultValues || DEFAULT_VALUES)
@@ -40,25 +40,14 @@ export const PostForm = ({ first, second, onSubmitForm, defaultValues }) => {
 
 	const onChange = (name, value) => {
 		if (name === 'title') {
-			if (!value.trim()) {
-				setTitleError('The title field cannot be empty')
-			} else if (value.length > MAX_TITLE_LENGTH) {
-				setTitleError('The title is too long')
-			} else {
-				setTitleError(null)
-			}
+			validateTextField(name, value, MAX_TITLE_LENGTH, setTitleError)
+		}
+
+		if (name === 'body') {
+			validateTextField(name, value, MAX_BODY_LENGTH, setBodyError)
 		}
 		setFormValues({ ...formValues, [name]: value })
 	}
-
-	// const maxWordLength = 20; // Максимальная длина слова
-	// const titleWords = title.split(' ');
-	// const contentWords = content.split(' ');
-	// const isLongWordExist = titleWords.some(word => word.length > maxWordLength) || contentWords.some(word => word.length > maxWordLength);
-	// if (isLongWordExist) {
-	//   // Обработка ошибки
-	//   console.error(`The title and content fields cannot contain words longer than ${maxWordLength} characters.`);
-	//   return;
 
 	return (
 		<Container>
@@ -85,6 +74,7 @@ export const PostForm = ({ first, second, onSubmitForm, defaultValues }) => {
 						cols={30}
 						onChange={e => onChange(e.target.name, e.target.value)}
 					/>
+					{bodyError && <Warning>{bodyError}</Warning>}
 				</Field>
 				<label>
 					<input
