@@ -1,11 +1,23 @@
 const UsersModel = require('../models/usersModel')
+const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
+const { secret } = require('../config')
+
+const generateAccessToken = (_id, username, friends) => {
+	const payload = {
+		_id,
+		username,
+		friends,
+	}
+	return jwt.sign(payload, secret, { expiresIn: '2h' })
+}
 
 class UsersController {
-
 	async regUser(req, res) {
 		try {
+			const { username, email, password } = req.body
 			const userExists = await UsersModel.findOne({
-				$or: [{ username: req.body.username }, { email: req.body.email }],
+				$or: [{ username }, { email }],
 			})
 
 			if (userExists) {
@@ -13,10 +25,11 @@ class UsersController {
 					message: 'Email address or username already exists',
 				})
 			}
+			var hashPassword = bcrypt.hashSync(password, 7)
 			const UserModel = new UsersModel({
-				username: req.body.username,
-				email: req.body.email,
-				password: req.body.password,
+				username,
+				email,
+				password: hashPassword,
 			})
 
 			await UserModel.save()
@@ -28,19 +41,38 @@ class UsersController {
 
 	async loginUser(req, res) {
 		try {
-			const user = await UsersModel.findOne({
-				email: req.body.email,
-				password: req.body.password,
-			})
+			const { email, password } = req.body
+			const user = await UsersModel.findOne({ email })
 
 			if (!user) {
 				return res.status(404).json({ message: 'User not found' })
 			}
+			const validPassword = bcrypt.compareSync(password, user.password)
+			if (!validPassword) {
+				return res.status(404).json({ message: 'Wrong password' })
+			}
+			const token = generateAccessToken(user._id, user.username, user.friends)
 
-			res.status(200).json({ user })
+			res.status(200).json({ user, token })
 		} catch (e) {
 			console.error(e)
 			res.status(500).json({ message: 'An error occurred while getting user' })
+		}
+	}
+
+	async checkAuth(req, res) {
+		try {
+			const token = req.headers.authorization?.split(' ')[1]
+
+			if (!token) {
+				return res.status(401).json({ message: 'Access token not provided' })
+			}
+			const userData = jwt.verify(token, secret)
+			return res
+				.status(200)
+				.json({ message: 'Authentication successful', user: userData })
+		} catch (e) {
+			console.error(e)
 		}
 	}
 

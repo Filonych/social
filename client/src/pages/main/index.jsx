@@ -25,7 +25,7 @@ export const MainPage = () => {
 			<MainTitle first='Recent' second='posts' />
 			{loading && <Loader />}
 			<Posts>
-				{list && list.map(post => <Post key={post._id} post={post}/>)}
+				{list && list.map(post => <Post key={post._id} post={post} />)}
 			</Posts>
 			{list && (
 				<Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} />

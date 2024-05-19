@@ -29,6 +29,26 @@ export const usersAPI = {
 				body: JSON.stringify({ email, password }),
 			})
 			const user = await response.json()
+			localStorage.setItem('token', user.token)
+			return user
+		} catch (ex) {
+			console.log(ex)
+		}
+	},
+
+	async fetchCheckAuth(token) {
+		try {
+			const response = await fetch(
+				'http://localhost:3005/api/users/checkAuth',
+				{
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			)
+			const user = await response.json()
 			return user
 		} catch (ex) {
 			console.log(ex)

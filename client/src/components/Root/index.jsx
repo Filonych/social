@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
-import { logout } from '../../redux/slices/usersSlice'
+import { checkAuth, logout } from '../../redux/slices/usersSlice'
 import { Button } from '../ui/Button'
 import { Container } from '../ui/Container'
 import { MenuItem } from '../ui/MenuItem'
@@ -17,11 +17,17 @@ export const Root = () => {
 		await dispatch(logout())
 		navigate('/auth')
 	}
+
+	useEffect(() => {
+		const token = localStorage.getItem('token')
+		if (token) dispatch(checkAuth(token))
+	}, [])
+
 	return (
 		<Container>
 			<SC.Menu>
 				<NavLink to='/'>
-					<img src='img/rocket.svg' />
+					<img src='img/rocket.svg' alt='logo' />
 				</NavLink>
 				{user && (
 					<SC.MenuLinks>

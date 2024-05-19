@@ -29,6 +29,13 @@ export const login = createAsyncThunk(
 	}
 )
 
+export const checkAuth = createAsyncThunk(
+	'users/fetchCheckAuth',
+	async token => {
+		return await usersAPI.fetchCheckAuth(token)
+	}
+)
+
 const initialState = {
 	user: null,
 	message: null,
@@ -39,6 +46,7 @@ export const usersSlice = createSlice({
 	initialState,
 	reducers: {
 		logout: state => {
+			localStorage.removeItem('token')
 			return { ...state, user: null }
 		},
 		clearMessage: state => {
@@ -55,6 +63,12 @@ export const usersSlice = createSlice({
 					...state,
 					user: action.payload.user,
 					message: action.payload.message,
+				}
+			})
+			.addCase(checkAuth.fulfilled, (state, action) => {
+				return {
+					...state,
+					user: action.payload.user,
 				}
 			})
 			.addCase(addFriend.fulfilled, (state, action) => {
