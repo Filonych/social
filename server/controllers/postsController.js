@@ -10,15 +10,6 @@ class PostsController {
 			let totalCount = 0
 
 			const page = parseInt(_page) || 1
-			const adminId = '6616aae42dae08b279a06b43'
-
-			if (_userId === adminId) {
-				result = await PostsModel.find()
-					.sort({ _id: -1 })
-					.skip((page - 1) * 6)
-					.limit(6)
-				totalCount = await PostsModel.countDocuments({})
-			}
 
 			if (_userId === 'undefined') {
 				result = await PostsModel.find({ isPrivate: false })
@@ -28,27 +19,37 @@ class PostsController {
 				totalCount = await PostsModel.countDocuments({ isPrivate: false })
 			}
 
-			if (_userId !== 'undefined' && _userId !== adminId) {
+			if (_userId !== 'undefined') {
 				const user = await UsersModel.findOne({ _id: _userId })
 				const friends = user.friends
 
-				result = await PostsModel.find({
-					$or: [
-						{ authorId: _userId },
-						{ author: { $in: friends } },
-						{ isPrivate: false },
-					],
-				})
-					.sort({ _id: -1 })
-					.skip((page - 1) * 6)
-					.limit(6)
-				totalCount = await PostsModel.countDocuments({
-					$or: [
-						{ authorId: _userId },
-						{ author: { $in: friends } },
-						{ isPrivate: false },
-					],
-				})
+				if (user.isAdmin) {
+					result = await PostsModel.find()
+						.sort({ _id: -1 })
+						.skip((page - 1) * 6)
+						.limit(6)
+					totalCount = await PostsModel.countDocuments({})
+				}
+
+				if (!user.isAdmin) {
+					result = await PostsModel.find({
+						$or: [
+							{ authorId: _userId },
+							{ author: { $in: friends } },
+							{ isPrivate: false },
+						],
+					})
+						.sort({ _id: -1 })
+						.skip((page - 1) * 6)
+						.limit(6)
+					totalCount = await PostsModel.countDocuments({
+						$or: [
+							{ authorId: _userId },
+							{ author: { $in: friends } },
+							{ isPrivate: false },
+						],
+					})
+				}
 			}
 
 			res.status(200).json({

@@ -12,7 +12,7 @@ export const FriendsPage = () => {
 		<Container>
 			<MainTitle first='My' second='friends' />
 			<SC.Wrap>
-				{user.friends.map(friend => (
+				{user?.friends.map(friend => (
 					<SC.Friend key={friend}>
 						<SC.Image></SC.Image>
 						<Link to={`/users/${friend}`}>{friend}</Link>

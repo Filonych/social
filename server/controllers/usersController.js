@@ -3,11 +3,12 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { secret } = require('../config')
 
-const generateAccessToken = (_id, username, friends) => {
+const generateAccessToken = (_id, username, friends, isAdmin) => {
 	const payload = {
 		_id,
 		username,
 		friends,
+		isAdmin,
 	}
 	return jwt.sign(payload, secret, { expiresIn: '2h' })
 }
@@ -51,7 +52,12 @@ class UsersController {
 			if (!validPassword) {
 				return res.status(404).json({ message: 'Wrong password' })
 			}
-			const token = generateAccessToken(user._id, user.username, user.friends)
+			const token = generateAccessToken(
+				user._id,
+				user.username,
+				user.friends,
+				user.isAdmin
+			)
 
 			res.status(200).json({ user, token })
 		} catch (e) {

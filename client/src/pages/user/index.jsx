@@ -17,11 +17,11 @@ export const UserPage = () => {
 	const { user } = useSelector(state => state.user)
 	const { list, loading } = useSelector(state => state.posts.postsByAuthor)
 	const { author } = useParams()
-
-	const authorIsAuthUser = user?.username === author
-	const isAddedToFriends = user?.friends.includes(author)
-
+	
 	const username = user?.username
+
+	const authorIsAuthUser = username === author
+	const isAddedToFriends = user?.friends.includes(author)
 
 	const onAddFriend = () => {
 		dispatch(addFriend({ username, author }))
@@ -32,10 +32,10 @@ export const UserPage = () => {
 	}
 
 	useEffect(() => {
-		if (isAddedToFriends || user?.username === author) {
+		if (isAddedToFriends || username === author || user?.isAdmin === true) {
 			dispatch(getPostsByAuthor({ author }))
 		}
-		if (!isAddedToFriends && user?.username !== author) {
+		if (!isAddedToFriends && username !== author) {
 			dispatch(getPostsByAuthor({ author, privatePosts: false }))
 		}
 	}, [author, user])

@@ -81,7 +81,7 @@ export const DetailPostPage = () => {
 								{isLiked ? 'Liked' : 'Like'}
 							</Button>
 							<Button onClick={() => setShowCommentForm(true)}>Comment</Button>
-							{(user._isAdmin || post.author === user.username) && (
+							{(user.isAdmin || post.author === user.username) && (
 								<SC.ButtonsWrap>
 									<MenuItem link={`/posts/${id}/edit`}>
 										<Button>Edit</Button>
