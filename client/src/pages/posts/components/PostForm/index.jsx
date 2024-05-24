@@ -21,8 +21,10 @@ const MAX_BODY_LENGTH = 2000
 export const PostForm = ({ first, second, onSubmitForm, defaultValues }) => {
 	const [formValues, setFormValues] = useState(defaultValues || DEFAULT_VALUES)
 
-	const [titleError, setTitleError] = useState(null)
-	const [bodyError, setBodyError] = useState(null)
+	const [validationErrors, setValidationErrors] = useState({
+		title: null,
+		body: null,
+	})
 
 	const disabled =
 		!formValues.title ||
@@ -39,13 +41,9 @@ export const PostForm = ({ first, second, onSubmitForm, defaultValues }) => {
 	}
 
 	const onChange = (name, value) => {
-		if (name === 'title') {
-			validateTextField(name, value, MAX_TITLE_LENGTH, setTitleError)
-		}
-
-		if (name === 'body') {
-			validateTextField(name, value, MAX_BODY_LENGTH, setBodyError)
-		}
+		const limiter = name === 'title' ? MAX_TITLE_LENGTH : MAX_BODY_LENGTH
+		let error = validateTextField(name, value, limiter)
+		setValidationErrors({ ...validationErrors, [name]: error })
 		setFormValues({ ...formValues, [name]: value })
 	}
 
@@ -60,9 +58,11 @@ export const PostForm = ({ first, second, onSubmitForm, defaultValues }) => {
 						value={formValues.title}
 						placeholder='Title'
 						onChange={e => onChange(e.target.name, e.target.value)}
-						className={titleError ? 'red' : ''}
+						className={validationErrors.title ? 'red' : ''}
 					/>
-					{titleError && <Warning>{titleError}</Warning>}
+					{validationErrors.title && (
+						<Warning>{validationErrors.title}</Warning>
+					)}
 				</Field>
 				<Field>
 					<Textarea
@@ -74,7 +74,7 @@ export const PostForm = ({ first, second, onSubmitForm, defaultValues }) => {
 						cols={30}
 						onChange={e => onChange(e.target.name, e.target.value)}
 					/>
-					{bodyError && <Warning>{bodyError}</Warning>}
+					{validationErrors.body && <Warning>{validationErrors.body}</Warning>}
 				</Field>
 				<label>
 					<input

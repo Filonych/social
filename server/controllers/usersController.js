@@ -26,7 +26,7 @@ class UsersController {
 					message: 'Email address or username already exists',
 				})
 			}
-			var hashPassword = bcrypt.hashSync(password, 7)
+			const hashPassword = bcrypt.hashSync(password, 7)
 			const UserModel = new UsersModel({
 				username,
 				email,

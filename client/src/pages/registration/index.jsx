@@ -42,7 +42,8 @@ export const RegistrationPage = () => {
 	}
 
 	const onChange = (name, value) => {
-		validateRegField(name, value, validationErrors, setValidationErrors)
+		let error = validateRegField(name, value)
+		setValidationErrors({ ...validationErrors, [name]: error })
 		setFormValues({ ...formValues, [name]: value })
 	}
 

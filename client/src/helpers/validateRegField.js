@@ -1,58 +1,50 @@
-export const validateRegField = (
-	name,
-	value,
-	validationErrors,
-	setValidationErrors
-) => {
-	const MAX_LOGIN_LENGTH = 20
+const MAX_LENGTH = 20
 
-	const isValidUsername = username => /^[a-zA-Z0-9_-]+$/.test(username)
+const isValidUsername = username => /^[a-zA-Z0-9_-]+$/.test(username)
+const isValidEmail = email =>
+	/^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu.test(
+		email
+	)
+const isValidPassword = password =>
+	/^[a-zA-Z0-9!@#$%^&*()_+{}[\]:;<>,.?/~`]+$/.test(password)
 
-	const isValidEmail = email =>
-		/^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu.test(
-			email
-		)
+export const validateRegField = (name, value) => {
+	const validateUsername = username => {
+		if (!isValidUsername(username)) {
+			return 'The username format is not valid'
+		} else {
+			return null
+		}
+	}
 
-	const isValidPassword = password =>
-		/^[a-zA-Z0-9!@#$%^&*()_+{}\[\]:;<>,.?/~`]+$/.test(password)
+	const validateEmail = email => {
+		if (!isValidEmail(email)) {
+			return 'The email format is not valid'
+		} else {
+			return null
+		}
+	}
+
+	const validatePassword = password => {
+		if (!isValidPassword(password)) {
+			return 'The password format is not valid'
+		} else {
+			return null
+		}
+	}
+
+	if (value.length > MAX_LENGTH) {
+		return `The ${name} is too long.`
+	}
 
 	switch (name) {
 		case 'username':
-			if (value.length > MAX_LOGIN_LENGTH) {
-				setValidationErrors({
-					...validationErrors,
-					username: 'The username is too long.',
-				})
-			} else if (!isValidUsername(value)) {
-				setValidationErrors({
-					...validationErrors,
-					username: 'The username format is not valid',
-				})
-			} else {
-				setValidationErrors({ ...validationErrors, username: null })
-			}
-			break
+			return validateUsername(value)
 		case 'email':
-			if (!isValidEmail(value)) {
-				setValidationErrors({
-					...validationErrors,
-					email: 'The email format is not valid.',
-				})
-			} else {
-				setValidationErrors({ ...validationErrors, email: null })
-			}
-			break
+			return validateEmail(value)
 		case 'password':
-			if (!isValidPassword(value)) {
-				setValidationErrors({
-					...validationErrors,
-					password: 'The password format is not valid.',
-				})
-			} else {
-				setValidationErrors({ ...validationErrors, password: null })
-			}
-			break
+			return validatePassword(value)
 		default:
-			break
+			return false
 	}
 }
