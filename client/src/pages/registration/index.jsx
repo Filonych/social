@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { PasswordVisibility } from '../../components/PasswordVisibility'
+import { InputPassword } from '../../components/InputPassword'
 import { Button } from '../../components/ui/Button'
 import { Container } from '../../components/ui/Container'
 import { Field } from '../../components/ui/Field'
@@ -22,7 +22,6 @@ export const RegistrationPage = () => {
 	const { message } = useSelector(state => state.user)
 
 	const [formValues, setFormValues] = useState(DEFAULT_VALUES)
-	const [showPassword, setShowPassword] = useState(false)
 	const [validationErrors, setValidationErrors] = useState({
 		username: null,
 		email: null,
@@ -91,17 +90,10 @@ export const RegistrationPage = () => {
 					)}
 				</Field>
 				<Field>
-					<Input
-						type={showPassword ? 'text' : 'password'}
-						name='password'
+					<InputPassword
 						value={formValues.password}
-						placeholder='Password'
 						onChange={e => onChange(e.target.name, e.target.value)}
 						className={validationErrors.password ? 'red' : undefined}
-					/>
-					<PasswordVisibility
-						showPassword={showPassword}
-						setShowPassword={setShowPassword}
 					/>
 					{validationErrors.password && (
 						<Warning>{validationErrors.password}</Warning>
