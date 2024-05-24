@@ -6,15 +6,20 @@ export const Button = styled.button`
 	padding: 14px 25px 12px 25px;
 	box-shadow: 3px 3px 0 0 #2e2f35;
 	background: ${({ className }) =>
-		className === 'white' ? 'white' : '#ff6d2c'};
+		className === 'white' || className === 'danger' ? 'white' : '#ff6d2c'};
 	padding: 5px 15px;
 	border-radius: 10px;
-	color: ${({ className }) => (className === 'white' ? 'black' : 'white')};
+	color: ${({ className }) =>
+		className === 'white' || className === 'danger' ? 'black' : 'white'};
 	cursor: pointer;
 
 	&:not(:disabled):hover {
 		background: ${({ className }) =>
-			className === 'white' ? '#ff6d2c' : '#009387'};
+			className === 'white'
+				? '#ff6d2c'
+				: className === 'danger'
+				? 'red'
+				: '#009387'};
 		color: white;
 	}
 

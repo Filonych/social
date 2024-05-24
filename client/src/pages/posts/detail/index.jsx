@@ -16,6 +16,7 @@ import {
 	deletePost,
 	getPostById,
 	likePost,
+	setMessage,
 } from '../../../redux/slices/postsSlice'
 import { CommentForm } from '../components/CommentForm'
 import * as SC from './styles'
@@ -35,6 +36,7 @@ export const DetailPostPage = () => {
 	const isLiked = post?.likes.includes(user?._id)
 
 	const onDeletePost = () => {
+		dispatch(clearMessage())
 		dispatch(deletePost({ id }))
 	}
 
@@ -65,7 +67,18 @@ export const DetailPostPage = () => {
 			{message && (
 				<Modal
 					text={message}
-					buttons={<Button onClick={() => onCloseModal()}>ОК</Button>}
+					buttons={
+						post ? (
+							<>
+								<Button onClick={() => onDeletePost()} className='danger'>
+									Yes
+								</Button>
+								<Button onClick={() => dispatch(clearMessage())}>No</Button>
+							</>
+						) : (
+							<Button onClick={() => onCloseModal()}>OK</Button>
+						)
+					}
 				/>
 			)}
 			{loading && <Loader />}
@@ -86,7 +99,15 @@ export const DetailPostPage = () => {
 									<MenuItem link={`/posts/${id}/edit`}>
 										<Button>Edit</Button>
 									</MenuItem>
-									<Button onClick={onDeletePost}>Delete</Button>
+									<Button
+										onClick={() =>
+											dispatch(
+												setMessage('Are you sure you want to delete this post?')
+											)
+										}
+									>
+										Delete
+									</Button>
 								</SC.ButtonsWrap>
 							)}
 						</SC.ButtonsWrap>

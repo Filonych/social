@@ -82,10 +82,15 @@ export const postsSlice = createSlice({
 	name: 'posts',
 	initialState,
 	reducers: {
+		setMessage: (state, action) => {
+			state.message = action.payload
+		},
+
 		clearMessage: state => {
 			state.message = null
 		},
 	},
+
 	extraReducers: builder => {
 		builder
 			.addCase(getPosts.pending, state => {
@@ -155,6 +160,10 @@ export const postsSlice = createSlice({
 				return {
 					...state,
 					message: action.payload.message,
+					postForView: {
+						post: null,
+						loading: false,
+					},
 				}
 			})
 			.addCase(editPost.fulfilled, (state, action) => {
@@ -166,6 +175,6 @@ export const postsSlice = createSlice({
 	},
 })
 
-export const { clearMessage } = postsSlice.actions
+export const { clearMessage, setMessage } = postsSlice.actions
 
 export default postsSlice.reducer
