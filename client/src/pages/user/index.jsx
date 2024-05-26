@@ -17,11 +17,12 @@ export const UserPage = () => {
 	const { user } = useSelector(state => state.user)
 	const { list, loading } = useSelector(state => state.posts.postsByAuthor)
 	const { author } = useParams()
-	
+
 	const username = user?.username
 
 	const authorIsAuthUser = username === author
 	const isAddedToFriends = user?.friends.includes(author)
+	const userIsAdmin = user?.isAdmin === true
 
 	const onAddFriend = () => {
 		dispatch(addFriend({ username, author }))
@@ -32,13 +33,18 @@ export const UserPage = () => {
 	}
 
 	useEffect(() => {
-		if (isAddedToFriends || username === author || user?.isAdmin === true) {
+		// закомментенный ниже код не работает, т.к. если мы заходим на страницу пользователя не залогинившись, то посты вообще не грузятся
+		// if (!user) {
+		// 	return
+		// }
+		if (isAddedToFriends || authorIsAuthUser || userIsAdmin) {
 			dispatch(getPostsByAuthor({ author }))
-		}
-		if (!isAddedToFriends && username !== author) {
+		} else if (!isAddedToFriends && !authorIsAuthUser) {
 			dispatch(getPostsByAuthor({ author, privatePosts: false }))
 		}
-	}, [author, user])
+		// из зависимостей убрала author, а user оставила, т.к. если убрать user, то
+		// этот useEffect не будет срабатывать после проверки токена в Root
+	}, [user])
 
 	return (
 		<Container>
