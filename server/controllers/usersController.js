@@ -3,11 +3,10 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { secret } = require('../config')
 
-const generateAccessToken = (_id, username, friends, isAdmin) => {
+const generateAccessToken = (_id, username, isAdmin) => {
 	const payload = {
 		_id,
 		username,
-		friends,
 		isAdmin,
 	}
 	return jwt.sign(payload, secret, { expiresIn: '2h' })
@@ -52,12 +51,7 @@ class UsersController {
 			if (!validPassword) {
 				return res.status(404).json({ message: 'Wrong password' })
 			}
-			const token = generateAccessToken(
-				user._id,
-				user.username,
-				user.friends,
-				user.isAdmin
-			)
+			const token = generateAccessToken(user._id, user.username, user.isAdmin)
 
 			res.status(200).json({ user, token })
 		} catch (e) {
@@ -79,6 +73,28 @@ class UsersController {
 				.json({ message: 'Authentication successful', user: userData })
 		} catch (e) {
 			console.error(e)
+		}
+	}
+
+	async getFriends(req, res) {
+		try {
+			const user = await UsersModel.findOne({
+				_id: req.user._id,
+			})
+
+			if (!user) {
+				return res
+					.status(400)
+					.json({ message: 'An error occurred while getting friends' })
+			}
+
+			const friends = user.friends
+
+			res.status(200).json({ friends })
+		} catch (e) {
+			res
+				.status(400)
+				.json({ message: 'An error occurred while getting friends' })
 		}
 	}
 

@@ -3,8 +3,8 @@ import { postsAPI } from '../../api/postsAPI'
 
 export const getPosts = createAsyncThunk(
 	'posts/fetchPosts',
-	async ({ user, currentPage }) => {
-		return await postsAPI.fetchPosts(user, currentPage)
+	async ({ currentPage }) => {
+		return await postsAPI.fetchPosts(currentPage)
 	}
 )
 
@@ -74,6 +74,7 @@ const initialState = {
 	postsByAuthor: {
 		list: null,
 		loading: false,
+		isAddedToFriends: false,
 	},
 	message: null,
 }
@@ -117,6 +118,7 @@ export const postsSlice = createSlice({
 				state.postsByAuthor = {
 					list: action.payload.posts,
 					loading: false,
+					isAddedToFriends: action.payload.isAddedToFriends,
 				}
 			})
 			.addCase(getPostById.pending, state => {

@@ -19,8 +19,7 @@ export const Root = () => {
 	}
 
 	useEffect(() => {
-		const token = localStorage.getItem('token')
-		if (token) dispatch(checkAuth(token))
+		if (token) dispatch(checkAuth())
 	}, [])
 
 	return (

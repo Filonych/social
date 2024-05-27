@@ -1,11 +1,12 @@
 const { Router } = require('express')
 const postsController = require('../controllers/postsController')
+const authMiddleware = require('../middleware/authMiddleware')
 
 const postsRoutes = new Router()
 
-postsRoutes.get('/list', postsController.getPosts)
+postsRoutes.get('/list', authMiddleware, postsController.getPosts)
 postsRoutes.get('/list/:id', postsController.getPostById)
-postsRoutes.post('/byAuthor', postsController.getPostsByAuthor)
+postsRoutes.post('/byAuthor', authMiddleware, postsController.getPostsByAuthor)
 postsRoutes.post('/add', postsController.addPost)
 postsRoutes.delete('/delete', postsController.deletePost)
 postsRoutes.put('/edit', postsController.editPost)

@@ -4,23 +4,21 @@ const UsersModel = require('../models/usersModel')
 class PostsController {
 	async getPosts(req, res) {
 		try {
-			const { _userId, _page } = req.query
+			const { _page } = req.query
 
 			let result = []
 			let totalCount = 0
 
 			const page = parseInt(_page) || 1
 
-			if (_userId === 'undefined') {
+			if (req.unauthorized) {
 				result = await PostsModel.find({ isPrivate: false })
 					.sort({ _id: -1 })
 					.skip((page - 1) * 6)
 					.limit(6)
 				totalCount = await PostsModel.countDocuments({ isPrivate: false })
-			}
-
-			if (_userId !== 'undefined') {
-				const user = await UsersModel.findOne({ _id: _userId })
+			} else {
+				const user = await UsersModel.findOne({ _id: req.user._id })
 				const friends = user.friends
 
 				if (user.isAdmin) {
@@ -34,7 +32,7 @@ class PostsController {
 				if (!user.isAdmin) {
 					result = await PostsModel.find({
 						$or: [
-							{ authorId: _userId },
+							{ authorId: req.user._id },
 							{ author: { $in: friends } },
 							{ isPrivate: false },
 						],
@@ -44,7 +42,7 @@ class PostsController {
 						.limit(6)
 					totalCount = await PostsModel.countDocuments({
 						$or: [
-							{ authorId: _userId },
+							{ authorId: req.user._id },
 							{ author: { $in: friends } },
 							{ isPrivate: false },
 						],
@@ -87,19 +85,23 @@ class PostsController {
 	async getPostsByAuthor(req, res) {
 		try {
 			let result = []
-			const { _privatePosts } = req.query
-			if (_privatePosts === 'false') {
+			const user = await UsersModel.findOne({ username: req.user?.username })
+			const isAddedToFriends = user?.friends.includes(req.body.author)
+			if (
+				req.user?.isAdmin ||
+				isAddedToFriends ||
+				req.body.author === req.user?.username
+			) {
+				result = await PostsModel.find({ author: req.body.author }).sort({
+					_id: -1,
+				})
+			} else if (req.unauthorized || !isAddedToFriends) {
 				result = await PostsModel.find({
 					author: req.body.author,
 					isPrivate: false,
 				})
-			} else {
-				result = await PostsModel.find({ author: req.body.author }).sort({
-					_id: -1,
-				})
 			}
-
-			res.status(200).json({ posts: result })
+			res.status(200).json({ posts: result, isAddedToFriends })
 		} catch (error) {
 			res
 				.status(400)

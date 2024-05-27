@@ -8,6 +8,13 @@ export const regNewUser = createAsyncThunk(
 	}
 )
 
+export const getFriends = createAsyncThunk(
+	'users/fetchGetFriends',
+	async () => {
+		return await usersAPI.fetchGetFriends()
+	}
+)
+
 export const addFriend = createAsyncThunk(
 	'users/fetchAddFriend',
 	async ({ username, author }) => {
@@ -29,16 +36,17 @@ export const login = createAsyncThunk(
 	}
 )
 
-export const checkAuth = createAsyncThunk(
-	'users/fetchCheckAuth',
-	async token => {
-		return await usersAPI.fetchCheckAuth(token)
-	}
-)
+export const checkAuth = createAsyncThunk('users/fetchCheckAuth', async () => {
+	return await usersAPI.fetchCheckAuth()
+})
 
 const initialState = {
 	user: null,
 	message: null,
+	friends: {
+		list: null,
+		loading: false,
+	},
 }
 
 export const usersSlice = createSlice({
@@ -71,6 +79,19 @@ export const usersSlice = createSlice({
 					user: action.payload.user,
 				}
 			})
+			.addCase(getFriends.pending, state => {
+				state.friends = {
+					list: null,
+					loading: true,
+				}
+			})
+			.addCase(getFriends.fulfilled, (state, action) => {
+				state.friends = {
+					list: action.payload.friends,
+					loading: false,
+				}
+			})
+
 			.addCase(addFriend.fulfilled, (state, action) => {
 				return { ...state, user: action.payload.user }
 			})

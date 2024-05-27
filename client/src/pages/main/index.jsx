@@ -17,8 +17,8 @@ export const MainPage = () => {
 	const [currentPage, setCurrentPage] = useState(1)
 
 	useEffect(() => {
-		dispatch(getPosts({ user: user?._id, currentPage }))
-	}, [user])
+		dispatch(getPosts({ currentPage }))
+	}, [])
 
 	return (
 		<Container>

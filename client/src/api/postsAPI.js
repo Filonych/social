@@ -1,8 +1,16 @@
 export const postsAPI = {
-	async fetchPosts(userId, currentPage) {
+	async fetchPosts(currentPage) {
 		try {
+			const token = localStorage.getItem('token')
 			const response = await fetch(
-				`http://localhost:3005/api/posts/list/?_userId=${userId}&_page=${currentPage}`
+				`http://localhost:3005/api/posts/list/?_page=${currentPage}`,
+				{
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: token ? `Bearer ${token}` : '',
+					},
+				}
 			)
 			if (!response.ok) {
 				throw new Error('Error fetching data')
@@ -16,14 +24,17 @@ export const postsAPI = {
 		}
 	},
 
-	async fetchByAuthor(author, privatePosts) {
+	async fetchByAuthor(author) {
 		try {
+			const token = localStorage.getItem('token')
 			const response = await fetch(
-				`http://localhost:3005/api/posts/byAuthor/?_privatePosts=${privatePosts}`,
+				`http://localhost:3005/api/posts/byAuthor`,
+
 				{
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
+						Authorization: token ? `Bearer ${token}` : '',
 					},
 					body: JSON.stringify({ author }),
 				}

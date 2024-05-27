@@ -14,48 +14,40 @@ import * as SC from './styles'
 export const UserPage = () => {
 	const dispatch = useDispatch()
 
-	const { user } = useSelector(state => state.user)
-	const { list, loading } = useSelector(state => state.posts.postsByAuthor)
+	const { user, friends } = useSelector(state => state.user)
+	const { list, loading, isAddedToFriends } = useSelector(
+		state => state.posts.postsByAuthor
+	)
 	const { author } = useParams()
 
 	const username = user?.username
-
 	const authorIsAuthUser = username === author
-	const isAddedToFriends = user?.friends.includes(author)
-	const userIsAdmin = user?.isAdmin === true
+	const areFriends = isAddedToFriends || friends?.list?.includes(author)
 
-	const onAddFriend = () => {
-		dispatch(addFriend({ username, author }))
+	const onAddFriend = async () => {
+		await dispatch(addFriend({ username, author }))
+		dispatch(getPostsByAuthor({ author }))
 	}
 
-	const onRemoveFriend = () => {
-		dispatch(RemoveFriend({ username, author }))
+	const onRemoveFriend = async () => {
+		await dispatch(RemoveFriend({ username, author }))
+		dispatch(getPostsByAuthor({ author }))
 	}
 
 	useEffect(() => {
-		// закомментенный ниже код не работает, т.к. если мы заходим на страницу пользователя не залогинившись, то посты вообще не грузятся
-		// if (!user) {
-		// 	return
-		// }
-		if (isAddedToFriends || authorIsAuthUser || userIsAdmin) {
-			dispatch(getPostsByAuthor({ author }))
-		} else if (!isAddedToFriends && !authorIsAuthUser) {
-			dispatch(getPostsByAuthor({ author, privatePosts: false }))
-		}
-		// из зависимостей убрала author, а user оставила, т.к. если убрать user, то
-		// этот useEffect не будет срабатывать после проверки токена в Root
-	}, [user])
+		dispatch(getPostsByAuthor({ author }))
+	}, [])
 
 	return (
 		<Container>
 			<SC.Avatar />
 			<SC.User>{author}</SC.User>
-			{user && !authorIsAuthUser && !isAddedToFriends && (
+			{user && !authorIsAuthUser && !areFriends && (
 				<Button onClick={onAddFriend} className='white'>
 					Add Friend
 				</Button>
 			)}
-			{user && !authorIsAuthUser && isAddedToFriends && (
+			{user && !authorIsAuthUser && areFriends && (
 				<Button onClick={onRemoveFriend}>Remove Friend</Button>
 			)}
 			{list?.length > 0 && <Typo>Posts</Typo>}
