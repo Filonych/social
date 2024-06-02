@@ -12,7 +12,6 @@ export const MainPage = () => {
 	const dispatch = useDispatch()
 
 	const { list, loading } = useSelector(state => state.posts.posts)
-	const { user } = useSelector(state => state.user)
 
 	const [currentPage, setCurrentPage] = useState(1)
 

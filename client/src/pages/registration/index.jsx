@@ -29,21 +29,20 @@ export const RegistrationPage = () => {
 	})
 
 	const disabled =
-		!formValues.username ||
-		!formValues.email ||
-		!formValues.password ||
-		validationErrors.username ||
-		validationErrors.email ||
-		validationErrors.password
+		!formValues.username || !formValues.email || !formValues.password
 
 	const onSubmit = e => {
 		e.preventDefault()
+
+		const errors = validateRegField(formValues)
+		setValidationErrors(errors)
+		if (errors.username || errors.email || errors.password) {
+			return
+		}
 		dispatch(regNewUser(formValues))
 	}
 
 	const onChange = (name, value) => {
-		let error = validateRegField(name, value)
-		setValidationErrors({ ...validationErrors, [name]: error })
 		setFormValues({ ...formValues, [name]: value })
 	}
 

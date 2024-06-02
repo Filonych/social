@@ -1,4 +1,5 @@
 const MAX_LENGTH = 20
+const MAX_EMAIL_LENGTH = 35
 
 const isValidUsername = username => /^[a-zA-Z0-9_-]+$/.test(username)
 const isValidEmail = email =>
@@ -8,43 +9,54 @@ const isValidEmail = email =>
 const isValidPassword = password =>
 	/^[a-zA-Z0-9!@#$%^&*()_+{}[\]:;<>,.?/~`]+$/.test(password)
 
-export const validateRegField = (name, value) => {
-	const validateUsername = username => {
-		if (!isValidUsername(username)) {
-			return 'The username format is not valid'
-		} else {
-			return null
+export const validateRegField = ({ username, email, password }) => {
+	let validationErrors = {
+		username: null,
+		email: null,
+		password: null,
+	}
+
+	if (!isValidUsername(username)) {
+		validationErrors = {
+			...validationErrors,
+			username: 'The username format is not valid',
 		}
 	}
 
-	const validateEmail = email => {
-		if (!isValidEmail(email)) {
-			return 'The email format is not valid'
-		} else {
-			return null
+	if (!isValidEmail(email)) {
+		validationErrors = {
+			...validationErrors,
+			email: 'The email format is not valid',
 		}
 	}
 
-	const validatePassword = password => {
-		if (!isValidPassword(password)) {
-			return 'The password format is not valid'
-		} else {
-			return null
+	if (!isValidPassword(password)) {
+		validationErrors = {
+			...validationErrors,
+			password: 'The password format is not valid',
 		}
 	}
 
-	if (value.length > MAX_LENGTH) {
-		return `The ${name} is too long.`
+	if (username.length > MAX_LENGTH) {
+		validationErrors = {
+			...validationErrors,
+			username: 'The username is too long',
+		}
 	}
 
-	switch (name) {
-		case 'username':
-			return validateUsername(value)
-		case 'email':
-			return validateEmail(value)
-		case 'password':
-			return validatePassword(value)
-		default:
-			return false
+	if (email.length > MAX_EMAIL_LENGTH) {
+		validationErrors = {
+			...validationErrors,
+			email: 'The email is too long',
+		}
 	}
+
+	if (password.length > MAX_LENGTH) {
+		validationErrors = {
+			...validationErrors,
+			password: 'The password is too long',
+		}
+	}
+
+	return validationErrors
 }

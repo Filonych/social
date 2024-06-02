@@ -43,7 +43,7 @@ export const PostForm = ({ first, second, onSubmitForm, defaultValues }) => {
 	const onChange = (name, value) => {
 		if (!name === 'isPrivate') {
 			const limiter = name === 'title' ? MAX_TITLE_LENGTH : MAX_BODY_LENGTH
-			let error = validateTextField(name, value, limiter)
+			const error = validateTextField(name, value, limiter)
 			setValidationErrors({ ...validationErrors, [name]: error })
 		}
 
