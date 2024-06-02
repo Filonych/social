@@ -13,7 +13,7 @@ module.exports = function (req, res, next) {
 		}
 		const decodedData = jwt.verify(token, secret)
 		if (decodedData.isAdmin) {
-			next()
+			return next()
 		}
 		return res.status(403).json({ message: 'You do not have access' })
 	} catch (e) {

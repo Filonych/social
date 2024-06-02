@@ -130,9 +130,11 @@ export const usersAPI = {
 				throw new Error('Error fetching data')
 			}
 			const responseData = await response.json()
-			const users = responseData.users?.result
-			const totalCount = responseData.users?.metadata.totalCount
-			return { users, totalCount }
+			if (responseData.users) {
+				const users = responseData.users.result
+				const totalCount = responseData.users.metadata.totalCount
+				return { users, totalCount }
+			}
 		} catch (ex) {
 			console.log(ex)
 		}

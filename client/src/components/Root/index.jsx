@@ -29,13 +29,21 @@ export const Root = () => {
 				<NavLink to='/'>
 					<img src='img/rocket.svg' alt='logo' />
 				</NavLink>
-				{user && (
+				{user && !user?.isAdmin && (
 					<SC.MenuLinks>
 						<MenuItem link={`/users/${user.username}`}>
 							{user.username}
 						</MenuItem>
 						<MenuItem link='/friends'>Friends</MenuItem>
-						<MenuItem link='/add'>Add Post</MenuItem>
+						<MenuItem link='/add'>Add Post</MenuItem>{' '}
+						<Button className='white' onClick={onClickExitBtn}>
+							Logout
+						</Button>
+					</SC.MenuLinks>
+				)}
+				{user && user?.isAdmin && (
+					<SC.MenuLinks>
+						<MenuItem link='/users'>Users</MenuItem>
 						<Button className='white' onClick={onClickExitBtn}>
 							Logout
 						</Button>
@@ -51,7 +59,6 @@ export const Root = () => {
 						</MenuItem>
 					</SC.MenuLinks>
 				)}
-				<MenuItem link='/users'>Users</MenuItem>
 			</SC.Menu>
 
 			<Outlet />

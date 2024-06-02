@@ -2,16 +2,15 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Pagination } from '../../components/Pagination'
 import { Container } from '../../components/ui/Container'
-import { Link } from '../../components/ui/Link'
 import { Loader } from '../../components/ui/Loader'
 import { MainTitle } from '../../components/ui/MainTitle'
 import { getUsers } from '../../redux/slices/usersSlice'
+import * as SC from './styles'
 
 export const Users = () => {
 	const dispatch = useDispatch()
 
 	const { list, loading, totalCount } = useSelector(state => state.user.users)
-	console.log('state.user.users', list, loading, totalCount)
 
 	const [currentPage, setCurrentPage] = useState(1)
 
@@ -22,17 +21,17 @@ export const Users = () => {
 		<Container>
 			<MainTitle first='All' second='users' />
 			{loading && <Loader />}
-			<div>
+			<SC.Wrap>
 				{list &&
-					list?.map((user, index) => (
-						<div key={user?._id}>
-							<Link to={`/users/${user?.username}`}>
-								{(currentPage - 1) * 10 + index + 1}
+					list?.map(user => (
+						<SC.User key={user?._id}>
+							<SC.Username to={`/users/${user?.username}`}>
 								{user?.username}
-							</Link>
-						</div>
+							</SC.Username>
+							<SC.Email>{user?.email}</SC.Email>
+						</SC.User>
 					))}
-			</div>
+			</SC.Wrap>
 			{list && (
 				<Pagination
 					currentPage={currentPage}

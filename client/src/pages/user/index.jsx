@@ -42,12 +42,12 @@ export const UserPage = () => {
 		<Container>
 			<SC.Avatar />
 			<SC.User>{author}</SC.User>
-			{user && !authorIsAuthUser && !areFriends && (
+			{user && !authorIsAuthUser && !areFriends && !user?.isAdmin && (
 				<Button onClick={onAddFriend} className='white'>
 					Add Friend
 				</Button>
 			)}
-			{user && !authorIsAuthUser && areFriends && (
+			{user && !authorIsAuthUser && areFriends && !user?.isAdmin && (
 				<Button onClick={onRemoveFriend}>Remove Friend</Button>
 			)}
 			{list?.length > 0 && <Typo>Posts</Typo>}
