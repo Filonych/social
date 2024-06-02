@@ -1,6 +1,7 @@
 const { Router } = require('express')
 const usersController = require('../controllers/usersController')
 const authMiddleware = require('../middleware/authMiddleware')
+const adminMiddleware = require('../middleware/adminMiddleware')
 
 const usersRoutes = new Router()
 
@@ -10,5 +11,6 @@ usersRoutes.post('/addFriend', usersController.addFriend)
 usersRoutes.post('/removeFriend', usersController.removeFriend)
 usersRoutes.get('/getFriends', authMiddleware, usersController.getFriends)
 usersRoutes.get('/checkAuth', usersController.checkAuth)
+usersRoutes.get('/list', adminMiddleware, usersController.getUsers)
 
 module.exports = usersRoutes

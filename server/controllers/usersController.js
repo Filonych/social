@@ -141,6 +141,36 @@ class UsersController {
 				.json({ message: 'An error occurred while deleting a friend' })
 		}
 	}
+
+	async getUsers(req, res) {
+		try {
+			const { _page } = req.query
+
+			let totalCount = 0
+
+			const page = parseInt(_page) || 1
+
+			const result = await UsersModel.find()
+				.sort({ _id: -1 })
+				.skip((page - 1) * 10)
+				.limit(10)
+
+			totalCount = await UsersModel.countDocuments()
+
+			res.status(200).json({
+				users: {
+					metadata: {
+						totalCount,
+					},
+					result,
+				},
+			})
+		} catch (error) {
+			res
+				.status(400)
+				.json({ message: 'An error occurred while getting the users' })
+		}
+	}
 }
 
 module.exports = new UsersController()

@@ -112,4 +112,29 @@ export const usersAPI = {
 			console.log(ex)
 		}
 	},
+
+	async fetchUsers(currentPage) {
+		try {
+			const token = localStorage.getItem('token')
+			const response = await fetch(
+				`http://localhost:3005/api/users/list/?_page=${currentPage}`,
+				{
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: token ? `Bearer ${token}` : '',
+					},
+				}
+			)
+			if (!response.ok) {
+				throw new Error('Error fetching data')
+			}
+			const responseData = await response.json()
+			const users = responseData.users?.result
+			const totalCount = responseData.users?.metadata.totalCount
+			return { users, totalCount }
+		} catch (ex) {
+			console.log(ex)
+		}
+	},
 }

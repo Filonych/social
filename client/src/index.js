@@ -12,6 +12,7 @@ import { DetailPostPage } from './pages/posts/detail'
 import { EditPostPage } from './pages/posts/edit'
 import { RegistrationPage } from './pages/registration'
 import { UserPage } from './pages/user'
+import { Users } from './pages/users'
 import { store } from './redux/store'
 
 const router = createBrowserRouter([
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
 			{
 				path: 'users/:author',
 				element: <UserPage />,
+			},
+			{
+				path: '/users',
+				element: <Users />,
 			},
 		],
 	},

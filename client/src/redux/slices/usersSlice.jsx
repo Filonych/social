@@ -40,12 +40,24 @@ export const checkAuth = createAsyncThunk('users/fetchCheckAuth', async () => {
 	return await usersAPI.fetchCheckAuth()
 })
 
+export const getUsers = createAsyncThunk(
+	'users/fetchUsers',
+	async ({ currentPage }) => {
+		return await usersAPI.fetchUsers(currentPage)
+	}
+)
+
 const initialState = {
 	user: null,
 	message: null,
 	friends: {
 		list: null,
 		loading: false,
+	},
+	users: {
+		list: null,
+		loading: false,
+		totalCount: 0,
 	},
 }
 
@@ -97,6 +109,19 @@ export const usersSlice = createSlice({
 			})
 			.addCase(RemoveFriend.fulfilled, (state, action) => {
 				return { ...state, user: action.payload.user }
+			})
+			.addCase(getUsers.pending, state => {
+				state.users = {
+					list: null,
+					loading: true,
+				}
+			})
+			.addCase(getUsers.fulfilled, (state, action) => {
+				state.users = {
+					list: action.payload.users,
+					loading: false,
+					totalCount: action.payload.totalCount,
+				}
 			})
 	},
 })

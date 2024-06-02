@@ -51,6 +51,7 @@ export const Root = () => {
 						</MenuItem>
 					</SC.MenuLinks>
 				)}
+				<MenuItem link='/users'>Users</MenuItem>
 			</SC.Menu>
 
 			<Outlet />
