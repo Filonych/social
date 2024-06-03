@@ -26,12 +26,14 @@ export const Users = () => {
 					list.map(user => (
 						<SC.User key={user._id}>
 							<div>
-								<SC.Simple>Username: </SC.Simple>
-								<SC.Username to={`/users/${user.username}`}>
-									{user?.username}
-								</SC.Username>
+								<SC.Details>
+									Username:
+									<SC.Username to={`/users/${user.username}`}>
+										{user?.username}
+									</SC.Username>
+								</SC.Details>
 							</div>
-							<SC.Simple>{`Email: ${user.email}`}</SC.Simple>
+							<SC.Details>{`Email: ${user.email}`}</SC.Details>
 						</SC.User>
 					))}
 			</SC.Wrap>

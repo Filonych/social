@@ -85,36 +85,39 @@ export const DetailPostPage = () => {
 			{post && (
 				<DetailedPostWrap>
 					<DetailedPost onLikePost={onLikePost}></DetailedPost>
-					{user && (
-						<SC.ButtonsWrap>
+					<SC.ButtonsWrap>
+						{user && !user.isAdmin && (
+							<>
+								<Button
+									className={isLiked ? 'white' : undefined}
+									onClick={onLikePost}
+								>
+									{isLiked ? 'Liked' : 'Like'}
+								</Button>
+								<Button onClick={() => setShowCommentForm(true)}>
+									Comment
+								</Button>
+							</>
+						)}
+						{user && post.author === user?.username && (
+							<MenuItem link={`/posts/${id}/edit`}>
+								<Button>Edit</Button>
+							</MenuItem>
+						)}
+						{user && (user?.isAdmin || post.author === user?.username) && (
 							<Button
-								className={isLiked ? 'white' : undefined}
-								onClick={onLikePost}
+								onClick={() =>
+									dispatch(
+										setMessage('Are you sure you want to delete this post?')
+									)
+								}
 							>
-								{isLiked ? 'Liked' : 'Like'}
+								Delete
 							</Button>
-							<Button onClick={() => setShowCommentForm(true)}>Comment</Button>
-							{(user.isAdmin || post.author === user.username) && (
-								<SC.ButtonsWrap>
-									<MenuItem link={`/posts/${id}/edit`}>
-										<Button>Edit</Button>
-									</MenuItem>
-									<Button
-										onClick={() =>
-											dispatch(
-												setMessage('Are you sure you want to delete this post?')
-											)
-										}
-									>
-										Delete
-									</Button>
-								</SC.ButtonsWrap>
-							)}
-						</SC.ButtonsWrap>
-					)}
+						)}
+					</SC.ButtonsWrap>
 				</DetailedPostWrap>
 			)}
-
 			{showCommentForm && (
 				<CommentForm onSubmitForm={onSubmitForm} button='Comment' />
 			)}

@@ -130,22 +130,22 @@ class PostsController {
 	async deletePost(req, res) {
 		try {
 			const postToDelete = await PostsModel.findOne({ _id: req.body.id })
-			if (postToDelete.author !== req.user.username) {
-				return res.status(400).json({
-					message: 'The post was not deleted',
+			if (postToDelete.author === req.user.username || req.user.isAdmin) {
+				const { deletedCount } = await PostsModel.deleteOne({
+					_id: req.body.id,
 				})
-			}
-			const { deletedCount } = await PostsModel.deleteOne({
-				_id: req.body.id,
-			})
 
-			if (deletedCount === 0) {
-				res.status(400).json({
-					message: 'The post was not deleted',
-				})
-				return
+				if (deletedCount === 0) {
+					res.status(400).json({
+						message: 'The post was not deleted',
+					})
+					return
+				}
+				return res.status(200).json({ message: 'Deleted successfully' })
 			}
-			res.status(200).json({ message: 'Deleted successfully' })
+			return res.status(400).json({
+				message: 'The post was not deleted',
+			})
 		} catch (e) {
 			res
 				.status(400)

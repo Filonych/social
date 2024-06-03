@@ -37,8 +37,8 @@ export const usersAPI = {
 	},
 
 	async fetchCheckAuth() {
-		const token = localStorage.getItem('token')
 		try {
+			const token = localStorage.getItem('token')
 			const response = await fetch(
 				'http://localhost:3005/api/users/checkAuth',
 				{
@@ -57,8 +57,8 @@ export const usersAPI = {
 	},
 
 	async fetchGetFriends() {
-		const token = localStorage.getItem('token')
 		try {
+			const token = localStorage.getItem('token')
 			const response = await fetch(
 				'http://localhost:3005/api/users/getFriends',
 				{
@@ -77,12 +77,14 @@ export const usersAPI = {
 
 	async fetchAddFriend(username, friend) {
 		try {
+			const token = localStorage.getItem('token')
 			const response = await fetch(
 				'http://localhost:3005/api/users/addFriend',
 				{
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
+						Authorization: token ? `Bearer ${token}` : '',
 					},
 					body: JSON.stringify({ username, friend }),
 				}
@@ -96,12 +98,14 @@ export const usersAPI = {
 
 	async fetchRemoveFriend(username, friend) {
 		try {
+			const token = localStorage.getItem('token')
 			const response = await fetch(
 				'http://localhost:3005/api/users/removeFriend',
 				{
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
+						Authorization: token ? `Bearer ${token}` : '',
 					},
 					body: JSON.stringify({ username, friend }),
 				}

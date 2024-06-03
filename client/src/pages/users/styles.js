@@ -19,8 +19,9 @@ export const Username = styled(Link)`
 	font-size: 15px;
 	color: #989898;
 	cursor: pointer;
+	margin-left: 7px;
 `
 
-export const Simple = styled.span`
-	text-align: left;
+export const Details = styled.span`
+	display: flex;
 `
