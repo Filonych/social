@@ -21,6 +21,6 @@ export const Username = styled(Link)`
 	cursor: pointer;
 `
 
-export const Email = styled.p`
-	margin: 0;
+export const Simple = styled.span`
+	text-align: left;
 `

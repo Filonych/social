@@ -129,6 +129,12 @@ class PostsController {
 
 	async deletePost(req, res) {
 		try {
+			const postToDelete = await PostsModel.findOne({ _id: req.body.id })
+			if (postToDelete.author !== req.user.username) {
+				return res.status(400).json({
+					message: 'The post was not deleted',
+				})
+			}
 			const { deletedCount } = await PostsModel.deleteOne({
 				_id: req.body.id,
 			})
@@ -149,6 +155,12 @@ class PostsController {
 
 	async editPost(req, res) {
 		try {
+			const postToEdit = await PostsModel.findOne({ _id: req.body._id })
+			if (postToEdit.author !== req.user.username) {
+				return res.status(400).json({
+					message: 'The post was not edited',
+				})
+			}
 			const updatedPost = await PostsModel.findOneAndUpdate(
 				{ _id: req.body._id },
 				{

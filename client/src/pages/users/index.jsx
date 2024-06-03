@@ -23,12 +23,15 @@ export const Users = () => {
 			{loading && <Loader />}
 			<SC.Wrap>
 				{list &&
-					list?.map(user => (
-						<SC.User key={user?._id}>
-							<SC.Username to={`/users/${user?.username}`}>
-								{user?.username}
-							</SC.Username>
-							<SC.Email>{user?.email}</SC.Email>
+					list.map(user => (
+						<SC.User key={user._id}>
+							<div>
+								<SC.Simple>Username: </SC.Simple>
+								<SC.Username to={`/users/${user.username}`}>
+									{user?.username}
+								</SC.Username>
+							</div>
+							<SC.Simple>{`Email: ${user.email}`}</SC.Simple>
 						</SC.User>
 					))}
 			</SC.Wrap>

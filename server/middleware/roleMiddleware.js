@@ -9,14 +9,18 @@ module.exports = function (req, res, next) {
 	try {
 		const token = req.headers.authorization.split(' ')[1]
 		if (!token) {
-			return res.status(403).json({ message: 'User is not authorized' })
+			req.unauthorized = true
+			return next()
 		}
 		const decodedData = jwt.verify(token, secret)
-		if (decodedData) {
-			next()
-		}
+		req.user = decodedData
+		next()
 	} catch (e) {
 		console.log(e)
+		if (e instanceof jwt.TokenExpiredError) {
+			req.unauthorized = true
+			return next()
+		}
 		return res.status(403).json({ message: 'User is not authorized' })
 	}
 }
