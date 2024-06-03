@@ -59,6 +59,8 @@ export const postsAPI = {
 
 	async fetchNewPost(title, body, date, author, authorId, isPrivate) {
 		try {
+			const token = localStorage.getItem('token')
+
 			const response = await fetch('http://localhost:3005/api/posts/add', {
 				method: 'POST',
 				body: JSON.stringify({
@@ -71,6 +73,7 @@ export const postsAPI = {
 				}),
 				headers: {
 					'Content-type': 'application/json; charset=UTF-8',
+					Authorization: token ? `Bearer ${token}` : '',
 				},
 			})
 			return await response.json()
@@ -81,6 +84,7 @@ export const postsAPI = {
 
 	async fetchDeletePost(id) {
 		try {
+			const token = localStorage.getItem('token')
 			if (!id) {
 				throw new Error('ID is broken')
 			}
@@ -89,6 +93,7 @@ export const postsAPI = {
 				headers: {
 					Accept: 'application/json',
 					'Content-Type': 'application/json',
+					Authorization: token ? `Bearer ${token}` : '',
 				},
 				body: JSON.stringify({
 					id,
@@ -102,6 +107,7 @@ export const postsAPI = {
 
 	async fetchEditPost(title, body, _id, isPrivate) {
 		try {
+			const token = localStorage.getItem('token')
 			const response = await fetch('http://localhost:3005/api/posts/edit', {
 				method: 'PUT',
 				body: JSON.stringify({
@@ -112,6 +118,7 @@ export const postsAPI = {
 				}),
 				headers: {
 					'Content-type': 'application/json; charset=UTF-8',
+					Authorization: token ? `Bearer ${token}` : '',
 				},
 			})
 			return await response.json()
@@ -122,6 +129,7 @@ export const postsAPI = {
 
 	async fetchAddComment(body, id, date, author, commentId) {
 		try {
+			const token = localStorage.getItem('token')
 			const response = await fetch('http://localhost:3005/api/posts/comment', {
 				method: 'POST',
 				body: JSON.stringify({
@@ -133,6 +141,7 @@ export const postsAPI = {
 				}),
 				headers: {
 					'Content-type': 'application/json; charset=UTF-8',
+					Authorization: token ? `Bearer ${token}` : '',
 				},
 			})
 			const post = response.json()
@@ -144,6 +153,7 @@ export const postsAPI = {
 
 	async fetchLikePost(id, user) {
 		try {
+			const token = localStorage.getItem('token')
 			const response = await fetch('http://localhost:3005/api/posts/likePost', {
 				method: 'POST',
 				body: JSON.stringify({
@@ -152,6 +162,7 @@ export const postsAPI = {
 				}),
 				headers: {
 					'Content-type': 'application/json; charset=UTF-8',
+					Authorization: token ? `Bearer ${token}` : '',
 				},
 			})
 			const post = response.json()
