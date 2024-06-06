@@ -229,17 +229,6 @@ class PostsController {
 
 				res.status(200).json({ post })
 			}
-			// 	if (deletedCount === 0) {
-			// 		res.status(400).json({
-			// 			message: 'The post was not deleted',
-			// 		})
-			// 		return
-			// 	}
-			// 	return res.status(200).json({ message: 'Deleted successfully' })
-			// }
-			// return res.status(400).json({
-			// 	message: 'The post was not deleted',
-			// })
 		} catch (e) {
 			res
 				.status(400)
