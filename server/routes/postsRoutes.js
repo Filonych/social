@@ -5,6 +5,7 @@ const authMiddleware = require('../middleware/authMiddleware')
 
 const postsRoutes = new Router()
 
+
 postsRoutes.get('/list', roleMiddleware, postsController.getPosts)
 postsRoutes.get('/list/:id', postsController.getPostById)
 postsRoutes.post('/byAuthor', roleMiddleware, postsController.getPostsByAuthor)

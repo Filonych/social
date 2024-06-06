@@ -9,7 +9,7 @@ const generateAccessToken = (_id, username, isAdmin) => {
 		username,
 		isAdmin,
 	}
-	return jwt.sign(payload, secret, { expiresIn: '2h' })
+	return jwt.sign(payload, secret)
 }
 
 class UsersController {

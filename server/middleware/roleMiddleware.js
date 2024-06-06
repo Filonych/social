@@ -17,10 +17,6 @@ module.exports = function (req, res, next) {
 		next()
 	} catch (e) {
 		console.log(e)
-		if (e instanceof jwt.TokenExpiredError) {
-			req.unauthorized = true
-			return next()
-		}
 		return res.status(403).json({ message: 'User is not authorized' })
 	}
 }
