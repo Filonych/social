@@ -1,13 +1,20 @@
-const MAX_LENGTH = 20
-const MAX_EMAIL_LENGTH = 35
+const isValidUsername = username => {
+	const lengthIsValid = username.length > 5 && username.length < 20
+	const usernameRegex = /^[a-zA-Z0-9_-]+$/
+	return lengthIsValid && usernameRegex.test(username)
+}
+const isValidEmail = email => {
+	const lengthIsValid = email.length > 5 && email.length < 50
+	const emailRegex =
+		/^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu
+	return lengthIsValid && emailRegex.test(email)
+}
 
-const isValidUsername = username => /^[a-zA-Z0-9_-]+$/.test(username)
-const isValidEmail = email =>
-	/^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu.test(
-		email
-	)
-const isValidPassword = password =>
-	/^[a-zA-Z0-9!@#$%^&*()_+{}[\]:;<>,.?/~`]+$/.test(password)
+const isValidPassword = password => {
+	const lengthIsValid = password.length > 5 && password.length < 35
+	const passwordRegex = /^[a-zA-Z0-9!@#$%^&*()_+{}[\]:;<>,.?/~`]+$/
+	return lengthIsValid && passwordRegex.test(password)
+}
 
 export const validateRegField = ({ username, email, password }) => {
 	let validationErrors = {
@@ -36,27 +43,5 @@ export const validateRegField = ({ username, email, password }) => {
 			password: 'The password format is not valid',
 		}
 	}
-
-	if (username.length > MAX_LENGTH) {
-		validationErrors = {
-			...validationErrors,
-			username: 'The username is too long',
-		}
-	}
-
-	if (email.length > MAX_EMAIL_LENGTH) {
-		validationErrors = {
-			...validationErrors,
-			email: 'The email is too long',
-		}
-	}
-
-	if (password.length > MAX_LENGTH) {
-		validationErrors = {
-			...validationErrors,
-			password: 'The password is too long',
-		}
-	}
-
 	return validationErrors
 }
