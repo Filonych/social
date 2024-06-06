@@ -5,14 +5,18 @@ const authMiddleware = require('../middleware/authMiddleware')
 
 const postsRoutes = new Router()
 
-
 postsRoutes.get('/list', roleMiddleware, postsController.getPosts)
 postsRoutes.get('/list/:id', postsController.getPostById)
 postsRoutes.post('/byAuthor', roleMiddleware, postsController.getPostsByAuthor)
 postsRoutes.post('/add', authMiddleware, postsController.addPost)
 postsRoutes.delete('/delete', roleMiddleware, postsController.deletePost)
 postsRoutes.put('/edit', roleMiddleware, postsController.editPost)
-postsRoutes.post('/comment', authMiddleware, postsController.addComment)
+postsRoutes.post('/addComment', authMiddleware, postsController.addComment)
+postsRoutes.post(
+	'/deleteComment',
+	authMiddleware,
+	postsController.deleteComment
+)
 postsRoutes.post('/likePost', authMiddleware, postsController.likePost)
 
 module.exports = postsRoutes

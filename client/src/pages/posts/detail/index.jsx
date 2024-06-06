@@ -13,6 +13,7 @@ import { formatDate } from '../../../helpers/formatDate'
 import {
 	addComment,
 	clearMessage,
+	deleteComment,
 	deletePost,
 	getPostById,
 	likePost,
@@ -32,12 +33,19 @@ export const DetailPostPage = () => {
 	const { message } = useSelector(state => state.posts)
 
 	const [showCommentForm, setShowCommentForm] = useState(false)
+	const [commentToDelete, setCommentToDelete] = useState(null)
 
 	const isLiked = post?.likes.includes(user?._id)
 
 	const onDeletePost = () => {
 		dispatch(clearMessage())
 		dispatch(deletePost({ id }))
+	}
+
+	const onDeleteComment = () => {
+		dispatch(clearMessage())
+		const username = user.username
+		dispatch(deleteComment({ id, commentToDelete, username }))
 	}
 
 	const onSubmitForm = async formValues => {
@@ -70,7 +78,14 @@ export const DetailPostPage = () => {
 					buttons={
 						post ? (
 							<>
-								<Button onClick={() => onDeletePost()} className='danger'>
+								<Button
+									onClick={() =>
+										message === 'Are you sure you want to delete this post?'
+											? onDeletePost()
+											: onDeleteComment()
+									}
+									className='danger'
+								>
 									Yes
 								</Button>
 								<Button onClick={() => dispatch(clearMessage())}>No</Button>
@@ -122,7 +137,7 @@ export const DetailPostPage = () => {
 				<CommentForm onSubmitForm={onSubmitForm} button='Comment' />
 			)}
 
-			<Comments post={post} />
+			<Comments post={post} setCommentToDelete={setCommentToDelete} />
 		</Container>
 	)
 }

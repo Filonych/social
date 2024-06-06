@@ -206,9 +206,44 @@ class PostsController {
 					.json({ message: 'An error occurred while editing' })
 			}
 
-			res.status(200).json({ post: post })
+			res.status(200).json({ post })
 		} catch (e) {
 			res.status(400).json({ message: 'An error occurred while editing' })
+		}
+	}
+
+	async deleteComment(req, res) {
+		try {
+			console.log('req.body', req.body)
+			const post = await PostsModel.findOne({ _id: req.body.postId })
+			console.log('post', post)
+			const user = await UsersModel.findOne({ username: req.body.user })
+			if (!post) {
+				return res.status(404).json({ message: 'Post not found' })
+			}
+			if (post.author === req.body.user || user.isAdmin) {
+				post.comments = post.comments.filter(
+					comment => comment.id !== req.body.commentId
+				)
+				await post.save()
+
+				res.status(200).json({ post })
+			}
+			// 	if (deletedCount === 0) {
+			// 		res.status(400).json({
+			// 			message: 'The post was not deleted',
+			// 		})
+			// 		return
+			// 	}
+			// 	return res.status(200).json({ message: 'Deleted successfully' })
+			// }
+			// return res.status(400).json({
+			// 	message: 'The post was not deleted',
+			// })
+		} catch (e) {
+			res
+				.status(400)
+				.json({ message: 'An error occurred while deleting the post' })
 		}
 	}
 

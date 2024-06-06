@@ -130,22 +130,49 @@ export const postsAPI = {
 	async fetchAddComment(body, id, date, author, commentId) {
 		try {
 			const token = localStorage.getItem('token')
-			const response = await fetch('http://localhost:3005/api/posts/comment', {
-				method: 'POST',
-				body: JSON.stringify({
-					body,
-					id,
-					date,
-					author,
-					commentId,
-				}),
-				headers: {
-					'Content-type': 'application/json; charset=UTF-8',
-					Authorization: token ? `Bearer ${token}` : '',
-				},
-			})
+			const response = await fetch(
+				'http://localhost:3005/api/posts/addComment',
+				{
+					method: 'POST',
+					body: JSON.stringify({
+						body,
+						id,
+						date,
+						author,
+						commentId,
+					}),
+					headers: {
+						'Content-type': 'application/json; charset=UTF-8',
+						Authorization: token ? `Bearer ${token}` : '',
+					},
+				}
+			)
 			const post = response.json()
 			return post
+		} catch (ex) {
+			console.log(ex)
+		}
+	},
+
+	async fetchDeleteComment(postId, commentId, user) {
+		try {
+			const token = localStorage.getItem('token')
+			const response = await fetch(
+				'http://localhost:3005/api/posts/deleteComment',
+				{
+					method: 'POST',
+					body: JSON.stringify({
+						postId,
+						commentId,
+						user,
+					}),
+					headers: {
+						'Content-type': 'application/json; charset=UTF-8',
+						Authorization: token ? `Bearer ${token}` : '',
+					},
+				}
+			)
+			return response.json()
 		} catch (ex) {
 			console.log(ex)
 		}

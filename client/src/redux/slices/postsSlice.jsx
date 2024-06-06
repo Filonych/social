@@ -54,6 +54,13 @@ export const addComment = createAsyncThunk(
 	}
 )
 
+export const deleteComment = createAsyncThunk(
+	'posts/fetchDeleteComment',
+	async ({ id, commentToDelete, username }) => {
+		return await postsAPI.fetchDeleteComment(id, commentToDelete, username)
+	}
+)
+
 export const likePost = createAsyncThunk(
 	'posts/fetchLikePost',
 	async ({ id, user }) => {
@@ -141,6 +148,18 @@ export const postsSlice = createSlice({
 				}
 			})
 			.addCase(addComment.fulfilled, (state, action) => {
+				state.postForView = {
+					post: action.payload.post,
+					loading: false,
+				}
+			})
+			.addCase(deleteComment.pending, state => {
+				state.postForView = {
+					post: null,
+					loading: true,
+				}
+			})
+			.addCase(deleteComment.fulfilled, (state, action) => {
 				state.postForView = {
 					post: action.payload.post,
 					loading: false,

@@ -42,3 +42,7 @@ export const PostDetailsWrap = styled.div`
 	max-width: 300px;
 	width: 100%;
 `
+
+export const ButtonWrap = styled.div`
+	margin-left: auto;
+`
