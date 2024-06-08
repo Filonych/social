@@ -82,7 +82,7 @@ export const postsAPI = {
 		}
 	},
 
-	async fetchDeletePost(id) {
+	async fetchDeletePost(id, username) {
 		try {
 			const token = localStorage.getItem('token')
 			if (!id) {
@@ -97,6 +97,7 @@ export const postsAPI = {
 				},
 				body: JSON.stringify({
 					id,
+					username,
 				}),
 			})
 			return await response.json()

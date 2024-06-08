@@ -10,7 +10,6 @@ class PostsController {
 			let totalCount = 0
 
 			const page = parseInt(_page) || 1
-
 			if (req.unauthorized) {
 				result = await PostsModel.find({ isPrivate: false })
 					.sort({ _id: -1 })
@@ -20,8 +19,9 @@ class PostsController {
 			} else {
 				const user = await UsersModel.findOne({ _id: req.user._id })
 				const friends = user.friends
+				const isAdmin = req.user.roles.includes('ADMIN')
 
-				if (user.isAdmin) {
+				if (isAdmin) {
 					result = await PostsModel.find()
 						.sort({ _id: -1 })
 						.skip((page - 1) * 6)
@@ -29,7 +29,7 @@ class PostsController {
 					totalCount = await PostsModel.countDocuments({})
 				}
 
-				if (!user.isAdmin) {
+				if (!isAdmin) {
 					result = await PostsModel.find({
 						$or: [
 							{ authorId: req.user._id },
@@ -84,20 +84,21 @@ class PostsController {
 
 	async getPostsByAuthor(req, res) {
 		try {
+			const { author } = req.body
 			let result = []
 			const user = await UsersModel.findOne({ username: req.user?.username })
-			const isAddedToFriends = user?.friends.includes(req.body.author)
-			if (
-				req.user?.isAdmin ||
-				isAddedToFriends ||
-				req.body.author === req.user?.username
-			) {
-				result = await PostsModel.find({ author: req.body.author }).sort({
+
+			const isAddedToFriends = user?.friends.includes(author)
+			const isAdmin = user?.roles.includes('ADMIN')
+			const isAuthor = author === req.user?.username
+
+			if (isAdmin || isAddedToFriends || isAuthor) {
+				result = await PostsModel.find({ author }).sort({
 					_id: -1,
 				})
 			} else if (req.unauthorized || !isAddedToFriends) {
 				result = await PostsModel.find({
-					author: req.body.author,
+					author: author,
 					isPrivate: false,
 				})
 			}
@@ -130,7 +131,11 @@ class PostsController {
 	async deletePost(req, res) {
 		try {
 			const postToDelete = await PostsModel.findOne({ _id: req.body.id })
-			if (postToDelete.author === req.user.username || req.user.isAdmin) {
+
+			const isAuthor = postToDelete.author === req.body.username
+			const isAdmin = req.user.roles.includes('ADMIN')
+
+			if (isAuthor || isAdmin) {
 				const { deletedCount } = await PostsModel.deleteOne({
 					_id: req.body.id,
 				})
@@ -156,7 +161,9 @@ class PostsController {
 	async editPost(req, res) {
 		try {
 			const postToEdit = await PostsModel.findOne({ _id: req.body._id })
-			if (postToEdit.author !== req.user.username) {
+			const isAuthor = postToEdit.author !== req.user.username
+
+			if (!isAuthor) {
 				return res.status(400).json({
 					message: 'The post was not edited',
 				})
@@ -219,7 +226,11 @@ class PostsController {
 			if (!post) {
 				return res.status(404).json({ message: 'Post not found' })
 			}
-			if (post.author === req.body.user || user.isAdmin) {
+
+			const isAuthor = post.author === req.body.user
+			const isAdmin = user.isAdmin
+
+			if (isAuthor || isAdmin) {
 				post.comments = post.comments.filter(
 					comment => comment.id !== req.body.commentId
 				)

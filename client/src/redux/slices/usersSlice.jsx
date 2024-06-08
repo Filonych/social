@@ -17,15 +17,15 @@ export const getFriends = createAsyncThunk(
 
 export const addFriend = createAsyncThunk(
 	'users/fetchAddFriend',
-	async ({ username, author }) => {
-		return await usersAPI.fetchAddFriend(username, author)
+	async ({ author }) => {
+		return await usersAPI.fetchAddFriend(author)
 	}
 )
 
 export const RemoveFriend = createAsyncThunk(
 	'users/fetchRemoveFriend',
-	async ({ username, author }) => {
-		return await usersAPI.fetchRemoveFriend(username, author)
+	async ({ author }) => {
+		return await usersAPI.fetchRemoveFriend(author)
 	}
 )
 
@@ -36,9 +36,12 @@ export const login = createAsyncThunk(
 	}
 )
 
-export const checkAuth = createAsyncThunk('users/fetchCheckAuth', async () => {
-	return await usersAPI.fetchCheckAuth()
-})
+export const checkAuth = createAsyncThunk(
+	'users/fetchCheckAuth',
+	async token => {
+		return await usersAPI.fetchCheckAuth(token)
+	}
+)
 
 export const getUsers = createAsyncThunk(
 	'users/fetchUsers',

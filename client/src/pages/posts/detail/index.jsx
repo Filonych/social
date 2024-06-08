@@ -36,15 +36,15 @@ export const DetailPostPage = () => {
 	const [commentToDelete, setCommentToDelete] = useState(null)
 
 	const isLiked = post?.likes.includes(user?._id)
+	const username = user?.username
 
 	const onDeletePost = () => {
 		dispatch(clearMessage())
-		dispatch(deletePost({ id }))
+		dispatch(deletePost({ id, username }))
 	}
 
 	const onDeleteComment = () => {
 		dispatch(clearMessage())
-		const username = user.username
 		dispatch(deleteComment({ id, commentToDelete, username }))
 	}
 

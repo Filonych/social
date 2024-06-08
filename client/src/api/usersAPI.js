@@ -36,9 +36,8 @@ export const usersAPI = {
 		}
 	},
 
-	async fetchCheckAuth() {
+	async fetchCheckAuth(token) {
 		try {
-			const token = localStorage.getItem('token')
 			const response = await fetch(
 				'http://localhost:3005/api/users/checkAuth',
 				{
@@ -75,7 +74,7 @@ export const usersAPI = {
 		}
 	},
 
-	async fetchAddFriend(username, friend) {
+	async fetchAddFriend(friend) {
 		try {
 			const token = localStorage.getItem('token')
 			const response = await fetch(
@@ -86,7 +85,7 @@ export const usersAPI = {
 						'Content-Type': 'application/json',
 						Authorization: token ? `Bearer ${token}` : '',
 					},
-					body: JSON.stringify({ username, friend }),
+					body: JSON.stringify({ friend }),
 				}
 			)
 			const user = await response.json()
@@ -96,7 +95,7 @@ export const usersAPI = {
 		}
 	},
 
-	async fetchRemoveFriend(username, friend) {
+	async fetchRemoveFriend(friend) {
 		try {
 			const token = localStorage.getItem('token')
 			const response = await fetch(
@@ -107,7 +106,7 @@ export const usersAPI = {
 						'Content-Type': 'application/json',
 						Authorization: token ? `Bearer ${token}` : '',
 					},
-					body: JSON.stringify({ username, friend }),
+					body: JSON.stringify({ friend }),
 				}
 			)
 			const user = await response.json()

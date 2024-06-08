@@ -3,7 +3,7 @@ import { postsAPI } from '../../api/postsAPI'
 
 export const getPosts = createAsyncThunk(
 	'posts/fetchPosts',
-	async ({ currentPage }) => {
+	async currentPage => {
 		return await postsAPI.fetchPosts(currentPage)
 	}
 )
@@ -14,8 +14,8 @@ export const getPostById = createAsyncThunk('posts/fetchbyId', async id => {
 
 export const getPostsByAuthor = createAsyncThunk(
 	'posts/fetchByAuthor',
-	async ({ author, privatePosts }) => {
-		return await postsAPI.fetchByAuthor(author, privatePosts)
+	async ({ author }) => {
+		return await postsAPI.fetchByAuthor(author)
 	}
 )
 
@@ -35,8 +35,8 @@ export const addPost = createAsyncThunk(
 
 export const deletePost = createAsyncThunk(
 	'posts/fetchDeletePost',
-	async ({ id }) => {
-		return await postsAPI.fetchDeletePost(id)
+	async ({ id, username }) => {
+		return await postsAPI.fetchDeletePost(id, username)
 	}
 )
 

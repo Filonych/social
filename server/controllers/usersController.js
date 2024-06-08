@@ -3,11 +3,12 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { secret } = require('../config')
 
-const generateAccessToken = (_id, username, isAdmin) => {
+const generateAccessToken = (_id, username, isAdmin, roles) => {
 	const payload = {
 		_id,
 		username,
 		isAdmin,
+		roles
 	}
 	return jwt.sign(payload, secret)
 }
@@ -51,7 +52,7 @@ class UsersController {
 			if (!validPassword) {
 				return res.status(404).json({ message: 'Wrong password' })
 			}
-			const token = generateAccessToken(user._id, user.username, user.isAdmin)
+			const token = generateAccessToken(user._id, user.username, user.isAdmin, user.roles)
 
 			res.status(200).json({ user, token })
 		} catch (e) {
@@ -101,7 +102,7 @@ class UsersController {
 	async addFriend(req, res) {
 		try {
 			const user = await UsersModel.findOne({
-				username: req.body.username,
+				username: req.user.username,
 			})
 
 			if (!user) {
@@ -124,7 +125,7 @@ class UsersController {
 
 	async removeFriend(req, res) {
 		try {
-			const user = await UsersModel.findOne({ username: req.body.username })
+			const user = await UsersModel.findOne({ username: req.user.username })
 
 			if (!user) {
 				return res.status(404).json({ message: 'User not found' })

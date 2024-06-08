@@ -5,12 +5,20 @@ const authMiddleware = require('../middleware/authMiddleware')
 
 const postsRoutes = new Router()
 
-postsRoutes.get('/list', roleMiddleware, postsController.getPosts)
+postsRoutes.get(
+	'/list',
+	roleMiddleware(['ADMIN', 'USER']),
+	postsController.getPosts
+)
 postsRoutes.get('/list/:id', postsController.getPostById)
-postsRoutes.post('/byAuthor', roleMiddleware, postsController.getPostsByAuthor)
+postsRoutes.post(
+	'/byAuthor',
+	roleMiddleware(['ADMIN', 'USER']),
+	postsController.getPostsByAuthor
+)
 postsRoutes.post('/add', authMiddleware, postsController.addPost)
-postsRoutes.delete('/delete', roleMiddleware, postsController.deletePost)
-postsRoutes.put('/edit', roleMiddleware, postsController.editPost)
+postsRoutes.delete('/delete', authMiddleware, postsController.deletePost)
+postsRoutes.put('/edit', authMiddleware, postsController.editPost)
 postsRoutes.post('/addComment', authMiddleware, postsController.addComment)
 postsRoutes.post(
 	'/deleteComment',
