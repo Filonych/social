@@ -161,7 +161,7 @@ class PostsController {
 	async editPost(req, res) {
 		try {
 			const postToEdit = await PostsModel.findOne({ _id: req.body._id })
-			const isAuthor = postToEdit.author !== req.user.username
+			const isAuthor = postToEdit.author == req.user.username
 
 			if (!isAuthor) {
 				return res.status(400).json({
