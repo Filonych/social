@@ -1,4 +1,5 @@
 const UsersModel = require('../models/usersModel')
+const Role = require('../models/Role')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { secret } = require('../config')
@@ -8,7 +9,7 @@ const generateAccessToken = (_id, username, isAdmin, roles) => {
 		_id,
 		username,
 		isAdmin,
-		roles
+		roles,
 	}
 	return jwt.sign(payload, secret)
 }
@@ -26,11 +27,13 @@ class UsersController {
 					message: 'Email address or username already exists',
 				})
 			}
+			const userRole = await Role.findOne({ value: 'USER' })
 			const hashPassword = bcrypt.hashSync(password, 7)
 			const UserModel = new UsersModel({
 				username,
 				email,
 				password: hashPassword,
+				roles: [userRole.value],
 			})
 
 			await UserModel.save()
@@ -52,7 +55,12 @@ class UsersController {
 			if (!validPassword) {
 				return res.status(404).json({ message: 'Wrong password' })
 			}
-			const token = generateAccessToken(user._id, user.username, user.isAdmin, user.roles)
+			const token = generateAccessToken(
+				user._id,
+				user.username,
+				user.isAdmin,
+				user.roles
+			)
 
 			res.status(200).json({ user, token })
 		} catch (e) {

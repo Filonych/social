@@ -212,8 +212,8 @@ class PostsController {
 					.status(400)
 					.json({ message: 'An error occurred while editing' })
 			}
-
-			res.status(200).json({ post })
+			const comments = post.comments
+			res.status(200).json({ comments })
 		} catch (e) {
 			res.status(400).json({ message: 'An error occurred while editing' })
 		}
@@ -227,7 +227,10 @@ class PostsController {
 				return res.status(404).json({ message: 'Post not found' })
 			}
 
-			const isAuthor = post.author === req.body.user
+			const comment = post.comments.find(
+				comment => comment.id === req.body.commentId
+			)
+			const isAuthor = comment.author === req.body.user
 			const isAdmin = user.isAdmin
 
 			if (isAuthor || isAdmin) {
@@ -236,7 +239,8 @@ class PostsController {
 				)
 				await post.save()
 
-				res.status(200).json({ post })
+				const comments = post.comments
+				res.status(200).json({ comments })
 			}
 		} catch (e) {
 			res

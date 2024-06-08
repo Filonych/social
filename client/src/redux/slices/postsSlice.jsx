@@ -143,25 +143,42 @@ export const postsSlice = createSlice({
 
 			.addCase(addComment.pending, state => {
 				state.postForView = {
-					post: null,
+					...state.postForView,
+					post: {
+						...state.postForView.post,
+						comments: null,
+					},
 					loading: true,
 				}
 			})
 			.addCase(addComment.fulfilled, (state, action) => {
 				state.postForView = {
-					post: action.payload.post,
+					...state.postForView,
+					post: {
+						...state.postForView.post,
+						comments: action.payload.comments,
+					},
 					loading: false,
 				}
 			})
+
 			.addCase(deleteComment.pending, state => {
 				state.postForView = {
-					post: null,
+					...state.postForView,
+					post: {
+						...state.postForView.post,
+						comments: null,
+					},
 					loading: true,
 				}
 			})
 			.addCase(deleteComment.fulfilled, (state, action) => {
 				state.postForView = {
-					post: action.payload.post,
+					...state.postForView,
+					post: {
+						...state.postForView.post,
+						comments: action.payload.comments,
+					},
 					loading: false,
 				}
 			})
