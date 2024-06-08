@@ -214,9 +214,7 @@ class PostsController {
 
 	async deleteComment(req, res) {
 		try {
-			console.log('req.body', req.body)
 			const post = await PostsModel.findOne({ _id: req.body.postId })
-			console.log('post', post)
 			const user = await UsersModel.findOne({ username: req.body.user })
 			if (!post) {
 				return res.status(404).json({ message: 'Post not found' })
