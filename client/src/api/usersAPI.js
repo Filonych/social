@@ -28,9 +28,9 @@ export const usersAPI = {
 				},
 				body: JSON.stringify({ email, password }),
 			})
-			const user = await response.json()
-			localStorage.setItem('token', user.token)
-			return user
+			const data = await response.json()
+			if (data.token) localStorage.setItem('token', data.token)
+			return data
 		} catch (ex) {
 			console.log(ex)
 		}
