@@ -14,6 +14,7 @@ export const Pagination = ({
 
 	const changeCurrentPage = page => {
 		setCurrentPage(page)
+		console.log('page',page)
 	}
 
 	return (
