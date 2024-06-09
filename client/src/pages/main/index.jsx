@@ -16,7 +16,7 @@ export const MainPage = () => {
 	const [currentPage, setCurrentPage] = useState(1)
 
 	useEffect(() => {
-		dispatch(getPosts({ currentPage }))
+		dispatch(getPosts(currentPage))
 	}, [currentPage])
 
 	return (

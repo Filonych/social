@@ -25,12 +25,12 @@ export const UserPage = () => {
 	const areFriends = isAddedToFriends || friends?.list?.includes(author)
 
 	const onAddFriend = async () => {
-		await dispatch(addFriend({ username, author }))
+		await dispatch(addFriend({ author }))
 		dispatch(getPostsByAuthor({ author }))
 	}
 
 	const onRemoveFriend = async () => {
-		await dispatch(RemoveFriend({ username, author }))
+		await dispatch(RemoveFriend({ author }))
 		dispatch(getPostsByAuthor({ author }))
 	}
 
