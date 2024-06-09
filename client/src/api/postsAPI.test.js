@@ -1,8 +1,8 @@
 import { postsAPI } from './postsAPI'
 
 describe('Получаем с сервера пост с выбранным id', () => {
-	test('получаем пост с id "6616b1882dae08b279b388f3"', async () => {
-		const id = '6616b1882dae08b279b388f3'
+	test('получаем пост с id "66521d0858b745273a981471"', async () => {
+		const id = '66521d0858b745273a981471'
 
 		const post = await postsAPI.fetchbyId(id)
 
