@@ -36,15 +36,15 @@ export const DetailPostPage = () => {
 	const [commentToDelete, setCommentToDelete] = useState(null)
 
 	const isLiked = post?.likes.includes(user?._id)
+	const username = user?.username
 
 	const onDeletePost = () => {
 		dispatch(clearMessage())
-		dispatch(deletePost({ id }))
+		dispatch(deletePost({ id, username }))
 	}
 
 	const onDeleteComment = () => {
 		dispatch(clearMessage())
-		const username = user.username
 		dispatch(deleteComment({ id, commentToDelete, username }))
 	}
 
@@ -53,7 +53,6 @@ export const DetailPostPage = () => {
 		const commentId = new Date().getTime()
 		formValues = { ...formValues, id, date, author: user.username, commentId }
 		await dispatch(addComment(formValues))
-		await dispatch(getPostById(id))
 		setShowCommentForm(false)
 	}
 
@@ -96,7 +95,6 @@ export const DetailPostPage = () => {
 					}
 				/>
 			)}
-			{loading && <Loader />}
 			{post && (
 				<DetailedPostWrap>
 					<DetailedPost onLikePost={onLikePost}></DetailedPost>
@@ -136,7 +134,7 @@ export const DetailPostPage = () => {
 			{showCommentForm && (
 				<CommentForm onSubmitForm={onSubmitForm} button='Comment' />
 			)}
-
+			{loading && <Loader />}
 			<Comments post={post} setCommentToDelete={setCommentToDelete} />
 		</Container>
 	)

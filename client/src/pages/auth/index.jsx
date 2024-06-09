@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { InputPassword } from '../../components/InputPassword'
 import { Button } from '../../components/ui/Button'
@@ -9,13 +9,15 @@ import { Form } from '../../components/ui/Form'
 import { Input } from '../../components/ui/Input'
 import { MainTitle } from '../../components/ui/MainTitle'
 import { Modal } from '../../components/ui/Modal'
-import { login } from '../../redux/slices/usersSlice'
+import { clearMessage, login } from '../../redux/slices/usersSlice'
 
 const DEFAULT_VALUES = { email: '', password: '' }
 
 export const AuthPage = () => {
 	const navigate = useNavigate()
 	const dispatch = useDispatch()
+
+	const { message } = useSelector(state => state.user)
 
 	const [formValues, setFormValues] = useState(DEFAULT_VALUES)
 	const [showModal, setShowModal] = useState(null)
@@ -27,7 +29,7 @@ export const AuthPage = () => {
 
 		const response = await dispatch(login(formValues))
 
-		if (response.payload.message === 'User not found') {
+		if (response.payload.message) {
 			setShowModal(true)
 			return
 		}
@@ -38,12 +40,17 @@ export const AuthPage = () => {
 	const onChange = (name, value) => {
 		setFormValues({ ...formValues, [name]: value })
 	}
+
+	const onHandleClose = () => {
+		setShowModal(false)
+		dispatch(clearMessage())
+	}
 	return (
 		<Container>
 			{showModal && (
 				<Modal
-					text='User not found'
-					buttons={<Button onClick={() => setShowModal(false)}>ОК</Button>}
+					text={message}
+					buttons={<Button onClick={() => onHandleClose()}>ОК</Button>}
 				/>
 			)}
 			<MainTitle first='Login' />

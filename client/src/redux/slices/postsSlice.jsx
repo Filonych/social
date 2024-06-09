@@ -3,7 +3,7 @@ import { postsAPI } from '../../api/postsAPI'
 
 export const getPosts = createAsyncThunk(
 	'posts/fetchPosts',
-	async ({ currentPage }) => {
+	async currentPage => {
 		return await postsAPI.fetchPosts(currentPage)
 	}
 )
@@ -14,8 +14,8 @@ export const getPostById = createAsyncThunk('posts/fetchbyId', async id => {
 
 export const getPostsByAuthor = createAsyncThunk(
 	'posts/fetchByAuthor',
-	async ({ author, privatePosts }) => {
-		return await postsAPI.fetchByAuthor(author, privatePosts)
+	async ({ author }) => {
+		return await postsAPI.fetchByAuthor(author)
 	}
 )
 
@@ -35,8 +35,8 @@ export const addPost = createAsyncThunk(
 
 export const deletePost = createAsyncThunk(
 	'posts/fetchDeletePost',
-	async ({ id }) => {
-		return await postsAPI.fetchDeletePost(id)
+	async ({ id, username }) => {
+		return await postsAPI.fetchDeletePost(id, username)
 	}
 )
 
@@ -143,25 +143,42 @@ export const postsSlice = createSlice({
 
 			.addCase(addComment.pending, state => {
 				state.postForView = {
-					post: null,
+					...state.postForView,
+					post: {
+						...state.postForView.post,
+						comments: null,
+					},
 					loading: true,
 				}
 			})
 			.addCase(addComment.fulfilled, (state, action) => {
 				state.postForView = {
-					post: action.payload.post,
+					...state.postForView,
+					post: {
+						...state.postForView.post,
+						comments: action.payload.comments,
+					},
 					loading: false,
 				}
 			})
+
 			.addCase(deleteComment.pending, state => {
 				state.postForView = {
-					post: null,
+					...state.postForView,
+					post: {
+						...state.postForView.post,
+						comments: null,
+					},
 					loading: true,
 				}
 			})
 			.addCase(deleteComment.fulfilled, (state, action) => {
 				state.postForView = {
-					post: action.payload.post,
+					...state.postForView,
+					post: {
+						...state.postForView.post,
+						comments: action.payload.comments,
+					},
 					loading: false,
 				}
 			})
