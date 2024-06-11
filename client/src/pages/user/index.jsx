@@ -7,17 +7,18 @@ import { Button } from '../../components/ui/Button'
 import { Container } from '../../components/ui/Container'
 import { Loader } from '../../components/ui/Loader'
 import { Typo } from '../../components/ui/Typo'
-import { getPostsByAuthor } from '../../redux/slices/postsSlice'
-import { RemoveFriend, addFriend } from '../../redux/slices/usersSlice'
+import { getAuthorPosts } from '../../redux/actions/postsActions'
+import { addFriend, removeFriend } from '../../redux/actions/usersActions'
+import { selectAuthorPosts } from '../../redux/selectors/postSelectors'
 import * as SC from './styles'
+import { selectFriends, selectUser } from '../../redux/selectors/usersSelectors'
 
 export const UserPage = () => {
 	const dispatch = useDispatch()
 
-	const { user, friends } = useSelector(state => state.user)
-	const { list, loading, isAddedToFriends } = useSelector(
-		state => state.posts.postsByAuthor
-	)
+	const user = useSelector(selectUser)
+	const friends = useSelector(selectFriends)
+	const { list, loading, isAddedToFriends } = useSelector(selectAuthorPosts)
 	const { author } = useParams()
 
 	const username = user?.username
@@ -26,16 +27,16 @@ export const UserPage = () => {
 
 	const onAddFriend = async () => {
 		await dispatch(addFriend({ author }))
-		dispatch(getPostsByAuthor({ author }))
+		dispatch(getAuthorPosts({ author }))
 	}
 
 	const onRemoveFriend = async () => {
-		await dispatch(RemoveFriend({ author }))
-		dispatch(getPostsByAuthor({ author }))
+		await dispatch(removeFriend({ author }))
+		dispatch(getAuthorPosts({ author }))
 	}
 
 	useEffect(() => {
-		dispatch(getPostsByAuthor({ author }))
+		dispatch(getAuthorPosts({ author }))
 	}, [])
 
 	return (

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Container } from '../../components/ui/Container'
 import { Link } from '../../components/ui/Link'
 import { MainTitle } from '../../components/ui/MainTitle'
-import { getFriends } from '../../redux/slices/usersSlice'
+import { getFriends } from '../../redux/actions/usersActions'
 import * as SC from './styles'
 
 export const FriendsPage = () => {

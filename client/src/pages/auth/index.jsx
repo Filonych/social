@@ -9,7 +9,8 @@ import { Form } from '../../components/ui/Form'
 import { Input } from '../../components/ui/Input'
 import { MainTitle } from '../../components/ui/MainTitle'
 import { Modal } from '../../components/ui/Modal'
-import { clearMessage, login } from '../../redux/slices/usersSlice'
+import { login } from '../../redux/actions/usersActions'
+import { clearMessage } from '../../redux/reducers/usersReducer'
 
 const DEFAULT_VALUES = { email: '', password: '' }
 
@@ -17,7 +18,7 @@ export const AuthPage = () => {
 	const navigate = useNavigate()
 	const dispatch = useDispatch()
 
-	const { message } = useSelector(state => state.user)
+	const message = useSelector(state => state.user.message)
 
 	const [formValues, setFormValues] = useState(DEFAULT_VALUES)
 	const [showModal, setShowModal] = useState(null)
@@ -50,7 +51,7 @@ export const AuthPage = () => {
 			{showModal && (
 				<Modal
 					text={message}
-					buttons={<Button onClick={() => onHandleClose()}>ОК</Button>}
+					buttons={<Button onClick={onHandleClose}>ОК</Button>}
 				/>
 			)}
 			<MainTitle first='Login' />

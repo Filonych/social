@@ -1,11 +1,10 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { Link } from '../../../ui/Link'
 import { PostDetails } from '../PostDetails'
 import * as SC from './styles'
-import { Link } from '../../../ui/Link'
 
-export const DetailedPost = () => {
-	const { post } = useSelector(state => state.posts.postForView)
+export const DetailedPost = ({ post }) => {
 	const { author, date, title, body, isPrivate } = post
 
 	const likes = post?.likes?.length || 0

@@ -1,72 +1,16 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { postsAPI } from '../../api/postsAPI'
-
-export const getPosts = createAsyncThunk(
-	'posts/fetchPosts',
-	async currentPage => {
-		return await postsAPI.fetchPosts(currentPage)
-	}
-)
-
-export const getPostById = createAsyncThunk('posts/fetchbyId', async id => {
-	return await postsAPI.fetchbyId(id)
-})
-
-export const getPostsByAuthor = createAsyncThunk(
-	'posts/fetchByAuthor',
-	async ({ author }) => {
-		return await postsAPI.fetchByAuthor(author)
-	}
-)
-
-export const addPost = createAsyncThunk(
-	'posts/fetchNewPost',
-	async ({ title, body, date, author, authorId, isPrivate }) => {
-		return await postsAPI.fetchNewPost(
-			title,
-			body,
-			date,
-			author,
-			authorId,
-			isPrivate
-		)
-	}
-)
-
-export const deletePost = createAsyncThunk(
-	'posts/fetchDeletePost',
-	async ({ id, username }) => {
-		return await postsAPI.fetchDeletePost(id, username)
-	}
-)
-
-export const editPost = createAsyncThunk(
-	'posts/fetchEditPost',
-	async ({ title, body, _id, isPrivate }) => {
-		return await postsAPI.fetchEditPost(title, body, _id, isPrivate)
-	}
-)
-
-export const addComment = createAsyncThunk(
-	'posts/fetchAddComment',
-	async ({ body, id, date, author, commentId }) => {
-		return await postsAPI.fetchAddComment(body, id, date, author, commentId)
-	}
-)
-
-export const deleteComment = createAsyncThunk(
-	'posts/fetchDeleteComment',
-	async ({ id, commentToDelete, username }) => {
-		return await postsAPI.fetchDeleteComment(id, commentToDelete, username)
-	}
-)
-
-export const likePost = createAsyncThunk(
-	'posts/fetchLikePost',
-	async ({ id, user }) => {
-		return await postsAPI.fetchLikePost(id, user)
-	}
-)
+// src/redux/reducers/postsReducer.js
+import { createSlice } from '@reduxjs/toolkit'
+import {
+	addComment,
+	addPost,
+	deleteComment,
+	deletePost,
+	editPost,
+	getAuthorPosts,
+	getPostById,
+	getPosts,
+	likePost,
+} from '../actions/postsActions'
 
 const initialState = {
 	posts: {
@@ -74,11 +18,11 @@ const initialState = {
 		loading: false,
 		totalCount: 0,
 	},
-	postForView: {
+	selectedPost: {
 		post: null,
 		loading: false,
 	},
-	postsByAuthor: {
+	authorPosts: {
 		list: null,
 		loading: false,
 		isAddedToFriends: false,
@@ -93,12 +37,10 @@ export const postsSlice = createSlice({
 		setMessage: (state, action) => {
 			state.message = action.payload
 		},
-
 		clearMessage: state => {
 			state.message = null
 		},
 	},
-
 	extraReducers: builder => {
 		builder
 			.addCase(getPosts.pending, state => {
@@ -114,76 +56,73 @@ export const postsSlice = createSlice({
 					totalCount: action.payload.totalCount,
 				}
 			})
-
-			.addCase(getPostsByAuthor.pending, state => {
-				state.postsByAuthor = {
+			.addCase(getAuthorPosts.pending, state => {
+				state.authorPosts = {
 					list: null,
 					loading: true,
 				}
 			})
-			.addCase(getPostsByAuthor.fulfilled, (state, action) => {
-				state.postsByAuthor = {
+			.addCase(getAuthorPosts.fulfilled, (state, action) => {
+				state.authorPosts = {
 					list: action.payload.posts,
 					loading: false,
 					isAddedToFriends: action.payload.isAddedToFriends,
 				}
 			})
 			.addCase(getPostById.pending, state => {
-				state.postForView = {
+				state.selectedPost = {
 					post: null,
 					loading: true,
 				}
 			})
 			.addCase(getPostById.fulfilled, (state, action) => {
-				state.postForView = {
+				state.selectedPost = {
 					post: action.payload.post,
 					loading: false,
 				}
 			})
-
 			.addCase(addComment.pending, state => {
-				state.postForView = {
-					...state.postForView,
+				state.selectedPost = {
+					...state.selectedPost,
 					post: {
-						...state.postForView.post,
+						...state.selectedPost.post,
 						comments: null,
 					},
 					loading: true,
 				}
 			})
 			.addCase(addComment.fulfilled, (state, action) => {
-				state.postForView = {
-					...state.postForView,
+				state.selectedPost = {
+					...state.selectedPost,
 					post: {
-						...state.postForView.post,
+						...state.selectedPost.post,
 						comments: action.payload.comments,
 					},
 					loading: false,
 				}
 			})
-
 			.addCase(deleteComment.pending, state => {
-				state.postForView = {
-					...state.postForView,
+				state.selectedPost = {
+					...state.selectedPost,
 					post: {
-						...state.postForView.post,
+						...state.selectedPost.post,
 						comments: null,
 					},
 					loading: true,
 				}
 			})
 			.addCase(deleteComment.fulfilled, (state, action) => {
-				state.postForView = {
-					...state.postForView,
+				state.selectedPost = {
+					...state.selectedPost,
 					post: {
-						...state.postForView.post,
+						...state.selectedPost.post,
 						comments: action.payload.comments,
 					},
 					loading: false,
 				}
 			})
 			.addCase(likePost.fulfilled, (state, action) => {
-				state.postForView = {
+				state.selectedPost = {
 					post: action.payload.post,
 					loading: false,
 				}
@@ -198,7 +137,7 @@ export const postsSlice = createSlice({
 				return {
 					...state,
 					message: action.payload.message,
-					postForView: {
+					selectedPost: {
 						post: null,
 						loading: false,
 					},

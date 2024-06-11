@@ -1,17 +1,19 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
-import { checkAuth, logout } from '../../redux/slices/usersSlice'
+import { checkAuth } from '../../redux/actions/usersActions'
+import { logout } from '../../redux/reducers/usersReducer'
 import { Button } from '../ui/Button'
 import { Container } from '../ui/Container'
 import { MenuItem } from '../ui/MenuItem'
 import * as SC from './styles'
+import { selectUser } from '../../redux/selectors/usersSelectors'
 
 export const Root = () => {
 	const dispatch = useDispatch()
 	const navigate = useNavigate()
 
-	const { user } = useSelector(state => state.user)
+	const user = useSelector(selectUser)
 
 	const onClickExitBtn = async () => {
 		await dispatch(logout())
@@ -20,7 +22,7 @@ export const Root = () => {
 
 	useEffect(() => {
 		const token = localStorage.getItem('token')
-		if (token) dispatch(checkAuth(token))
+		if (token) dispatch(checkAuth())
 	}, [])
 
 	return (

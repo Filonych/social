@@ -12,15 +12,19 @@ import { Modal } from '../../../components/ui/Modal'
 import { formatDate } from '../../../helpers/formatDate'
 import {
 	addComment,
-	clearMessage,
 	deleteComment,
 	deletePost,
 	getPostById,
 	likePost,
-	setMessage,
-} from '../../../redux/slices/postsSlice'
+} from '../../../redux/actions/postsActions'
+import { clearMessage, setMessage } from '../../../redux/reducers/postsReducer'
+import {
+	selectMessage,
+	selectSelectedPost,
+} from '../../../redux/selectors/postSelectors'
 import { CommentForm } from '../components/CommentForm'
 import * as SC from './styles'
+import { selectUser } from '../../../redux/selectors/usersSelectors'
 
 export const DetailPostPage = () => {
 	const dispatch = useDispatch()
@@ -28,24 +32,23 @@ export const DetailPostPage = () => {
 
 	const { id } = useParams()
 
-	const { user } = useSelector(state => state.user)
-	const { post, loading } = useSelector(state => state.posts.postForView)
-	const { message } = useSelector(state => state.posts)
+	const user = useSelector(selectUser)
+	const { post, loading } = useSelector(selectSelectedPost)
+	const message = useSelector(selectMessage)
 
 	const [showCommentForm, setShowCommentForm] = useState(false)
 	const [commentToDelete, setCommentToDelete] = useState(null)
 
 	const isLiked = post?.likes.includes(user?._id)
-	const username = user?.username
 
 	const onDeletePost = () => {
 		dispatch(clearMessage())
-		dispatch(deletePost({ id, username }))
+		dispatch(deletePost(id))
 	}
 
 	const onDeleteComment = () => {
 		dispatch(clearMessage())
-		dispatch(deleteComment({ id, commentToDelete, username }))
+		dispatch(deleteComment({ id, commentToDelete }))
 	}
 
 	const onSubmitForm = async formValues => {
@@ -57,7 +60,7 @@ export const DetailPostPage = () => {
 	}
 
 	const onLikePost = () => {
-		dispatch(likePost({ id, user: user._id }))
+		dispatch(likePost(id))
 	}
 
 	const onCloseModal = () => {
@@ -90,14 +93,14 @@ export const DetailPostPage = () => {
 								<Button onClick={() => dispatch(clearMessage())}>No</Button>
 							</>
 						) : (
-							<Button onClick={() => onCloseModal()}>OK</Button>
+							<Button onClick={onCloseModal}>OK</Button>
 						)
 					}
 				/>
 			)}
 			{post && (
 				<DetailedPostWrap>
-					<DetailedPost onLikePost={onLikePost}></DetailedPost>
+					<DetailedPost post={post}></DetailedPost>
 					<SC.ButtonsWrap>
 						{user && !user.isAdmin && (
 							<>

@@ -14,7 +14,7 @@ postsRoutes.get('/list/:id', postsController.getPostById)
 postsRoutes.post(
 	'/byAuthor',
 	roleMiddleware(['ADMIN', 'USER']),
-	postsController.getPostsByAuthor
+	postsController.getAuthorPosts
 )
 postsRoutes.post('/add', authMiddleware, postsController.addPost)
 postsRoutes.delete('/delete', authMiddleware, postsController.deletePost)

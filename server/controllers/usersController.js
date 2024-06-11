@@ -159,7 +159,7 @@ class UsersController {
 
 			const page = parseInt(_page) || 1
 
-			const result = await UsersModel.find()
+			const users = await UsersModel.find()
 				.sort({ _id: -1 })
 				.skip((page - 1) * 10)
 				.limit(10)
@@ -167,12 +167,8 @@ class UsersController {
 			totalCount = await UsersModel.countDocuments()
 
 			res.status(200).json({
-				users: {
-					metadata: {
-						totalCount,
-					},
-					result,
-				},
+				users,
+				totalCount,
 			})
 		} catch (error) {
 			res

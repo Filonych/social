@@ -11,7 +11,9 @@ import { MainTitle } from '../../components/ui/MainTitle'
 import { Modal } from '../../components/ui/Modal'
 import { Warning } from '../../components/ui/Warning'
 import { validateRegField } from '../../helpers/validateRegField'
-import { clearMessage, regNewUser } from '../../redux/slices/usersSlice'
+import { regNewUser } from '../../redux/actions/usersActions'
+import { clearMessage } from '../../redux/reducers/usersReducer'
+import { selectMessage } from '../../redux/selectors/usersSelectors'
 
 const DEFAULT_VALUES = { username: '', email: '', password: '' }
 
@@ -19,7 +21,7 @@ export const RegistrationPage = () => {
 	const dispatch = useDispatch()
 	const navigate = useNavigate()
 
-	const { message } = useSelector(state => state.user)
+	const message = useSelector(selectMessage)
 
 	const [formValues, setFormValues] = useState(DEFAULT_VALUES)
 	const [validationErrors, setValidationErrors] = useState({
@@ -58,7 +60,7 @@ export const RegistrationPage = () => {
 			{message && (
 				<Modal
 					text={message}
-					buttons={<Button onClick={() => onHandleClose()}>ОК</Button>}
+					buttons={<Button onClick={onHandleClose}>ОК</Button>}
 				/>
 			)}
 			<MainTitle first='Create' second='account' />

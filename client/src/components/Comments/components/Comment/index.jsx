@@ -1,15 +1,16 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setMessage } from '../../../../redux/slices/postsSlice'
+import { setMessage } from '../../../../redux/reducers/postsReducer'
 import { PostDetails } from '../../../Posts/components/PostDetails'
 import { Button } from '../../../ui/Button'
 import { Link } from '../../../ui/Link'
 import * as SC from './styles'
+import { selectUser } from '../../../../redux/selectors/usersSelectors'
 
 export const Comment = ({ comment, setCommentToDelete }) => {
 	const dispatch = useDispatch()
 
-	const { user } = useSelector(state => state.user)
+	const user = useSelector(selectUser)
 
 	const onClickButton = commentId => {
 		setCommentToDelete(commentId)
