@@ -11,45 +11,42 @@ import { getAuthorPosts } from '../../redux/actions/postsActions'
 import { addFriend, removeFriend } from '../../redux/actions/usersActions'
 import { selectAuthorPosts } from '../../redux/selectors/postSelectors'
 import * as SC from './styles'
-import { selectFriends, selectUser } from '../../redux/selectors/usersSelectors'
+import { selectUser } from '../../redux/selectors/usersSelectors'
 
 export const UserPage = () => {
 	const dispatch = useDispatch()
 
 	const user = useSelector(selectUser)
-	const friends = useSelector(selectFriends)
-	const { list, loading, isAddedToFriends } = useSelector(selectAuthorPosts)
+	const { list, loading } = useSelector(selectAuthorPosts)
 	const { author } = useParams()
 
 	const username = user?.username
 	const isAuthor = username === author
-	const isAdmin = user?.roles.includes('ADMIN')
-	const areFriends = isAddedToFriends || friends?.list?.includes(author)
+	const isAuthUser = user?.roles.includes('USER')
+	const areFriends = user?.friends.includes(author)
 
-	const onAddFriend = async () => {
-		await dispatch(addFriend(author))
-		dispatch(getAuthorPosts(author))
+	const onAddFriend = () => {
+		dispatch(addFriend(author))
 	}
 
-	const onRemoveFriend = async () => {
-		await dispatch(removeFriend(author))
-		dispatch(getAuthorPosts(author))
+	const onRemoveFriend = () => {
+		dispatch(removeFriend(author))
 	}
 
 	useEffect(() => {
 		dispatch(getAuthorPosts(author))
-	}, [])
+	}, [user])
 
 	return (
 		<Container>
 			<SC.Avatar />
 			<SC.User>{author}</SC.User>
-			{user && !isAuthor && !areFriends && !isAdmin && (
+			{!isAuthor && isAuthUser && !areFriends && (
 				<Button onClick={onAddFriend} className='white'>
 					Add Friend
 				</Button>
 			)}
-			{user && !isAuthor && areFriends && !isAdmin && (
+			{!isAuthor && isAuthUser && areFriends && (
 				<Button onClick={onRemoveFriend}>Remove Friend</Button>
 			)}
 			{list?.length > 0 && <Typo>Posts</Typo>}

@@ -24,8 +24,7 @@ const initialState = {
 	},
 	authorPosts: {
 		list: null,
-		loading: false,
-		isAddedToFriends: false,
+		loading: false
 	},
 	message: null,
 }
@@ -65,8 +64,7 @@ export const postsSlice = createSlice({
 			.addCase(getAuthorPosts.fulfilled, (state, action) => {
 				state.authorPosts = {
 					list: action.payload.posts,
-					loading: false,
-					isAddedToFriends: action.payload.isAddedToFriends,
+					loading: false
 				}
 			})
 			.addCase(getPostById.pending, state => {

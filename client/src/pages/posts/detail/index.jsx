@@ -42,6 +42,7 @@ export const DetailPostPage = () => {
 	const isLiked = post?.likes.includes(user?._id)
 	const isAuthor = post?.author === user?.username
 	const isAdmin = user?.roles.includes('ADMIN')
+	const isAuthUser = user?.roles.includes('USER')
 
 	const onDeletePost = () => {
 		dispatch(clearMessage())
@@ -110,7 +111,7 @@ export const DetailPostPage = () => {
 				<DetailedPostWrap>
 					<DetailedPost post={post}></DetailedPost>
 					<SC.ButtonsWrap>
-						{user && !isAdmin && (
+						{isAuthUser && (
 							<>
 								<Button
 									className={isLiked ? 'white' : undefined}
@@ -123,12 +124,12 @@ export const DetailPostPage = () => {
 								</Button>
 							</>
 						)}
-						{user && isAuthor && (
+						{isAuthor && (
 							<MenuItem link={`/posts/${id}/edit`}>
 								<Button>Edit</Button>
 							</MenuItem>
 						)}
-						{user && (isAdmin || isAuthor) && (
+						{(isAdmin || isAuthor) && (
 							<Button
 								onClick={() =>
 									dispatch(

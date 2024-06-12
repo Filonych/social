@@ -98,7 +98,7 @@ class PostsController {
 					isPrivate: false,
 				})
 			}
-			res.status(200).json({ posts: result, isAddedToFriends })
+			res.status(200).json({ posts: result })
 		} catch (error) {
 			res
 				.status(400)
@@ -108,16 +108,9 @@ class PostsController {
 
 	async addPost(req, res) {
 		try {
-			const PostModel = new PostsModel({
-				title: req.body.title,
-				body: req.body.body,
-				author: req.body.author,
-				authorId: req.body.authorId,
-				date: req.body.date,
-				isPrivate: req.body.isPrivate,
-			})
-
+			const PostModel = new PostsModel(req.body)
 			await PostModel.save()
+
 			res.status(200).json({ message: 'The post successfully added' })
 		} catch (e) {
 			res.status(400).json({ message: 'An error occurred while adding' })
@@ -156,7 +149,8 @@ class PostsController {
 
 	async editPost(req, res) {
 		try {
-			const postToEdit = await PostsModel.findOne({ _id: req.body._id })
+			const { _id, title, body, isPrivate } = req.body
+			const postToEdit = await PostsModel.findOne({ _id })
 			const isAuthor = postToEdit.author == req.user.username
 
 			if (!isAuthor) {
@@ -165,11 +159,11 @@ class PostsController {
 				})
 			}
 			const updatedPost = await PostsModel.findOneAndUpdate(
-				{ _id: req.body._id },
+				{ _id },
 				{
-					title: req.body.title,
-					body: req.body.body,
-					isPrivate: req.body.isPrivate,
+					title,
+					body,
+					isPrivate,
 				},
 				{ new: true }
 			)
@@ -188,15 +182,16 @@ class PostsController {
 
 	async addComment(req, res) {
 		try {
+			const { id, body, author, date, commentId } = req.body
 			const post = await PostsModel.findOneAndUpdate(
-				{ _id: req.body.id },
+				{ _id: id },
 				{
 					$push: {
 						comments: {
-							body: req.body.body,
-							author: req.body.author,
-							date: req.body.date,
-							id: req.body.commentId,
+							body,
+							author,
+							date,
+							id: commentId,
 						},
 					},
 				},

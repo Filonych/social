@@ -2,7 +2,6 @@ import { createSlice } from '@reduxjs/toolkit'
 import {
 	addFriend,
 	checkAuth,
-	getFriends,
 	getUsers,
 	login,
 	regNewUser,
@@ -51,18 +50,6 @@ export const usersSlice = createSlice({
 				return {
 					...state,
 					user: action.payload.user,
-				}
-			})
-			.addCase(getFriends.pending, state => {
-				state.friends = {
-					list: null,
-					loading: true,
-				}
-			})
-			.addCase(getFriends.fulfilled, (state, action) => {
-				state.friends = {
-					list: action.payload.friends,
-					loading: false,
 				}
 			})
 

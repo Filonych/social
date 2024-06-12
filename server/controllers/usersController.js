@@ -77,33 +77,12 @@ class UsersController {
 				return res.status(401).json({ message: 'Access token not provided' })
 			}
 			const userData = jwt.verify(token, secret)
+			const user = await UsersModel.findOne({ _id: userData._id })
 			return res
 				.status(200)
-				.json({ message: 'Authentication successful', user: userData })
+				.json({ message: 'Authentication successful', user })
 		} catch (e) {
 			console.error(e)
-		}
-	}
-
-	async getFriends(req, res) {
-		try {
-			const user = await UsersModel.findOne({
-				_id: req.user._id,
-			})
-
-			if (!user) {
-				return res
-					.status(400)
-					.json({ message: 'An error occurred while getting friends' })
-			}
-
-			const friends = user.friends
-
-			res.status(200).json({ friends })
-		} catch (e) {
-			res
-				.status(400)
-				.json({ message: 'An error occurred while getting friends' })
 		}
 	}
 

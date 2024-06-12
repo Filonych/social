@@ -8,13 +8,6 @@ export const regNewUser = createAsyncThunk(
 	}
 )
 
-export const getFriends = createAsyncThunk(
-	'users/fetchGetFriends',
-	async () => {
-		return await usersAPI.fetchGetFriends()
-	}
-)
-
 export const addFriend = createAsyncThunk(
 	'users/fetchAddFriend',
 	async (author) => {

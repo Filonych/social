@@ -21,7 +21,7 @@ export const Comment = ({ comment, onClickDeleteComment }) => {
 				<InfoPanel>{comment.date}</InfoPanel>
 			</SC.InfoPanelWrap>
 			<SC.CommentText>{comment.body}</SC.CommentText>
-			{user && (isAdmin || isAuthor) && (
+			{(isAdmin || isAuthor) && (
 				<SC.ButtonWrap>
 					<Button
 						className='white'

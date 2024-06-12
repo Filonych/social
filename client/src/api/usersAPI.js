@@ -46,18 +46,6 @@ export const usersAPI = {
 		}
 	},
 
-	async fetchGetFriends() {
-		try {
-			const response = await fetch(`${BASE_URL_USERS}/getFriends`, {
-				method: 'GET',
-				headers: getAuthHeaders(),
-			})
-			return await handleResponse(response)
-		} catch (ex) {
-			console.log(ex)
-		}
-	},
-
 	async fetchAddFriend(friend) {
 		try {
 			const response = await fetch(`${BASE_URL_USERS}/addFriend`, {
