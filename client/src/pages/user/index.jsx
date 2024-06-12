@@ -22,33 +22,34 @@ export const UserPage = () => {
 	const { author } = useParams()
 
 	const username = user?.username
-	const authorIsAuthUser = username === author
+	const isAuthor = username === author
+	const isAdmin = user?.roles.includes('ADMIN')
 	const areFriends = isAddedToFriends || friends?.list?.includes(author)
 
 	const onAddFriend = async () => {
-		await dispatch(addFriend({ author }))
-		dispatch(getAuthorPosts({ author }))
+		await dispatch(addFriend(author))
+		dispatch(getAuthorPosts(author))
 	}
 
 	const onRemoveFriend = async () => {
-		await dispatch(removeFriend({ author }))
-		dispatch(getAuthorPosts({ author }))
+		await dispatch(removeFriend(author))
+		dispatch(getAuthorPosts(author))
 	}
 
 	useEffect(() => {
-		dispatch(getAuthorPosts({ author }))
+		dispatch(getAuthorPosts(author))
 	}, [])
 
 	return (
 		<Container>
 			<SC.Avatar />
 			<SC.User>{author}</SC.User>
-			{user && !authorIsAuthUser && !areFriends && !user?.isAdmin && (
+			{user && !isAuthor && !areFriends && !isAdmin && (
 				<Button onClick={onAddFriend} className='white'>
 					Add Friend
 				</Button>
 			)}
-			{user && !authorIsAuthUser && areFriends && !user?.isAdmin && (
+			{user && !isAuthor && areFriends && !isAdmin && (
 				<Button onClick={onRemoveFriend}>Remove Friend</Button>
 			)}
 			{list?.length > 0 && <Typo>Posts</Typo>}

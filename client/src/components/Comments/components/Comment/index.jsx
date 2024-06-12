@@ -1,34 +1,32 @@
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { setMessage } from '../../../../redux/reducers/postsReducer'
-import { PostDetails } from '../../../Posts/components/PostDetails'
+import { useSelector } from 'react-redux'
+import { selectUser } from '../../../../redux/selectors/usersSelectors'
+import { InfoPanel } from '../../../Posts/components/InfoPanel'
 import { Button } from '../../../ui/Button'
 import { Link } from '../../../ui/Link'
 import * as SC from './styles'
-import { selectUser } from '../../../../redux/selectors/usersSelectors'
 
-export const Comment = ({ comment, setCommentToDelete }) => {
-	const dispatch = useDispatch()
-
+export const Comment = ({ comment, onClickDeleteComment }) => {
 	const user = useSelector(selectUser)
 
-	const onClickButton = commentId => {
-		setCommentToDelete(commentId)
-		dispatch(setMessage('Are you sure you want to delete this comment?'))
-	}
+	const isAdmin = user?.roles.includes('ADMIN')
+	const isAuthor = comment.author === user?.username
 
 	return (
 		<SC.CommentWrap>
-			<SC.PostDetailsWrap>
-				<PostDetails>
+			<SC.InfoPanelWrap>
+				<InfoPanel>
 					<Link to={`/users/${comment.author}`}>{comment.author}</Link>
-				</PostDetails>
-				<PostDetails>{comment.date}</PostDetails>
-			</SC.PostDetailsWrap>
+				</InfoPanel>
+				<InfoPanel>{comment.date}</InfoPanel>
+			</SC.InfoPanelWrap>
 			<SC.CommentText>{comment.body}</SC.CommentText>
-			{user && (user.isAdmin || comment.author === user.username) && (
+			{user && (isAdmin || isAuthor) && (
 				<SC.ButtonWrap>
-					<Button className='white' onClick={() => onClickButton(comment.id)}>
+					<Button
+						className='white'
+						onClick={() => onClickDeleteComment(comment.id)}
+					>
 						Delete
 					</Button>
 				</SC.ButtonWrap>

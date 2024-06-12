@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { InputEmail } from '../../components/InputEmail'
 import { InputPassword } from '../../components/InputPassword'
+import { InputUsername } from '../../components/InputUsername'
 import { Button } from '../../components/ui/Button'
 import { Container } from '../../components/ui/Container'
-import { Field } from '../../components/ui/Field'
 import { Form } from '../../components/ui/Form'
-import { Input } from '../../components/ui/Input'
 import { MainTitle } from '../../components/ui/MainTitle'
 import { Modal } from '../../components/ui/Modal'
 import { Warning } from '../../components/ui/Warning'
@@ -25,20 +25,24 @@ export const RegistrationPage = () => {
 
 	const [formValues, setFormValues] = useState(DEFAULT_VALUES)
 	const [validationErrors, setValidationErrors] = useState({
-		username: null,
-		email: null,
-		password: null,
+		usernameError: null,
+		emailError: null,
+		passwordError: null,
 	})
 
-	const disabled =
-		!formValues.username || !formValues.email || !formValues.password
+	const { usernameError, emailError, passwordError } = validationErrors
+	const { username, email, password } = formValues
+
+	const disabled = !username || !email || !password
 
 	const onSubmit = e => {
 		e.preventDefault()
 
 		const errors = validateRegField(formValues)
+		const { usernameError, emailError, passwordError } = errors
+
 		setValidationErrors(errors)
-		if (errors.username || errors.email || errors.password) {
+		if (usernameError || emailError || passwordError) {
 			return
 		}
 		dispatch(regNewUser(formValues))
@@ -65,42 +69,24 @@ export const RegistrationPage = () => {
 			)}
 			<MainTitle first='Create' second='account' />
 			<Form onSubmit={onSubmit}>
-				<Field>
-					<Input
-						type='text'
-						name='username'
-						value={formValues.username}
-						placeholder='Username'
-						onChange={e => onChange(e.target.name, e.target.value)}
-						className={validationErrors.username ? 'red' : undefined}
-					/>
-					{validationErrors.username && (
-						<Warning>{validationErrors.username}</Warning>
-					)}
-				</Field>
-				<Field>
-					<Input
-						type='email'
-						name='email'
-						value={formValues.email}
-						placeholder='E-mail'
-						onChange={e => onChange(e.target.name, e.target.value)}
-						className={validationErrors.email ? 'red' : undefined}
-					/>
-					{validationErrors.email && (
-						<Warning>{validationErrors.email}</Warning>
-					)}
-				</Field>
-				<Field>
-					<InputPassword
-						value={formValues.password}
-						onChange={e => onChange(e.target.name, e.target.value)}
-						className={validationErrors.password ? 'red' : undefined}
-					/>
-					{validationErrors.password && (
-						<Warning>{validationErrors.password}</Warning>
-					)}
-				</Field>
+				<InputUsername
+					value={username}
+					onChange={e => onChange(e.target.name, e.target.value)}
+					className={usernameError ? 'red' : undefined}
+				/>
+				{usernameError && <Warning>{usernameError}</Warning>}
+				<InputEmail
+					value={email}
+					onChange={e => onChange(e.target.name, e.target.value)}
+					className={emailError ? 'red' : undefined}
+				/>
+				{emailError && <Warning>{emailError}</Warning>}
+				<InputPassword
+					value={password}
+					onChange={e => onChange(e.target.name, e.target.value)}
+					className={passwordError ? 'red' : undefined}
+				/>
+				{passwordError && <Warning>{passwordError}</Warning>}
 				<Button type='submit' disabled={disabled}>
 					Create account
 				</Button>

@@ -62,7 +62,7 @@ class UsersController {
 				user.roles
 			)
 
-			res.status(200).json({ user, token })
+			res.status(200).json({ user, token, message: 'You have successfully logged in' })
 		} catch (e) {
 			console.error(e)
 			res.status(500).json({ message: 'An error occurred while getting user' })

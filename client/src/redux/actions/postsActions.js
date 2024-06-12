@@ -14,7 +14,7 @@ export const getPostById = createAsyncThunk('posts/fetchbyId', async id => {
 
 export const getAuthorPosts = createAsyncThunk(
 	'posts/fetchByAuthor',
-	async ({ author }) => {
+	async (author) => {
 		return await postsAPI.fetchByAuthor(author)
 	}
 )

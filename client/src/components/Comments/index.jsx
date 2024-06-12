@@ -3,7 +3,7 @@ import { Typo } from '../ui/Typo'
 import { Comment } from './components/Comment'
 import * as SC from './styles'
 
-export const Comments = ({ post, setCommentToDelete }) => {
+export const Comments = ({ post, onClickDeleteComment }) => {
 	const commentsCount = post?.comments?.length || 0
 
 	return (
@@ -14,7 +14,7 @@ export const Comments = ({ post, setCommentToDelete }) => {
 					<Comment
 						key={comment.id}
 						comment={comment}
-						setCommentToDelete={setCommentToDelete}
+						onClickDeleteComment={onClickDeleteComment}
 					/>
 				))}
 		</SC.CommentsWrap>

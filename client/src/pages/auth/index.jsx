@@ -1,16 +1,16 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { InputEmail } from '../../components/InputEmail'
 import { InputPassword } from '../../components/InputPassword'
 import { Button } from '../../components/ui/Button'
 import { Container } from '../../components/ui/Container'
-import { Field } from '../../components/ui/Field'
 import { Form } from '../../components/ui/Form'
-import { Input } from '../../components/ui/Input'
 import { MainTitle } from '../../components/ui/MainTitle'
 import { Modal } from '../../components/ui/Modal'
 import { login } from '../../redux/actions/usersActions'
 import { clearMessage } from '../../redux/reducers/usersReducer'
+import { selectMessage, selectUser } from '../../redux/selectors/usersSelectors'
 
 const DEFAULT_VALUES = { email: '', password: '' }
 
@@ -18,24 +18,16 @@ export const AuthPage = () => {
 	const navigate = useNavigate()
 	const dispatch = useDispatch()
 
-	const message = useSelector(state => state.user.message)
+	const user = useSelector(selectUser)
+	const message = useSelector(selectMessage)
 
 	const [formValues, setFormValues] = useState(DEFAULT_VALUES)
-	const [showModal, setShowModal] = useState(null)
 
 	const disabled = !formValues.email || !formValues.password
 
 	const onSubmit = async e => {
 		e.preventDefault()
-
-		const response = await dispatch(login(formValues))
-
-		if (response.payload.message) {
-			setShowModal(true)
-			return
-		}
-
-		navigate('/')
+		dispatch(login(formValues))
 	}
 
 	const onChange = (name, value) => {
@@ -43,12 +35,17 @@ export const AuthPage = () => {
 	}
 
 	const onHandleClose = () => {
-		setShowModal(false)
-		dispatch(clearMessage())
+		if (user) {
+			dispatch(clearMessage())
+			navigate('/')
+		}
+
+		if (!user) dispatch(clearMessage())
 	}
+
 	return (
 		<Container>
-			{showModal && (
+			{message && (
 				<Modal
 					text={message}
 					buttons={<Button onClick={onHandleClose}>ОК</Button>}
@@ -56,15 +53,10 @@ export const AuthPage = () => {
 			)}
 			<MainTitle first='Login' />
 			<Form onSubmit={onSubmit}>
-				<Field>
-					<Input
-						type='email'
-						name='email'
-						value={formValues.email}
-						placeholder='E-mail'
-						onChange={e => onChange(e.target.name, e.target.value)}
-					/>
-				</Field>
+				<InputEmail
+					value={formValues.email}
+					onChange={e => onChange(e.target.name, e.target.value)}
+				/>
 				<InputPassword
 					value={formValues.password}
 					onChange={e => onChange(e.target.name, e.target.value)}

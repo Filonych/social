@@ -1,7 +1,6 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
 import { Link } from '../../../ui/Link'
-import { PostDetails } from '../PostDetails'
+import { InfoPanel } from '../InfoPanel'
 import * as SC from './styles'
 
 export const DetailedPost = ({ post }) => {
@@ -13,17 +12,17 @@ export const DetailedPost = ({ post }) => {
 	return (
 		<SC.DetailedPost>
 			<SC.Details>
-				<PostDetails>
+				<InfoPanel>
 					<Link to={`/users/${author}`}>{author}</Link>
-				</PostDetails>
-				<PostDetails>{date}</PostDetails>
-				<PostDetails>{`${likes} ${
+				</InfoPanel>
+				<InfoPanel>{date}</InfoPanel>
+				<InfoPanel>{`${likes} ${
 					likes === 0 || likes > 1 ? 'likes' : 'like'
-				}`}</PostDetails>
-				<PostDetails>{`${commentsCount} ${
+				}`}</InfoPanel>
+				<InfoPanel>{`${commentsCount} ${
 					commentsCount === 0 || commentsCount > 1 ? 'comments' : 'comment'
-				}`}</PostDetails>
-				<PostDetails>{`${isPrivate ? 'Private' : 'Public'}`}</PostDetails>
+				}`}</InfoPanel>
+				<InfoPanel>{`${isPrivate ? 'Private' : 'Public'}`}</InfoPanel>
 			</SC.Details>{' '}
 			<SC.Title>{title}</SC.Title>
 			<SC.Body>{body}</SC.Body>

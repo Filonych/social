@@ -17,14 +17,14 @@ export const getFriends = createAsyncThunk(
 
 export const addFriend = createAsyncThunk(
 	'users/fetchAddFriend',
-	async ({ author }) => {
+	async (author) => {
 		return await usersAPI.fetchAddFriend(author)
 	}
 )
 
 export const removeFriend = createAsyncThunk(
 	'users/fetchRemoveFriend',
-	async ({ author }) => {
+	async (author) => {
 		return await usersAPI.fetchRemoveFriend(author)
 	}
 )

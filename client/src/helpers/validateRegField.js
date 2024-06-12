@@ -18,29 +18,29 @@ const isValidPassword = password => {
 
 export const validateRegField = ({ username, email, password }) => {
 	let validationErrors = {
-		username: null,
-		email: null,
-		password: null,
+		usernameError: null,
+		emailError: null,
+		passwordError: null,
 	}
 
 	if (!isValidUsername(username)) {
 		validationErrors = {
 			...validationErrors,
-			username: 'The username format is not valid',
+			usernameError: 'The username format is not valid',
 		}
 	}
 
 	if (!isValidEmail(email)) {
 		validationErrors = {
 			...validationErrors,
-			email: 'The email format is not valid',
+			emailError: 'The email format is not valid',
 		}
 	}
 
 	if (!isValidPassword(password)) {
 		validationErrors = {
 			...validationErrors,
-			password: 'The password format is not valid',
+			passwordError: 'The password format is not valid',
 		}
 	}
 	return validationErrors

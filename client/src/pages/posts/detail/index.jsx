@@ -22,9 +22,9 @@ import {
 	selectMessage,
 	selectSelectedPost,
 } from '../../../redux/selectors/postSelectors'
+import { selectUser } from '../../../redux/selectors/usersSelectors'
 import { CommentForm } from '../components/CommentForm'
 import * as SC from './styles'
-import { selectUser } from '../../../redux/selectors/usersSelectors'
 
 export const DetailPostPage = () => {
 	const dispatch = useDispatch()
@@ -40,10 +40,17 @@ export const DetailPostPage = () => {
 	const [commentToDelete, setCommentToDelete] = useState(null)
 
 	const isLiked = post?.likes.includes(user?._id)
+	const isAuthor = post?.author === user?.username
+	const isAdmin = user?.roles.includes('ADMIN')
 
 	const onDeletePost = () => {
 		dispatch(clearMessage())
 		dispatch(deletePost(id))
+	}
+
+	const onClickDeleteComment = commentId => {
+		setCommentToDelete(commentId)
+		dispatch(setMessage('Are you sure you want to delete this comment?'))
 	}
 
 	const onDeleteComment = () => {
@@ -51,11 +58,11 @@ export const DetailPostPage = () => {
 		dispatch(deleteComment({ id, commentToDelete }))
 	}
 
-	const onSubmitForm = async formValues => {
+	const onSubmitForm = formValues => {
 		const date = formatDate()
 		const commentId = new Date().getTime()
 		formValues = { ...formValues, id, date, author: user.username, commentId }
-		await dispatch(addComment(formValues))
+		dispatch(addComment(formValues))
 		setShowCommentForm(false)
 	}
 
@@ -66,6 +73,14 @@ export const DetailPostPage = () => {
 	const onCloseModal = () => {
 		navigate('/')
 		dispatch(clearMessage())
+	}
+
+	const onClickYes = () => {
+		if (message === 'Are you sure you want to delete this post?') {
+			onDeletePost()
+			return
+		}
+		onDeleteComment()
 	}
 
 	useEffect(() => {
@@ -80,14 +95,7 @@ export const DetailPostPage = () => {
 					buttons={
 						post ? (
 							<>
-								<Button
-									onClick={() =>
-										message === 'Are you sure you want to delete this post?'
-											? onDeletePost()
-											: onDeleteComment()
-									}
-									className='danger'
-								>
+								<Button onClick={onClickYes} className='danger'>
 									Yes
 								</Button>
 								<Button onClick={() => dispatch(clearMessage())}>No</Button>
@@ -102,7 +110,7 @@ export const DetailPostPage = () => {
 				<DetailedPostWrap>
 					<DetailedPost post={post}></DetailedPost>
 					<SC.ButtonsWrap>
-						{user && !user.isAdmin && (
+						{user && !isAdmin && (
 							<>
 								<Button
 									className={isLiked ? 'white' : undefined}
@@ -115,12 +123,12 @@ export const DetailPostPage = () => {
 								</Button>
 							</>
 						)}
-						{user && post.author === user?.username && (
+						{user && isAuthor && (
 							<MenuItem link={`/posts/${id}/edit`}>
 								<Button>Edit</Button>
 							</MenuItem>
 						)}
-						{user && (user?.isAdmin || post.author === user?.username) && (
+						{user && (isAdmin || isAuthor) && (
 							<Button
 								onClick={() =>
 									dispatch(
@@ -138,7 +146,7 @@ export const DetailPostPage = () => {
 				<CommentForm onSubmitForm={onSubmitForm} button='Comment' />
 			)}
 			{loading && <Loader />}
-			<Comments post={post} setCommentToDelete={setCommentToDelete} />
+			<Comments post={post} onClickDeleteComment={onClickDeleteComment} />
 		</Container>
 	)
 }
