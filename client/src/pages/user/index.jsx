@@ -7,47 +7,46 @@ import { Button } from '../../components/ui/Button'
 import { Container } from '../../components/ui/Container'
 import { Loader } from '../../components/ui/Loader'
 import { Typo } from '../../components/ui/Typo'
-import { getPostsByAuthor } from '../../redux/slices/postsSlice'
-import { RemoveFriend, addFriend } from '../../redux/slices/usersSlice'
+import { getAuthorPosts } from '../../redux/actions/postsActions'
+import { addFriend, removeFriend } from '../../redux/actions/usersActions'
+import { selectAuthorPosts } from '../../redux/selectors/postSelectors'
 import * as SC from './styles'
+import { selectUser } from '../../redux/selectors/usersSelectors'
 
 export const UserPage = () => {
 	const dispatch = useDispatch()
 
-	const { user, friends } = useSelector(state => state.user)
-	const { list, loading, isAddedToFriends } = useSelector(
-		state => state.posts.postsByAuthor
-	)
+	const user = useSelector(selectUser)
+	const { list, loading } = useSelector(selectAuthorPosts)
 	const { author } = useParams()
 
 	const username = user?.username
-	const authorIsAuthUser = username === author
-	const areFriends = isAddedToFriends || friends?.list?.includes(author)
+	const isAuthor = username === author
+	const isAuthUser = user?.roles.includes('USER')
+	const areFriends = user?.friends.includes(author)
 
-	const onAddFriend = async () => {
-		await dispatch(addFriend({ author }))
-		dispatch(getPostsByAuthor({ author }))
+	const onAddFriend = () => {
+		dispatch(addFriend(author))
 	}
 
-	const onRemoveFriend = async () => {
-		await dispatch(RemoveFriend({ author }))
-		dispatch(getPostsByAuthor({ author }))
+	const onRemoveFriend = () => {
+		dispatch(removeFriend(author))
 	}
 
 	useEffect(() => {
-		dispatch(getPostsByAuthor({ author }))
-	}, [])
+		dispatch(getAuthorPosts(author))
+	}, [user])
 
 	return (
 		<Container>
 			<SC.Avatar />
 			<SC.User>{author}</SC.User>
-			{user && !authorIsAuthUser && !areFriends && !user?.isAdmin && (
+			{!isAuthor && isAuthUser && !areFriends && (
 				<Button onClick={onAddFriend} className='white'>
 					Add Friend
 				</Button>
 			)}
-			{user && !authorIsAuthUser && areFriends && !user?.isAdmin && (
+			{!isAuthor && isAuthUser && areFriends && (
 				<Button onClick={onRemoveFriend}>Remove Friend</Button>
 			)}
 			{list?.length > 0 && <Typo>Posts</Typo>}

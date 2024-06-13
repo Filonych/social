@@ -62,7 +62,7 @@ class UsersController {
 				user.roles
 			)
 
-			res.status(200).json({ user, token })
+			res.status(200).json({ user, token, message: 'You have successfully logged in' })
 		} catch (e) {
 			console.error(e)
 			res.status(500).json({ message: 'An error occurred while getting user' })
@@ -77,33 +77,12 @@ class UsersController {
 				return res.status(401).json({ message: 'Access token not provided' })
 			}
 			const userData = jwt.verify(token, secret)
+			const user = await UsersModel.findOne({ _id: userData._id })
 			return res
 				.status(200)
-				.json({ message: 'Authentication successful', user: userData })
+				.json({ message: 'Authentication successful', user })
 		} catch (e) {
 			console.error(e)
-		}
-	}
-
-	async getFriends(req, res) {
-		try {
-			const user = await UsersModel.findOne({
-				_id: req.user._id,
-			})
-
-			if (!user) {
-				return res
-					.status(400)
-					.json({ message: 'An error occurred while getting friends' })
-			}
-
-			const friends = user.friends
-
-			res.status(200).json({ friends })
-		} catch (e) {
-			res
-				.status(400)
-				.json({ message: 'An error occurred while getting friends' })
 		}
 	}
 
@@ -159,7 +138,7 @@ class UsersController {
 
 			const page = parseInt(_page) || 1
 
-			const result = await UsersModel.find()
+			const users = await UsersModel.find()
 				.sort({ _id: -1 })
 				.skip((page - 1) * 10)
 				.limit(10)
@@ -167,12 +146,8 @@ class UsersController {
 			totalCount = await UsersModel.countDocuments()
 
 			res.status(200).json({
-				users: {
-					metadata: {
-						totalCount,
-					},
-					result,
-				},
+				users,
+				totalCount,
 			})
 		} catch (error) {
 			res

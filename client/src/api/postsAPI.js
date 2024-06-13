@@ -1,24 +1,17 @@
+import { BASE_URL_POSTS } from '../constants/baseUrl'
+import { getAuthHeaders, handleResponse } from '../helpers/apiHelpers'
+
 export const postsAPI = {
 	async fetchPosts(currentPage) {
 		try {
-			const token = localStorage.getItem('token')
 			const response = await fetch(
-				`http://localhost:3005/api/posts/list/?_page=${currentPage}`,
+				`${BASE_URL_POSTS}/list/?_page=${currentPage}`,
 				{
 					method: 'GET',
-					headers: {
-						'Content-Type': 'application/json',
-						Authorization: token ? `Bearer ${token}` : '',
-					},
+					headers: getAuthHeaders(),
 				}
 			)
-			if (!response.ok) {
-				throw new Error('Error fetching data')
-			}
-			const responseData = await response.json()
-			const posts = responseData.posts.result
-			const totalCount = responseData.posts.metadata.totalCount
-			return { posts, totalCount }
+			return await handleResponse(response)
 		} catch (ex) {
 			console.log(ex)
 		}
@@ -26,20 +19,12 @@ export const postsAPI = {
 
 	async fetchByAuthor(author) {
 		try {
-			const token = localStorage.getItem('token')
-			const response = await fetch(
-				`http://localhost:3005/api/posts/byAuthor`,
-
-				{
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-						Authorization: token ? `Bearer ${token}` : '',
-					},
-					body: JSON.stringify({ author }),
-				}
-			)
-			return await response.json()
+			const response = await fetch(`${BASE_URL_POSTS}/byAuthor`, {
+				method: 'POST',
+				headers: getAuthHeaders(),
+				body: JSON.stringify({ author }),
+			})
+			return await handleResponse(response)
 		} catch (ex) {
 			console.log(ex)
 		}
@@ -47,155 +32,93 @@ export const postsAPI = {
 
 	async fetchbyId(id) {
 		try {
-			if (!id) {
-				throw new Error('ID is broken')
-			}
-			const response = await fetch(`http://localhost:3005/api/posts/list/${id}`)
-			return await response.json()
+			const response = await fetch(`${BASE_URL_POSTS}/list/${id}`)
+			return await handleResponse(response)
 		} catch (ex) {
 			console.log(ex)
 		}
 	},
 
-	async fetchNewPost(title, body, date, author, authorId, isPrivate) {
+	async fetchNewPost(postData) {
 		try {
-			const token = localStorage.getItem('token')
-
-			const response = await fetch('http://localhost:3005/api/posts/add', {
+			const response = await fetch(`${BASE_URL_POSTS}/add`, {
 				method: 'POST',
-				body: JSON.stringify({
-					title,
-					body,
-					date,
-					author,
-					authorId,
-					isPrivate,
-				}),
-				headers: {
-					'Content-type': 'application/json; charset=UTF-8',
-					Authorization: token ? `Bearer ${token}` : '',
-				},
+				body: JSON.stringify(postData),
+				headers: getAuthHeaders(),
 			})
-			return await response.json()
+			return await handleResponse(response)
 		} catch (ex) {
 			console.log(ex)
 		}
 	},
 
-	async fetchDeletePost(id, username) {
+	async fetchDeletePost(id) {
 		try {
-			const token = localStorage.getItem('token')
-			if (!id) {
-				throw new Error('ID is broken')
-			}
-			const response = await fetch(`http://localhost:3005/api/posts/delete`, {
+			const response = await fetch(`${BASE_URL_POSTS}/delete`, {
 				method: 'DELETE',
-				headers: {
-					Accept: 'application/json',
-					'Content-Type': 'application/json',
-					Authorization: token ? `Bearer ${token}` : '',
-				},
+				headers: getAuthHeaders(),
 				body: JSON.stringify({
 					id,
-					username,
 				}),
 			})
-			return await response.json()
+			return await handleResponse(response)
 		} catch (ex) {
 			console.log(ex)
 		}
 	},
 
-	async fetchEditPost(title, body, _id, isPrivate) {
+	async fetchEditPost(postData) {
 		try {
-			const token = localStorage.getItem('token')
-			const response = await fetch('http://localhost:3005/api/posts/edit', {
+			const response = await fetch(`${BASE_URL_POSTS}/edit`, {
 				method: 'PUT',
-				body: JSON.stringify({
-					title,
-					body,
-					_id,
-					isPrivate,
-				}),
-				headers: {
-					'Content-type': 'application/json; charset=UTF-8',
-					Authorization: token ? `Bearer ${token}` : '',
-				},
+				headers: getAuthHeaders(),
+				body: JSON.stringify(postData),
 			})
-			return await response.json()
+			return await handleResponse(response)
 		} catch (ex) {
 			console.log(ex)
 		}
 	},
 
-	async fetchAddComment(body, id, date, author, commentId) {
+	async fetchAddComment(commentData) {
 		try {
-			const token = localStorage.getItem('token')
-			const response = await fetch(
-				'http://localhost:3005/api/posts/addComment',
-				{
-					method: 'POST',
-					body: JSON.stringify({
-						body,
-						id,
-						date,
-						author,
-						commentId,
-					}),
-					headers: {
-						'Content-type': 'application/json; charset=UTF-8',
-						Authorization: token ? `Bearer ${token}` : '',
-					},
-				}
-			)
-			const comments = response.json()
-			return comments
-		} catch (ex) {
-			console.log(ex)
-		}
-	},
-
-	async fetchDeleteComment(postId, commentId, user) {
-		try {
-			const token = localStorage.getItem('token')
-			const response = await fetch(
-				'http://localhost:3005/api/posts/deleteComment',
-				{
-					method: 'POST',
-					body: JSON.stringify({
-						postId,
-						commentId,
-						user,
-					}),
-					headers: {
-						'Content-type': 'application/json; charset=UTF-8',
-						Authorization: token ? `Bearer ${token}` : '',
-					},
-				}
-			)
-			const comments = response.json()
-			return comments
-		} catch (ex) {
-			console.log(ex)
-		}
-	},
-
-	async fetchLikePost(id, user) {
-		try {
-			const token = localStorage.getItem('token')
-			const response = await fetch('http://localhost:3005/api/posts/likePost', {
+			const response = await fetch(`${BASE_URL_POSTS}/addComment`, {
 				method: 'POST',
+				headers: getAuthHeaders(),
+				body: JSON.stringify(commentData),
+			})
+			return await handleResponse(response)
+		} catch (ex) {
+			console.log(ex)
+		}
+	},
+
+	async fetchDeleteComment(postId, commentId) {
+		try {
+			const response = await fetch(`${BASE_URL_POSTS}/deleteComment`, {
+				method: 'POST',
+				headers: getAuthHeaders(),
+				body: JSON.stringify({
+					postId,
+					commentId,
+				}),
+			})
+			return await handleResponse(response)
+		} catch (ex) {
+			console.log(ex)
+		}
+	},
+
+	async fetchLikePost(id) {
+		try {
+			const response = await fetch(`${BASE_URL_POSTS}/likePost`, {
+				method: 'POST',
+				headers: getAuthHeaders(),
 				body: JSON.stringify({
 					id,
-					user,
 				}),
-				headers: {
-					'Content-type': 'application/json; charset=UTF-8',
-					Authorization: token ? `Bearer ${token}` : '',
-				},
 			})
-			const post = response.json()
-			return post
+			return await handleResponse(response)
 		} catch (ex) {
 			console.log(ex)
 		}

@@ -1,26 +1,22 @@
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React from 'react'
+import { useSelector } from 'react-redux'
 import { Container } from '../../components/ui/Container'
 import { Link } from '../../components/ui/Link'
 import { MainTitle } from '../../components/ui/MainTitle'
-import { getFriends } from '../../redux/slices/usersSlice'
+import { selectUser } from '../../redux/selectors/usersSelectors'
 import * as SC from './styles'
 
 export const FriendsPage = () => {
-	const dispatch = useDispatch()
-	const { list } = useSelector(state => state.user.friends)
 
-	useEffect(() => {
-		dispatch(getFriends())
-	}, [])
+	const user = useSelector(selectUser)
 
 	return (
 		<Container>
 			<MainTitle first='My' second='friends' />
 			<SC.Wrap>
-				{list?.map(friend => (
+				{user?.friends.map(friend => (
 					<SC.Friend key={friend}>
-						<SC.Image></SC.Image>
+						<SC.Image />
 						<Link to={`/users/${friend}`}>{friend}</Link>
 					</SC.Friend>
 				))}

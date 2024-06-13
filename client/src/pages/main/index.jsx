@@ -6,12 +6,13 @@ import { Post } from '../../components/Posts/components/Post'
 import { Container } from '../../components/ui/Container'
 import { Loader } from '../../components/ui/Loader'
 import { MainTitle } from '../../components/ui/MainTitle'
-import { getPosts } from '../../redux/slices/postsSlice'
+import { getPosts } from '../../redux/actions/postsActions'
+import { selectPosts } from '../../redux/selectors/postSelectors'
 
 export const MainPage = () => {
 	const dispatch = useDispatch()
 
-	const { list, loading, totalCount } = useSelector(state => state.posts.posts)
+	const { list, loading, totalCount } = useSelector(selectPosts)
 
 	const [currentPage, setCurrentPage] = useState(1)
 

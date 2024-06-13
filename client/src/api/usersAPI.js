@@ -1,19 +1,17 @@
+import { BASE_URL_USERS } from '../constants/baseUrl'
+import { getAuthHeaders, handleResponse } from '../helpers/apiHelpers'
+
 export const usersAPI = {
-	async fetchNewUser(username, email, password) {
+	async fetchNewUser(userData) {
 		try {
-			const response = await fetch('http://localhost:3005/api/users/add', {
+			const response = await fetch(`${BASE_URL_USERS}/add`, {
 				method: 'POST',
-				body: JSON.stringify({
-					username,
-					email,
-					password,
-				}),
+				body: JSON.stringify(userData),
 				headers: {
 					'Content-type': 'application/json; charset=UTF-8',
 				},
 			})
-			const message = await response.json()
-			return message
+			return await handleResponse(response)
 		} catch (ex) {
 			console.log(ex)
 		}
@@ -21,7 +19,7 @@ export const usersAPI = {
 
 	async fetchLogin(email, password) {
 		try {
-			const response = await fetch('http://localhost:3005/api/users/login', {
+			const response = await fetch(`${BASE_URL_USERS}/login`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -30,45 +28,19 @@ export const usersAPI = {
 			})
 			const data = await response.json()
 			if (data.token) localStorage.setItem('token', data.token)
-			return data
+			return await data
 		} catch (ex) {
 			console.log(ex)
 		}
 	},
 
-	async fetchCheckAuth(token) {
+	async fetchCheckAuth() {
 		try {
-			const response = await fetch(
-				'http://localhost:3005/api/users/checkAuth',
-				{
-					method: 'GET',
-					headers: {
-						'Content-Type': 'application/json',
-						Authorization: `Bearer ${token}`,
-					},
-				}
-			)
-			const user = await response.json()
-			return user
-		} catch (ex) {
-			console.log(ex)
-		}
-	},
-
-	async fetchGetFriends() {
-		try {
-			const token = localStorage.getItem('token')
-			const response = await fetch(
-				'http://localhost:3005/api/users/getFriends',
-				{
-					method: 'GET',
-					headers: {
-						'Content-Type': 'application/json',
-						Authorization: `Bearer ${token}`,
-					},
-				}
-			)
-			return await response.json()
+			const response = await fetch(`${BASE_URL_USERS}/checkAuth`, {
+				method: 'GET',
+				headers: getAuthHeaders(),
+			})
+			return await handleResponse(response)
 		} catch (ex) {
 			console.log(ex)
 		}
@@ -76,20 +48,12 @@ export const usersAPI = {
 
 	async fetchAddFriend(friend) {
 		try {
-			const token = localStorage.getItem('token')
-			const response = await fetch(
-				'http://localhost:3005/api/users/addFriend',
-				{
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-						Authorization: token ? `Bearer ${token}` : '',
-					},
-					body: JSON.stringify({ friend }),
-				}
-			)
-			const user = await response.json()
-			return user
+			const response = await fetch(`${BASE_URL_USERS}/addFriend`, {
+				method: 'POST',
+				headers: getAuthHeaders(),
+				body: JSON.stringify({ friend }),
+			})
+			return await handleResponse(response)
 		} catch (ex) {
 			console.log(ex)
 		}
@@ -97,20 +61,12 @@ export const usersAPI = {
 
 	async fetchRemoveFriend(friend) {
 		try {
-			const token = localStorage.getItem('token')
-			const response = await fetch(
-				'http://localhost:3005/api/users/removeFriend',
-				{
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-						Authorization: token ? `Bearer ${token}` : '',
-					},
-					body: JSON.stringify({ friend }),
-				}
-			)
-			const user = await response.json()
-			return user
+			const response = await fetch(`${BASE_URL_USERS}/removeFriend`, {
+				method: 'POST',
+				headers: getAuthHeaders(),
+				body: JSON.stringify({ friend }),
+			})
+			return await handleResponse(response)
 		} catch (ex) {
 			console.log(ex)
 		}
@@ -118,26 +74,14 @@ export const usersAPI = {
 
 	async fetchUsers(currentPage) {
 		try {
-			const token = localStorage.getItem('token')
 			const response = await fetch(
-				`http://localhost:3005/api/users/list/?_page=${currentPage}`,
+				`${BASE_URL_USERS}/list/?_page=${currentPage}`,
 				{
 					method: 'GET',
-					headers: {
-						'Content-Type': 'application/json',
-						Authorization: token ? `Bearer ${token}` : '',
-					},
+					headers: getAuthHeaders(),
 				}
 			)
-			if (!response.ok) {
-				throw new Error('Error fetching data')
-			}
-			const responseData = await response.json()
-			if (responseData.users) {
-				const users = responseData.users.result
-				const totalCount = responseData.users.metadata.totalCount
-				return { users, totalCount }
-			}
+			return await handleResponse(response)
 		} catch (ex) {
 			console.log(ex)
 		}

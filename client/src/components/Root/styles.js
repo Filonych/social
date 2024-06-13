@@ -9,9 +9,4 @@ export const Menu = styled.div`
 	margin: 0 auto;
 `
 
-export const MenuLinks = styled.div`
-	display: flex;
-	gap: 15px;
-	justify-content: space-between;
-	align-items: center;
-`
+

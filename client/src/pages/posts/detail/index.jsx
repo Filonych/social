@@ -12,13 +12,17 @@ import { Modal } from '../../../components/ui/Modal'
 import { formatDate } from '../../../helpers/formatDate'
 import {
 	addComment,
-	clearMessage,
 	deleteComment,
 	deletePost,
 	getPostById,
 	likePost,
-	setMessage,
-} from '../../../redux/slices/postsSlice'
+} from '../../../redux/actions/postsActions'
+import { clearMessage, setMessage } from '../../../redux/reducers/postsReducer'
+import {
+	selectMessage,
+	selectSelectedPost,
+} from '../../../redux/selectors/postSelectors'
+import { selectUser } from '../../../redux/selectors/usersSelectors'
 import { CommentForm } from '../components/CommentForm'
 import * as SC from './styles'
 
@@ -28,41 +32,56 @@ export const DetailPostPage = () => {
 
 	const { id } = useParams()
 
-	const { user } = useSelector(state => state.user)
-	const { post, loading } = useSelector(state => state.posts.postForView)
-	const { message } = useSelector(state => state.posts)
+	const user = useSelector(selectUser)
+	const { post, loading } = useSelector(selectSelectedPost)
+	const message = useSelector(selectMessage)
 
 	const [showCommentForm, setShowCommentForm] = useState(false)
 	const [commentToDelete, setCommentToDelete] = useState(null)
 
 	const isLiked = post?.likes.includes(user?._id)
-	const username = user?.username
+	const isAuthor = post?.author === user?.username
+	const isAdmin = user?.roles.includes('ADMIN')
+	const isAuthUser = user?.roles.includes('USER')
 
 	const onDeletePost = () => {
 		dispatch(clearMessage())
-		dispatch(deletePost({ id, username }))
+		dispatch(deletePost(id))
+	}
+
+	const onClickDeleteComment = commentId => {
+		setCommentToDelete(commentId)
+		dispatch(setMessage('Are you sure you want to delete this comment?'))
 	}
 
 	const onDeleteComment = () => {
 		dispatch(clearMessage())
-		dispatch(deleteComment({ id, commentToDelete, username }))
+		dispatch(deleteComment({ id, commentToDelete }))
 	}
 
-	const onSubmitForm = async formValues => {
+	const onSubmitForm = formValues => {
 		const date = formatDate()
 		const commentId = new Date().getTime()
 		formValues = { ...formValues, id, date, author: user.username, commentId }
-		await dispatch(addComment(formValues))
+		dispatch(addComment(formValues))
 		setShowCommentForm(false)
 	}
 
 	const onLikePost = () => {
-		dispatch(likePost({ id, user: user._id }))
+		dispatch(likePost(id))
 	}
 
 	const onCloseModal = () => {
 		navigate('/')
 		dispatch(clearMessage())
+	}
+
+	const onClickYes = () => {
+		if (message === 'Are you sure you want to delete this post?') {
+			onDeletePost()
+			return
+		}
+		onDeleteComment()
 	}
 
 	useEffect(() => {
@@ -77,29 +96,22 @@ export const DetailPostPage = () => {
 					buttons={
 						post ? (
 							<>
-								<Button
-									onClick={() =>
-										message === 'Are you sure you want to delete this post?'
-											? onDeletePost()
-											: onDeleteComment()
-									}
-									className='danger'
-								>
+								<Button onClick={onClickYes} className='danger'>
 									Yes
 								</Button>
 								<Button onClick={() => dispatch(clearMessage())}>No</Button>
 							</>
 						) : (
-							<Button onClick={() => onCloseModal()}>OK</Button>
+							<Button onClick={onCloseModal}>OK</Button>
 						)
 					}
 				/>
 			)}
 			{post && (
 				<DetailedPostWrap>
-					<DetailedPost onLikePost={onLikePost}></DetailedPost>
+					<DetailedPost post={post}></DetailedPost>
 					<SC.ButtonsWrap>
-						{user && !user.isAdmin && (
+						{isAuthUser && (
 							<>
 								<Button
 									className={isLiked ? 'white' : undefined}
@@ -112,12 +124,12 @@ export const DetailPostPage = () => {
 								</Button>
 							</>
 						)}
-						{user && post.author === user?.username && (
+						{isAuthor && (
 							<MenuItem link={`/posts/${id}/edit`}>
 								<Button>Edit</Button>
 							</MenuItem>
 						)}
-						{user && (user?.isAdmin || post.author === user?.username) && (
+						{(isAdmin || isAuthor) && (
 							<Button
 								onClick={() =>
 									dispatch(
@@ -135,7 +147,7 @@ export const DetailPostPage = () => {
 				<CommentForm onSubmitForm={onSubmitForm} button='Comment' />
 			)}
 			{loading && <Loader />}
-			<Comments post={post} setCommentToDelete={setCommentToDelete} />
+			<Comments post={post} onClickDeleteComment={onClickDeleteComment} />
 		</Container>
 	)
 }

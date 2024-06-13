@@ -4,19 +4,21 @@ import { Pagination } from '../../components/Pagination'
 import { Container } from '../../components/ui/Container'
 import { Loader } from '../../components/ui/Loader'
 import { MainTitle } from '../../components/ui/MainTitle'
-import { getUsers } from '../../redux/slices/usersSlice'
 import * as SC from './styles'
+import { getUsers } from '../../redux/actions/usersActions'
+import { selectUsers } from '../../redux/selectors/usersSelectors'
+import { User } from './components/User'
 
 export const Users = () => {
 	const dispatch = useDispatch()
 
-	const { list, loading, totalCount } = useSelector(state => state.user.users)
-
+	const { list, loading, totalCount } = useSelector(selectUsers)
 	const [currentPage, setCurrentPage] = useState(1)
 
 	useEffect(() => {
 		dispatch(getUsers({ currentPage }))
 	}, [currentPage])
+
 	return (
 		<Container>
 			<MainTitle first='All' second='users' />
@@ -24,17 +26,7 @@ export const Users = () => {
 			<SC.Wrap>
 				{list &&
 					list.map(user => (
-						<SC.User key={user._id}>
-							<div>
-								<SC.Details>
-									Username:
-									<SC.Username to={`/users/${user.username}`}>
-										{user?.username}
-									</SC.Username>
-								</SC.Details>
-							</div>
-							<SC.Details>{`Email: ${user.email}`}</SC.Details>
-						</SC.User>
+						<User key={user._id} user={user}/>
 					))}
 			</SC.Wrap>
 			{list && (

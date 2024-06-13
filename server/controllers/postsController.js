@@ -6,12 +6,12 @@ class PostsController {
 		try {
 			const { _page } = req.query
 
-			let result = []
+			let posts = []
 			let totalCount = 0
 
 			const page = parseInt(_page) || 1
 			if (req.unauthorized) {
-				result = await PostsModel.find({ isPrivate: false })
+				posts = await PostsModel.find({ isPrivate: false })
 					.sort({ _id: -1 })
 					.skip((page - 1) * 6)
 					.limit(6)
@@ -22,7 +22,7 @@ class PostsController {
 				const isAdmin = req.user.roles.includes('ADMIN')
 
 				if (isAdmin) {
-					result = await PostsModel.find()
+					posts = await PostsModel.find()
 						.sort({ _id: -1 })
 						.skip((page - 1) * 6)
 						.limit(6)
@@ -30,7 +30,7 @@ class PostsController {
 				}
 
 				if (!isAdmin) {
-					result = await PostsModel.find({
+					posts = await PostsModel.find({
 						$or: [
 							{ authorId: req.user._id },
 							{ author: { $in: friends } },
@@ -51,12 +51,8 @@ class PostsController {
 			}
 
 			res.status(200).json({
-				posts: {
-					metadata: {
-						totalCount,
-					},
-					result,
-				},
+				posts,
+				totalCount,
 			})
 		} catch (error) {
 			res
@@ -82,7 +78,7 @@ class PostsController {
 		}
 	}
 
-	async getPostsByAuthor(req, res) {
+	async getAuthorPosts(req, res) {
 		try {
 			const { author } = req.body
 			let result = []
@@ -102,7 +98,7 @@ class PostsController {
 					isPrivate: false,
 				})
 			}
-			res.status(200).json({ posts: result, isAddedToFriends })
+			res.status(200).json({ posts: result })
 		} catch (error) {
 			res
 				.status(400)
@@ -112,16 +108,9 @@ class PostsController {
 
 	async addPost(req, res) {
 		try {
-			const PostModel = new PostsModel({
-				title: req.body.title,
-				body: req.body.body,
-				author: req.body.author,
-				authorId: req.body.authorId,
-				date: req.body.date,
-				isPrivate: req.body.isPrivate,
-			})
-
+			const PostModel = new PostsModel(req.body)
 			await PostModel.save()
+
 			res.status(200).json({ message: 'The post successfully added' })
 		} catch (e) {
 			res.status(400).json({ message: 'An error occurred while adding' })
@@ -132,7 +121,7 @@ class PostsController {
 		try {
 			const postToDelete = await PostsModel.findOne({ _id: req.body.id })
 
-			const isAuthor = postToDelete.author === req.body.username
+			const isAuthor = postToDelete.author === req.user.username
 			const isAdmin = req.user.roles.includes('ADMIN')
 
 			if (isAuthor || isAdmin) {
@@ -160,7 +149,8 @@ class PostsController {
 
 	async editPost(req, res) {
 		try {
-			const postToEdit = await PostsModel.findOne({ _id: req.body._id })
+			const { _id, title, body, isPrivate } = req.body
+			const postToEdit = await PostsModel.findOne({ _id })
 			const isAuthor = postToEdit.author == req.user.username
 
 			if (!isAuthor) {
@@ -169,11 +159,11 @@ class PostsController {
 				})
 			}
 			const updatedPost = await PostsModel.findOneAndUpdate(
-				{ _id: req.body._id },
+				{ _id },
 				{
-					title: req.body.title,
-					body: req.body.body,
-					isPrivate: req.body.isPrivate,
+					title,
+					body,
+					isPrivate,
 				},
 				{ new: true }
 			)
@@ -192,15 +182,16 @@ class PostsController {
 
 	async addComment(req, res) {
 		try {
+			const { id, body, author, date, commentId } = req.body
 			const post = await PostsModel.findOneAndUpdate(
-				{ _id: req.body.id },
+				{ _id: id },
 				{
 					$push: {
 						comments: {
-							body: req.body.body,
-							author: req.body.author,
-							date: req.body.date,
-							id: req.body.commentId,
+							body,
+							author,
+							date,
+							id: commentId,
 						},
 					},
 				},
@@ -222,7 +213,7 @@ class PostsController {
 	async deleteComment(req, res) {
 		try {
 			const post = await PostsModel.findOne({ _id: req.body.postId })
-			const user = await UsersModel.findOne({ username: req.body.user })
+			const user = await UsersModel.findOne({ username: req.user.username })
 			if (!post) {
 				return res.status(404).json({ message: 'Post not found' })
 			}
@@ -230,7 +221,7 @@ class PostsController {
 			const comment = post.comments.find(
 				comment => comment.id === req.body.commentId
 			)
-			const isAuthor = comment.author === req.body.user
+			const isAuthor = comment.author === user.username
 			const isAdmin = user.isAdmin
 
 			if (isAuthor || isAdmin) {
@@ -257,11 +248,11 @@ class PostsController {
 				return res.status(400).json({ message: 'An error occurred' })
 			}
 
-			if (post.likes.includes(req.body.user)) {
-				const index = post.likes.indexOf(req.body.user)
+			if (post.likes.includes(req.user._id)) {
+				const index = post.likes.indexOf(req.user._id)
 				post.likes.splice(index, 1)
 			} else {
-				post.likes.push(req.body.user)
+				post.likes.push(req.user._id)
 			}
 
 			await post.save()

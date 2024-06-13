@@ -3,7 +3,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Button } from '../../../components/ui/Button'
 import { Modal } from '../../../components/ui/Modal'
-import { clearMessage, editPost } from '../../../redux/slices/postsSlice'
+import { editPost } from '../../../redux/actions/postsActions'
+import { clearMessage } from '../../../redux/reducers/postsReducer'
+import { selectMessage, selectSelectedPost } from '../../../redux/selectors/postSelectors'
 import { PostForm } from '../components/PostForm'
 
 export const EditPostPage = () => {
@@ -11,8 +13,8 @@ export const EditPostPage = () => {
 	const navigate = useNavigate()
 
 	const { id } = useParams()
-	const { post } = useSelector(state => state.posts.postForView)
-	const { message } = useSelector(state => state.posts)
+	const { post } = useSelector(selectSelectedPost)
+	const message = useSelector(selectMessage)
 
 	const onSubmitForm = formValues => {
 		dispatch(editPost(formValues))
@@ -32,7 +34,7 @@ export const EditPostPage = () => {
 			{message && (
 				<Modal
 					text={message}
-					buttons={<Button onClick={() => onCloseModal()}>ОК</Button>}
+					buttons={<Button onClick={onCloseModal}>ОК</Button>}
 				/>
 			)}
 			<PostForm

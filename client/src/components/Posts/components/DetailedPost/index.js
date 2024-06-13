@@ -1,11 +1,9 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
-import { PostDetails } from '../PostDetails'
-import * as SC from './styles'
 import { Link } from '../../../ui/Link'
+import { InfoPanel } from '../InfoPanel'
+import * as SC from './styles'
 
-export const DetailedPost = () => {
-	const { post } = useSelector(state => state.posts.postForView)
+export const DetailedPost = ({ post }) => {
 	const { author, date, title, body, isPrivate } = post
 
 	const likes = post?.likes?.length || 0
@@ -14,17 +12,17 @@ export const DetailedPost = () => {
 	return (
 		<SC.DetailedPost>
 			<SC.Details>
-				<PostDetails>
+				<InfoPanel>
 					<Link to={`/users/${author}`}>{author}</Link>
-				</PostDetails>
-				<PostDetails>{date}</PostDetails>
-				<PostDetails>{`${likes} ${
+				</InfoPanel>
+				<InfoPanel>{date}</InfoPanel>
+				<InfoPanel>{`${likes} ${
 					likes === 0 || likes > 1 ? 'likes' : 'like'
-				}`}</PostDetails>
-				<PostDetails>{`${commentsCount} ${
+				}`}</InfoPanel>
+				<InfoPanel>{`${commentsCount} ${
 					commentsCount === 0 || commentsCount > 1 ? 'comments' : 'comment'
-				}`}</PostDetails>
-				<PostDetails>{`${isPrivate ? 'Private' : 'Public'}`}</PostDetails>
+				}`}</InfoPanel>
+				<InfoPanel>{`${isPrivate ? 'Private' : 'Public'}`}</InfoPanel>
 			</SC.Details>{' '}
 			<SC.Title>{title}</SC.Title>
 			<SC.Body>{body}</SC.Body>

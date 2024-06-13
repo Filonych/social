@@ -37,7 +37,7 @@ export const CommentText = styled.div`
 	padding-left: 15px;
 	text-align: left;
 `
-export const PostDetailsWrap = styled.div`
+export const InfoPanelWrap = styled.div`
 	display: flex;
 	max-width: 300px;
 	width: 100%;

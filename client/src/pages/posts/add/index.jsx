@@ -5,15 +5,18 @@ import { Button } from '../../../components/ui/Button'
 import { Container } from '../../../components/ui/Container'
 import { Modal } from '../../../components/ui/Modal'
 import { formatDate } from '../../../helpers/formatDate'
-import { addPost, clearMessage } from '../../../redux/slices/postsSlice'
+import { addPost } from '../../../redux/actions/postsActions'
+import { clearMessage } from '../../../redux/reducers/postsReducer'
+import { selectMessage } from '../../../redux/selectors/postSelectors'
 import { PostForm } from '../components/PostForm'
+import { selectUser } from '../../../redux/selectors/usersSelectors'
 
 export const AddPostPage = () => {
 	const dispatch = useDispatch()
 	const navigate = useNavigate()
 
-	const { user } = useSelector(state => state.user)
-	const { message } = useSelector(state => state.posts)
+	const user = useSelector(selectUser)
+	const message = useSelector(selectMessage)
 
 	const onSubmitForm = formValues => {
 		const date = formatDate()
@@ -38,7 +41,7 @@ export const AddPostPage = () => {
 			{message && (
 				<Modal
 					text={message}
-					buttons={<Button onClick={() => onCloseModal()}>ОК</Button>}
+					buttons={<Button onClick={onCloseModal}>ОК</Button>}
 				/>
 			)}
 			<Container>

@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-export const PostDetails = styled.div`
+export const InfoPanel = styled.div`
 	display: flex;
 	align-items: center;
 
